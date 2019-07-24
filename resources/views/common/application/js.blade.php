@@ -6,7 +6,7 @@
         format: 'Y-m-d',
         direction:-1
     });
-    $(document).on("contextmenu",function(e){        
+    $(document).on("contextmenu",function(e){
        e.preventDefault();
     });
 </script>
@@ -22,50 +22,50 @@ $.validator.addMethod("altsubject", function(value, element, param) {
   depends: function(element) {
           return $(".alt-english-mil").prop("checked") == param;
         }
-  
+
 }, "kkkkkkkkkkkkk");*/
 
-/*$("#application").validate({ 
- 
-  rules: { 
-    "opt-subject[]": { 
-      required: true, 
-      minlength: 1 
+/*$("#application").validate({
+
+  rules: {
+    "opt-subject[]": {
+      required: true,
+      minlength: 1
     },
     "subjects[]":{
       required: true
     }
 
-  }, 
-  messages: { 
+  },
+  messages: {
     "opt-subject[]": "Please select at least one types of spam."
     //"subject[]" : "Please select all compulsory subjects"
-  } 
+  }
 
-}); 
+});
  });*/
  // new code added.
 $(document).ready(function(){
     /*console.log = function(){
 
     }*/
-    var bootstrapOptionsValidator = 
+    var bootstrapOptionsValidator =
     {errorElement: "span",
         errorPlacement: function ( error, element ) {
             // Add the `help-block` class to the error element
             error.addClass( "invalid-feedback" );
-    
+
             // Add `has-feedback` class to the parent div.form-group
             // in order to add icons to inputs
             element.parents( ".form-group" ).addClass( "has-feedback" );
-    
+
             if ( element.prop( "type" ) === "checkbox" ||  element.prop( "type" ) === "radio") {
                 error.insertAfter( element.parent( "label" ).parent("div") );
             } else {
                 error.insertAfter( element );
             }
             element.addClass('is-invalid');
-    
+
             // Add the span element, if doesn't exists, and apply the icon classes to it.
             if ( !element.next( "span" )[ 0 ] ) {
                 $( "<span class='glyphicon glyphicon-remove form-control-feedback'></span>" ).insertAfter( element );
@@ -86,14 +86,14 @@ $(document).ready(function(){
     $('form#application').on('submit', function(event) {
         $(".se-pre-con").fadeIn("slow");
 
-        $("input[name='caste_id'").rules("add", 
+        $("input[name='caste_id'").rules("add",
         {
             required: true,
             messages:{
                 required:"Please select caste."
             }
         });
-        $("input[name='course_id'").rules("add", 
+        $("input[name='course_id'").rules("add",
         {
             required: true,
             number: true,
@@ -101,7 +101,7 @@ $(document).ready(function(){
                 number: "Select a valid Course."
             }
         });
-        $("input[name='stream_id'").rules("add", 
+        $("input[name='stream_id'").rules("add",
         {
             required: true,
             number: true,
@@ -109,7 +109,7 @@ $(document).ready(function(){
                 number: "Select a valid Stream."
             }
         });
-        $("input[name='semester_id'").rules("add", 
+        $("input[name='semester_id'").rules("add",
         {
             required: true,
             number: true,
@@ -117,56 +117,56 @@ $(document).ready(function(){
                 number: "Select a valid Semester."
             }
         });
-        $("input[name='dob'").rules("add", 
+        $("input[name='dob'").rules("add",
         {
             required: true,
             maxlength: 60
         });
-        $("input[name='gender'").rules("add", 
+        $("input[name='gender'").rules("add",
         {
             required: true
         });
-        $("input[name='mothers_name'").rules("add", 
+        $("input[name='mothers_name'").rules("add",
         {
             required: true,
             maxlength: 60
         });
-        $("input[name='religion'").rules("add", 
+        $("input[name='religion'").rules("add",
         {
             required: true
         });
-        $("input[name='present_vill_or_town'").rules("add", 
+        $("input[name='present_vill_or_town'").rules("add",
         {
             required: true
         });
-        $("input[name='present_city'").rules("add", 
+        $("input[name='present_city'").rules("add",
         {
             required: true
         });
-        $("input[name='present_pin'").rules("add", 
+        $("input[name='present_pin'").rules("add",
         {
             required: true,
             number: true,
             maxlength:6,
             minlength:6
         });
-        $("select[name='blood_group'").rules("add", 
+        $("select[name='blood_group'").rules("add",
         {
             required: true
         });
-        $("select[name='percentage'").rules("add", 
+        $("select[name='percentage'").rules("add",
         {
             required: true,
             number: true
         });
-        $("select[name='all_total_marks'").rules("add", 
+        $("select[name='all_total_marks'").rules("add",
         {
             required: true,
             number: true
         });
         /*var course_id = $("#course_id:checked").val();
         if (course_id != undefined) {
-            console.log("course is checked"); 
+            console.log("course is checked");
             if (course_id == 1) {
                 // higher secondary validation
                 var stream = $("#stream_id:checked").val();
@@ -244,10 +244,10 @@ $(document).ready(function(){
                 });
             }
         }
-        if ({{(isset($application) ? 0 : 1)}}) {            
+        if ({{(isset($application) ? 0 : 1)}}) {
 
-            $("input[name='passport'").rules("add", 
-            {            
+            $("input[name='passport'").rules("add",
+            {
                 extension: "jpe?g|png",
                 required: true,
                 maxsize: 100000,
@@ -257,8 +257,8 @@ $(document).ready(function(){
                     required: "Passport Photo is required"
                 }
             });
-            $("input[name='sign'").rules("add", 
-            {            
+            $("input[name='sign'").rules("add",
+            {
                 extension: "jpe?g|png",
                 required: true,
                 maxsize: 100000,
@@ -268,8 +268,8 @@ $(document).ready(function(){
                     required: "Signature Photo is required"
                 }
             });
-            $("input[name='marksheet'").rules("add", 
-            {            
+            $("input[name='marksheet'").rules("add",
+            {
                 extension: "jpe?g|png",
                 maxsize: 1000000,
                 required: true,
@@ -280,8 +280,8 @@ $(document).ready(function(){
             });
             if($("input[name='caste_id']:checked").val() != 1){
 
-                $("input[name='caste_certificate'").rules("add", 
-                {            
+                $("input[name='caste_certificate'").rules("add",
+                {
                     extension: "jpe?g|png",
                     maxsize: 1000000,
                     required: true,
@@ -291,8 +291,8 @@ $(document).ready(function(){
                     }
                 });
             }else{
-                $("input[name='caste_certificate'").rules("add", 
-                {            
+                $("input[name='caste_certificate'").rules("add",
+                {
                     extension: "jpe?g|png",
                     maxsize: 1000000,
                     required: false,
@@ -302,11 +302,11 @@ $(document).ready(function(){
                     }
                 });
             }
-            // annual income 
+            // annual income
             if($("#annual_income").val() < 100000 && $("#annual_income").val() != 0){
                 if($("input[name='free_admission']:checked").val() == 'yes'){
-                    $("input[name='income_certificate'").rules("add", 
-                    {            
+                    $("input[name='income_certificate'").rules("add",
+                    {
                         extension: "jpe?g|png",
                         maxsize: 1000000,
                         required: true,
@@ -315,9 +315,9 @@ $(document).ready(function(){
                             extension: "Accept only jpg/jpeg file"
                         }
                     });
-                }else{                    
-                    $("input[name='income_certificate'").rules("add", 
-                    {            
+                }else{
+                    $("input[name='income_certificate'").rules("add",
+                    {
                         extension: "jpe?g|png",
                         maxsize: 1000000,
                         required: false,
@@ -328,8 +328,8 @@ $(document).ready(function(){
                     });
                 }
             }else{
-                $("input[name='income_certificate'").rules("add", 
-                {            
+                $("input[name='income_certificate'").rules("add",
+                {
                     extension: "jpe?g|png",
                     maxsize: 1000000,
                     required: false,
@@ -339,11 +339,11 @@ $(document).ready(function(){
                     }
                 });
             }
-            // Plantation Image 
+            // Plantation Image
             if($("input[name='free_admission']:checked").val() == "yes"){
 
-                $("input[name='image_of_tree_plantation'").rules("add", 
-                {            
+                $("input[name='image_of_tree_plantation'").rules("add",
+                {
                     extension: "jpe?g|png",
                     maxsize: 1000000,
                     required: true,
@@ -353,8 +353,8 @@ $(document).ready(function(){
                     }
                 });
             }else{
-                $("input[name='image_of_tree_plantation'").rules("add", 
-                {            
+                $("input[name='image_of_tree_plantation'").rules("add",
+                {
                     extension: "jpe?g|png",
                     maxsize: 1000000,
                     required: false,
@@ -366,7 +366,7 @@ $(document).ready(function(){
             }
         }
 
-        // test if form is valid 
+        // test if form is valid
         if($('form#application').validate(bootstrapOptionsValidator).form()) {
             $(this).unbind('submit').submit();
             console.log("Validation Success.");
@@ -385,7 +385,7 @@ $('.rdCourse').change(function(){
   if($(this).val() == 1){
     $('.degree-panel').addClass('d-none');
     $('.hs-panel :input').attr('disabled', false);
-    $('.degree-panel :input').attr('disabled', true);    
+    $('.degree-panel :input').attr('disabled', true);
     // added
     $('.hs-stream :input').attr('disabled', false);
     $('.hs-semeste :input').attr('disabled', false);
@@ -415,7 +415,7 @@ $(document).on("click",".Science", function(){
   $(".hs-subjects-science").removeClass('d-none');
   $(".hs-subjects-arts").addClass('d-none');
   $(".hs-subjects-commerce").addClass('d-none');
-  // disabling inputs for 
+  // disabling inputs for
   $(".hs-subjects-arts :input").prop('disabled', true);
   $(".hs-subjects-commerce :input").prop('disabled', true);
   $(".hs-subjects-science :input").prop('disabled', false);
@@ -427,9 +427,9 @@ $(document).on("click",".Arts", function(){
   $(".hs-subjects-commerce").addClass('d-none');
 
 
-  // disabling inputs for 
+  // disabling inputs for
   $(".hs-subjects-arts :input").prop('disabled', false);
-  $(".hs-subjects-commerce :input").prop('disabled', true);  
+  $(".hs-subjects-commerce :input").prop('disabled', true);
   $(".hs-subjects-science :input").prop('disabled', true);
 });
 
@@ -439,7 +439,7 @@ $(document).on("click",".Commerce", function(){
   $(".hs-subjects-commerce").removeClass('d-none');
   $(".hs-subjects-science").removeClass('disabled', true);
 
-  // disabling inputs for 
+  // disabling inputs for
   $(".hs-subjects-arts :input").prop('disabled', true);
   $(".hs-subjects-commerce :input").prop('disabled', false);
   $(".hs-subjects-science").prop('disabled', true);
@@ -603,7 +603,7 @@ $(document).ready(function(){
         // var get_val = $(this).val();
         // sum += Number(get_val);
     });
-    // after storing value into 
+    // after storing value into
     sum = arrSum(compulsory_subject_marks);
     sum += arrSum(other_subject_marks);
     if(na_subjects_marks.length > 0){
@@ -632,7 +632,7 @@ $(document).ready(function(){
             var calculation_total_marks = 0;
             $(".last_subjects").each(function(){
                 if($(this).val().toLowerCase().replace(/\./g, "").trim() == "na"){
-                    
+
                 }else{
                     calculation_total_marks+=1;
                 }
@@ -647,10 +647,23 @@ $(document).ready(function(){
         var tmarks = sum*9.5;
         if ($("#course_id").val() == 2) {
             var percent = (tmarks/500)*100;
-        }else
+        }else if($("#course_id").val() == 1){
             var percent = (tmarks/500)*100;
+        }else{
+            var calculation_total_marks = 0;
+            $(".last_subjects").each(function(){
+                if($(this).val().toLowerCase().replace(/\./g, "").trim() == "na"){
+
+                }else{
+                    calculation_total_marks+=1;
+                }
+            });
+            calculation_total_marks = calculation_total_marks * 100;
+            var percent = (tmarks/calculation_total_marks)*100;
+            // var percent = (tmarks/500)*100;
+        }
     }
-    
+
     $('#percentage').val(percent.toFixed(2));
     $('#all_total_marks').val(tmarks);
 });
@@ -682,7 +695,7 @@ $(document).ready(function(){
     $('.degree-commerce').addClass('d-none');
     $('.degree-science').addClass('d-none');
   })
-  //degree Arts 
+  //degree Arts
   $('.rd-arts-degree').click(function(){
     $('.degree-science-major').addClass('d-none');
     $('.degree-arts-major').addClass('d-none');
@@ -1038,6 +1051,12 @@ $(document).ready(function() {
             $("#other_board_university").prop("required", false).val("");
     });
     $(document).on("input","#annual_income", function(){
+        console.log("Input Event Found.");
+        var course_id = $("#course_id").val();
+        console.log(course_id);
+        if(course_id == 3 || course_id.trim() == ""){
+            return true;
+        }
         var income = $(this).val();
         income = parseFloat(income);
         if (income < 100000){
@@ -1076,7 +1095,7 @@ $(document).ready(function() {
         }else
             $("#co_curricular_certificate").prop({"required": false, "disabled": true});
     });
-    $(document).on("input",".last_subjects", function(){        
+    $(document).on("input",".last_subjects", function(){
         $(document).find(".cell").first().trigger("keyup");
     });
     $(document).on("change","input[name='sign']", function(){
@@ -1154,7 +1173,7 @@ hideAndDisabled = function(field_id_name){
         $selected_field.addClass('d-none').find("input, select, textarea").prop("disabled", true);
     }
 }
-showAndEnabled = function(field_id_name){    
+showAndEnabled = function(field_id_name){
     $("#subject_column").removeClass("d-none");
     var $selected_field = $(field_id_name);
     if ($selected_field.length > 0) {
@@ -1184,7 +1203,7 @@ changePlaceholderSubjects = function(){
         }else{
             $(".last_subjects").each(function(index, element){
                 $(element).attr("placeholder","Subject "+(index +1));
-            });            
+            });
         }
     }else if(course_id == 2){
         // for degree
