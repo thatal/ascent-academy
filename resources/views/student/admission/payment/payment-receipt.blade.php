@@ -1,10 +1,9 @@
 @extends('common.student-app')
 @section('title')
-Admission
+Payment
 @endsection
 
 @section('css')
-<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
 @stop
 
 @section('content')
@@ -17,16 +16,21 @@ Admission
                     <div class="card-header">
                         <div class="row justify-content-between">
                             <div class="col-auto mr-auto">
-                                <h3 class="card-title">Fees Details</h3>
+                                <h3 class="card-title">Receipt</h3>
+                            </div>
+                            <div class="col-auto">
+                                <a href="{{ route('student.application.index') }}" class="btn btn-warning">Application
+                                    List</a>
                             </div>
                         </div>
                     </div>
                     <div class="card-body">
                         <div class="col-md-8 offset-md-2">
-                        <form method="post" action="{{config('constants.url')}}">
-                                @csrf
-                                @include('student.admission.payment.receipt-table')
-                            </form>
+                            @include('student.admission.payment.receipt-table')
+                        </div>
+                    </div>
+                    <div class="card-footer text-right">
+                        <div class="d-flex">
                         </div>
                     </div>
                 </div>

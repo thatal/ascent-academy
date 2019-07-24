@@ -728,7 +728,7 @@ AppliedSubject::create($applied_subjects_data);
         $application = Application::where('uuid', $request->application_uuid)->first();
         $application_id = $application->id;
         $amount = config('constants.application_fee');
-        $redirect_url = config('constants.redirect_url');
+        $redirect_url = config('constants.redirect_url_application');
         $merchant_id = config('constants.merchant_id');
         $checksum_key = config('constants.checksum_key');
 
