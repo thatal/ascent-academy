@@ -22,7 +22,7 @@ Application
             </div>
           </div>
           <div class="card-body">
-            <form method="post" action="https://pgi.billdesk.com/pgidsk/PGIMerchantPayment">
+            <form method="post" action="{{config('constants.url')}}">
               @csrf
               <input type="hidden" name="msg" value="{{ $checksum }}">
               <div class="row">

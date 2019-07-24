@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AdmissionCollection extends Model
+class TempAdmissionCollection extends Model
 {
     use SoftDeletes;
 
@@ -13,9 +13,9 @@ class AdmissionCollection extends Model
         'id'
     ];
 
-	public function receipt()
+	public function tempReceipt()
     {
-        return $this->belongsTo('App\Models\AdmissionReceipt', 'receipt_id');
+        return $this->belongsTo('App\Models\TempAdmissionReceipt', 'temp_receipt_id');
     }
     public function student()
     {
@@ -33,5 +33,4 @@ class AdmissionCollection extends Model
     {
         return $this->belongsTo('App\Models\Fee', 'fee_id');
     }
-
 }

@@ -1,52 +1,137 @@
 <?php
-use App\Models\DailyLog;
 use App\Models\Application;
+use App\Models\DailyLog;
 use App\Models\Reservation;
 
-
-function saveLogs($user_id, $username, $guard, $activity) {
+function saveLogs($user_id, $username, $guard, $activity)
+{
     $log = [];
-    $log['user_id']  = $user_id;
-    $log['username']  = $username;
-    $log['guard']     = $guard;
-    $log['activity']  = $activity;
-    $log['url']       = \Request::fullUrl();
-    $log['method']    = \Request::method();
-    $log['ip']        = \Request::ip();
-    $log['agent']     = \Request::header('user-agent');
+    $log['user_id'] = $user_id;
+    $log['username'] = $username;
+    $log['guard'] = $guard;
+    $log['activity'] = $activity;
+    $log['url'] = \Request::fullUrl();
+    $log['method'] = \Request::method();
+    $log['ip'] = \Request::ip();
+    $log['agent'] = \Request::header('user-agent');
     DailyLog::create($log);
 }
-function dumpp($data) {
+function dumpp($data)
+{
     echo '<pre class="sf-dump">';
     print_r($data);
     echo "</pre>";
 }
-function get_attachment($doc_name, $application){
-    $doc_name = ucwords(str_replace("_", " ",$doc_name));
+function is_new_admission($semester_id)
+{
+    if (in_array($semester_id, [1, 3])) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+function getFeeStructure($application, $fee_structures)
+{
+    $total = 0;
+    $free_total = 0;
+    $removing_ids = [19, 21, 22, 23, 24, 25, 26, 27, 28];
+    $self_ids = [19, 21, 22, 23, 24, 25, 26, 27, 28];
+    // for only degree
+    if ($application->course_id == 2) {
+        // condition should == because removing id may different from fee structure
+        if (in_array($application->appliedStream->stream_id, [4, 6])) {
+            // for major subjects
+            // if course id is major search from appliedMajorSubjects
+            $major_subject_name = $application->appliedMajorSubjects->subject->name;
+            // if major subject is psychology or Home Science removestructure id [22,23,24,25,26,28]
+            if (strtolower(trim($major_subject_name)) == "home science") {
+                if (($key = array_search(21, $removing_ids)) !== false) {
+                    unset($removing_ids[$key]);
+                }
+            }
+            if (strtolower(trim($major_subject_name)) == "psychology") {
+                if (($key = array_search(22, $removing_ids)) !== false) {
+                    unset($removing_ids[$key]);
+                }
+            }
+        }
+        // for all stream ids
+        $applied_generic_subjects = $application->appliedSubjects->where("is_major", 0);
+        foreach ($applied_generic_subjects as $index_g => $generic_subject) {
+            if (strtolower(trim($generic_subject->subject->name)) == "computer science & application") {
+                if (($key = array_search(19, $removing_ids)) !== false) {
+                    unset($removing_ids[$key]);
+                }
+            }
+            if (strtolower(trim($generic_subject->subject->name)) == "computer science") {
+                if (($key = array_search(19, $removing_ids)) !== false) {
+                    unset($removing_ids[$key]);
+                }
+            }
+            if (strtolower(trim($generic_subject->subject->name)) == "home science") {
+                if (($key = array_search(23, $removing_ids)) !== false) {
+                    unset($removing_ids[$key]);
+                }
+            }
+            if (strtolower(trim($generic_subject->subject->name)) == "psychology") {
+                if (($key = array_search(24, $removing_ids)) !== false) {
+                    unset($removing_ids[$key]);
+                }
+            }
+            if (strtolower(trim($generic_subject->subject->name)) == "sociology") {
+                if (($key = array_search(25, $removing_ids)) !== false) {
+                    unset($removing_ids[$key]);
+                }
+            }
+            if (strtolower(trim($generic_subject->subject->name)) == "boro") {
+                if (($key = array_search(26, $removing_ids)) !== false) {
+                    unset($removing_ids[$key]);
+                }
+            }
+            if (stripos(strtolower(trim($generic_subject->subject->name)), "tourism") !== false || stripos(strtolower(trim($generic_subject->subject->name)), "ttm") !== false) {
+                if (($key = array_search(27, $removing_ids)) !== false) {
+                    unset($removing_ids[$key]);
+                }
+            }
+        }
+        $fee_structures = $fee_structures->whereNotIn("fee_head_id", $removing_ids);
+    }
+    return [
+        'fee_structures'    =>  $fee_structures,
+        'self_ids'          =>  $self_ids
+    ];
+}
+
+function get_attachment($doc_name, $application)
+{
+    $doc_name = ucwords(str_replace("_", " ", $doc_name));
     foreach ($application->attachments as $key => $attachment) {
         if ($attachment->doc_name == $doc_name) {
             return $attachment->path;
             break;
-        }            
-    }        
+        }
+    }
     return null;
 }
-function sendSMS($mobile_no, $message) {
-    $user       = config('constants.sms_user');
-    $password   = config('constants.sms_password');
-    $senderid   = config('constants.sms_senderid');
-    $url        = config('constants.sms_url');
-    $app_name   = env('APP_NAME');
-    $message    = urlencode($message."\n".$app_name);
-    $mobile_no  = '91' . $mobile_no;
-    $smsInit        = curl_init($url."?user=$user&password=$password&mobiles=$mobile_no&sms=".$message."&senderid=".$senderid);
+function sendSMS($mobile_no, $message)
+{
+    $user = config('constants.sms_user');
+    $password = config('constants.sms_password');
+    $senderid = config('constants.sms_senderid');
+    $url = config('constants.sms_url');
+    $app_name = env('APP_NAME');
+    $message = urlencode($message . "\n" . $app_name);
+    $mobile_no = '91' . $mobile_no;
+    $smsInit = curl_init($url . "?user=$user&password=$password&mobiles=$mobile_no&sms=" . $message . "&senderid=" . $senderid);
     curl_setopt($smsInit, CURLOPT_RETURNTRANSFER, true);
-    $res         = curl_exec($smsInit);
+    $res = curl_exec($smsInit);
     \Log::info($res);
-    
+
 }
 
-function returnStateListHtml (){
+function returnStateListHtml()
+{
     return '
         <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
         <option value="Andhra Pradesh">Andhra Pradesh</option>
@@ -86,25 +171,27 @@ function returnStateListHtml (){
     ';
 }
 
-function dateFormat($dateTime, $format = "d-m-Y") {
-    if($dateTime == "0000-00-00" || $dateTime == "0000-00-00 00:00:00"){
+function dateFormat($dateTime, $format = "d-m-Y")
+{
+    if ($dateTime == "0000-00-00" || $dateTime == "0000-00-00 00:00:00") {
         return " ";
     }
     $date = strtotime($dateTime);
-    if(date('d-m-Y', $date) != '01-01-1970'){
+    if (date('d-m-Y', $date) != '01-01-1970') {
         return date($format, $date);
-    }else{
+    } else {
         return " ";
     }
 }
-function findSubjectInAppliedSubject($appliedSubjects, $searching_id){
-    if(!$appliedSubjects){
+function findSubjectInAppliedSubject($appliedSubjects, $searching_id)
+{
+    if (!$appliedSubjects) {
         return "NA";
     }
     $found_subject = $appliedSubjects->where("subject_id", $searching_id);
-    if($found_subject->count()){
+    if ($found_subject->count()) {
         return array_first($found_subject)["subject_id"];
-    }else{
+    } else {
         return "NA";
     }
 }
@@ -177,130 +264,137 @@ function findSubjectInAppliedSubject($appliedSubjects, $searching_id){
 //     ];
 // }
 
-function getSeatDetails($stream=null,$caste=null)
+function getSeatDetails($stream = null, $caste = null)
 {
-    $applications = Application::whereIn('status',[3,4,5,6,7]);
-    if($stream){
-        $applications = $applications->whereHas('appliedStream',function($query) use ($stream){
-                               $query->where('stream_id',$stream); 
-                            });
+    $applications = Application::whereIn('status', [3, 4, 5, 6, 7]);
+    if ($stream) {
+        $applications = $applications->whereHas('appliedStream', function ($query) use ($stream) {
+            $query->where('stream_id', $stream);
+        });
     }
-    if($caste){
-        $applications = $applications->where('selected_category_id',$caste);
+    if ($caste) {
+        $applications = $applications->where('selected_category_id', $caste);
     }
 
     $applications = $applications->get();
 
-    $allocated_applications = $applications->where('status',3);
+    $allocated_applications = $applications->where('status', 3);
     $allocated_applications = $allocated_applications->groupBy('appliedStream.stream_id')
-                                    ->transform(function($item, $key) {
-                                        if(in_array($key, [4,6])){
-                                            return $item->groupBy('appliedMajorSubjects.subject_id')
-                                                        ->transform(function($it, $ke) {
-                                                            return $it->groupBy('selected_category_id')
-                                                                        ->transform(function($i, $k) {
-                                                                            return $i->count();
-                                                                    });
-                                                });
-                                        }else{
-                                            return $item->groupBy('selected_category_id')
-                                                    ->transform(function($i, $k) {
-                                                        return $i->count();
-                                                    });
-                                        }
-                                    })
-                                    ->toArray();
+        ->transform(function ($item, $key) {
+            if (in_array($key, [4, 6])) {
+                return $item->groupBy('appliedMajorSubjects.subject_id')
+                    ->transform(function ($it, $ke) {
+                        return $it->groupBy('selected_category_id')
+                            ->transform(function ($i, $k) {
+                                return $i->count();
+                            });
+                    });
+            } else {
+                return $item->groupBy('selected_category_id')
+                    ->transform(function ($i, $k) {
+                        return $i->count();
+                    });
+            }
+        })
+        ->toArray();
 
-    $admission_complete = $applications->where('status',4);
+    $admission_complete = $applications->where('status', 4);
     $admission_complete = $admission_complete->groupBy('appliedStream.stream_id')
-                                    ->transform(function($item, $key) {
-                                        if(in_array($key, [4,6])){
-                                            return $item->groupBy('appliedMajorSubjects.subject_id')
-                                                        ->transform(function($it, $ke) {
-                                                            return $it->groupBy('selected_category_id')
-                                                                        ->transform(function($i, $k) {
-                                                                            return $i->count();
-                                                                    });
-                                                });
-                                        }else{
-                                            return $item->groupBy('selected_category_id')
-                                                    ->transform(function($i, $k) {
-                                                        return $i->count();
-                                                    });
-                                        }
-                                    })
-                                    ->toArray();
+        ->transform(function ($item, $key) {
+            if (in_array($key, [4, 6])) {
+                return $item->groupBy('appliedMajorSubjects.subject_id')
+                    ->transform(function ($it, $ke) {
+                        return $it->groupBy('selected_category_id')
+                            ->transform(function ($i, $k) {
+                                return $i->count();
+                            });
+                    });
+            } else {
+                return $item->groupBy('selected_category_id')
+                    ->transform(function ($i, $k) {
+                        return $i->count();
+                    });
+            }
+        })
+        ->toArray();
     $reservations = Reservation::get();
     $reservations = $reservations->groupBy('stream_id')
-                                ->transform(function($item, $key) {
-                                    if(in_array($key, [4,6])){
-                                        return $item->groupBy('major_id')
-                                                    ->transform(function($it, $ke) {
-                                                        return $it->groupBy('category_id')
-                                                                    ->transform(function($i, $k) {
-                                                                        return $i[0]->seat;
-                                                                });
-                                            });
-                                    }else{
-                                        return $item->groupBy('category_id')
-                                                ->transform(function($i, $k) {
-                                                    return $i[0]->seat;
-                                                });
-                                    }
-                                })
-                                ->toArray();
+        ->transform(function ($item, $key) {
+            if (in_array($key, [4, 6])) {
+                return $item->groupBy('major_id')
+                    ->transform(function ($it, $ke) {
+                        return $it->groupBy('category_id')
+                            ->transform(function ($i, $k) {
+                                return $i[0]->seat;
+                            });
+                    });
+            } else {
+                return $item->groupBy('category_id')
+                    ->transform(function ($i, $k) {
+                        return $i[0]->seat;
+                    });
+            }
+        })
+        ->toArray();
     return [
-        'allocated_applications'    => $allocated_applications,
-        'admission_complete'        => $admission_complete,
-        'reservations'              => $reservations,
+        'allocated_applications' => $allocated_applications,
+        'admission_complete' => $admission_complete,
+        'reservations' => $reservations,
     ];
 }
 
-function checkSeatAvailability($request, $application, $major=null){
+function checkSeatAvailability($request, $application, $major = null)
+{
     $stream_id = $application->appliedStream->stream_id;
     $category_id = $request->get("category");
     $seat_details = getSeatDetails($stream_id, $category_id);
-    $allocated_applications_count = getCount($application, $seat_details, 'allocated_applications', $stream_id, $major,$category_id);
-    $admitted_application_count = getCount($application, $seat_details, 'admission_complete', $stream_id, $major,$category_id);
-    $reservation_count = getCount($application, $seat_details, 'reservations', $stream_id, $major,$category_id);
-    if(($allocated_applications_count+$admitted_application_count)>=$reservation_count){
+    $allocated_applications_count = getCount($application, $seat_details, 'allocated_applications', $stream_id, $major, $category_id);
+    $admitted_application_count = getCount($application, $seat_details, 'admission_complete', $stream_id, $major, $category_id);
+    $reservation_count = getCount($application, $seat_details, 'reservations', $stream_id, $major, $category_id);
+    if (($allocated_applications_count + $admitted_application_count) >= $reservation_count) {
         return 0;
-    }else{
+    } else {
         return 1;
     }
 }
 
-function getCount($application, $seat_details, $type, $stream_id, $major, $category_id){
+function getCount($application, $seat_details, $type, $stream_id, $major, $category_id)
+{
     $count = 0;
-    if(in_array($stream_id, [4,6])){
+    if (in_array($stream_id, [4, 6])) {
         $major_id = $major;
-        if(array_key_exists($stream_id, $seat_details[$type]))
-            if(array_key_exists($major_id, $seat_details[$type][$stream_id]))
-                if(array_key_exists($category_id, $seat_details[$type][$stream_id][$major_id]))
+        if (array_key_exists($stream_id, $seat_details[$type])) {
+            if (array_key_exists($major_id, $seat_details[$type][$stream_id])) {
+                if (array_key_exists($category_id, $seat_details[$type][$stream_id][$major_id])) {
                     $count = $seat_details[$type][$stream_id][$major_id][$category_id];
-                else
+                } else {
                     $count = 0;
-            else
+                }
+            } else {
                 $count = 0;
-        else
+            }
+        } else {
             $count = 0;
-    }else{
-        if(array_key_exists($stream_id, $seat_details[$type]))
-            if(array_key_exists($category_id, $seat_details[$type][$stream_id]))
+        }
+
+    } else {
+        if (array_key_exists($stream_id, $seat_details[$type])) {
+            if (array_key_exists($category_id, $seat_details[$type][$stream_id])) {
                 $count = $seat_details[$type][$stream_id][$category_id];
-            else
+            } else {
                 $count = 0;
-        else
+            }
+        } else {
             $count = 0;
+        }
 
     }
     return $count;
 }
 
-
 function getIndianCurrency(float $number)
 {
-    if($number==0){
+    if ($number == 0) {
         return 'Zero only';
     }
     $decimal = round($number - ($no = floor($number)), 2) * 100;
@@ -317,8 +411,8 @@ function getIndianCurrency(float $number)
         19 => 'nineteen', 20 => 'twenty', 30 => 'thirty',
         40 => 'forty', 50 => 'fifty', 60 => 'sixty',
         70 => 'seventy', 80 => 'eighty', 90 => 'ninety');
-    $digits = array('', 'hundred','thousand','lakh', 'crore');
-    while( $i < $digits_length ) {
+    $digits = array('', 'hundred', 'thousand', 'lakh', 'crore');
+    while ($i < $digits_length) {
         $divider = ($i == 2) ? 10 : 100;
         $number = floor($no % $divider);
         $no = floor($no / $divider);
@@ -326,14 +420,18 @@ function getIndianCurrency(float $number)
         if ($number) {
             $plural = (($counter = count($str)) && $number > 9) ? 's' : null;
             $hundred = ($counter == 1 && $str[0]) ? ' and ' : null;
-            $str [] = ($number < 21) ? $words[$number].' '. $digits[$counter]. $plural.' '.$hundred:$words[floor($number / 10) * 10].' '.$words[$number % 10]. ' '.$digits[$counter].$plural.' '.$hundred;
-        } else $str[] = null;
+            $str[] = ($number < 21) ? $words[$number] . ' ' . $digits[$counter] . $plural . ' ' . $hundred : $words[floor($number / 10) * 10] . ' ' . $words[$number % 10] . ' ' . $digits[$counter] . $plural . ' ' . $hundred;
+        } else {
+            $str[] = null;
+        }
+
     }
     $Rupees = implode('', array_reverse($str));
     $paise = ($decimal) ? "." . ($words[$decimal / 10] . " " . $words[$decimal % 10]) . ' Paise' : '';
-    return ($Rupees ? $Rupees . 'Rupees ' : '') . $paise ." only";
+    return ($Rupees ? $Rupees . 'Rupees ' : '') . $paise . " only";
 }
 
-function getDecimal($amount,$upto=2){
-    return number_format($amount,$upto);
+function getDecimal($amount, $upto = 2)
+{
+    return number_format($amount, $upto);
 }

@@ -31,7 +31,7 @@ trait AdmissionTrait
         if(auth()->guard('admin')->check()){
             $guard = 'admin';
         }elseif(auth()->guard('staff')->check()){
-            $guard = 'staff'; 
+            $guard = 'staff';
         }
         if($application->status != 3){
             return redirect()->route($guard.".application.index")->with("error", "Subject not yet allocated");
@@ -49,11 +49,14 @@ trait AdmissionTrait
         }
 
         if(auth()->guard('admin')->check()){
-            $view = 'admin.admission.create'; 
+            $view = 'admin.admission.create';
         }elseif(auth()->guard('staff')->check()){
-            $view = 'staff.admission.create'; 
+            $view = 'staff.admission.create';
         }
-        return view($view,compact('application','fee','fee_structures'));
+        $data = getFeeStructure($application, $fee_structures);
+        $fee_structures = $data['fee_structures'];
+        $self_ids = $data['self_ids'];
+        return view($view,compact('application','fee','fee_structures','self_ids'));
     }
 
     public function store(Request $request, Application $application)
@@ -68,9 +71,9 @@ trait AdmissionTrait
         }elseif(auth()->guard('staff')->check()){
             $view = 'staff.admission.receipt';
             $by = 'Staff';
-            $guard = 'staff'; 
-            $by_id  = auth()->guard('staff')->id(); 
-            $by_username  = auth()->guard('staff')->user()->username; 
+            $guard = 'staff';
+            $by_id  = auth()->guard('staff')->id();
+            $by_username  = auth()->guard('staff')->user()->username;
         }
 
         if($application->status == 4){
@@ -78,7 +81,7 @@ trait AdmissionTrait
         }
         DB::beginTransaction();
         try {
-            
+
             $application->admission_done_by = $by;
             $application->admission_done_by_id = $by_id;
             $application->status = 4;
@@ -124,10 +127,10 @@ trait AdmissionTrait
                 if(array_key_exists($key, $request->is_frees)){
                     if($request->is_frees[$key]==1)
                         $admission_collection_data['free_amount'] = $request->free_amounts[$key];
-                    else 
+                    else
                         $admission_collection_data['free_amount'] = 0;
                 }else{
-                    $admission_collection_data['free_amount'] = 0; 
+                    $admission_collection_data['free_amount'] = 0;
                 }/*dump($admission_collection_data);*/
                 AdmissionCollection::create($admission_collection_data);
             }
@@ -138,7 +141,7 @@ trait AdmissionTrait
                         ->update(['status'=>6]);
 
             saveLogs($by_id, $by_username, $by, "Admission done for {$application->id}");
-            
+
         } catch (Exception $e) {
             DB::rollback();
             Log::error($e);
@@ -186,7 +189,7 @@ trait AdmissionTrait
                             })
                             ->where('status',4)
                             ->count() + 1;
-        }else{    
+        }else{
             $count  = Application::where('course_id',$application->course_id)
                             ->where('semester_id',$application->semester_id)
                             ->whereHas('appliedStream',function($query) use ($application){
@@ -218,9 +221,9 @@ trait AdmissionTrait
     public function receipt(Request $request, Application $application)
     {
         if(auth()->guard('admin')->check()){
-            $view = 'admin.admission.receipt'; 
+            $view = 'admin.admission.receipt';
         }elseif(auth()->guard('staff')->check()){
-            $view = 'staff.admission.receipt'; 
+            $view = 'staff.admission.receipt';
         }
         // $collections = AdmissionCollection::where('application_id',$application->id)->get();
         return view($view,compact('application','fees'));

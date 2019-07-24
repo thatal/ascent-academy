@@ -16,84 +16,14 @@
             @endif
             <form name="application" id="application" method="post" action="{{ auth()->guard('admin')->check()? route('admin.admission.store',$application->uuid): route('staff.admission.store',$application->uuid) }}">
               @csrf
-              @php
-              $total = 0;
-              $free_total = 0;
-              $removing_ids = [19,21,22,23,24,25,26,27,28];
-              $self_ids = [19,21,22,23,24,25,26,27,28];
-            // for only degree
-              if($application->course_id == 2){
-                // condition should == because removing id may different from fee structure
-                if(in_array($application->appliedStream->stream_id, [4,6])){
-                    // for major subjects
-                    // if course id is major search from appliedMajorSubjects
-                    $major_subject_name = $application->appliedMajorSubjects->subject->name;
-                    // if major subject is psychology or Home Science removestructure id [22,23,24,25,26,28]
-                    if(strtolower(trim($major_subject_name)) == "home science"){
-                        if (($key = array_search(21, $removing_ids)) !== false) {
-                            unset($removing_ids[$key]);
-                        }                    
-                    }
-                    if(strtolower(trim($major_subject_name)) == "psychology"){
-                        if (($key = array_search(22, $removing_ids)) !== false) {
-                            unset($removing_ids[$key]);
-                        }                    
-                    }
-                }
-                // for all stream ids
-                $applied_generic_subjects = $application->appliedSubjects->where("is_major", 0);
-                foreach ($applied_generic_subjects as $index_g => $generic_subject) {
-                    if(strtolower(trim($generic_subject->subject->name)) == "computer science & application"){
-                        if (($key = array_search(19, $removing_ids)) !== false) {
-                            unset($removing_ids[$key]);
-                        }
-                    }
-                    if(strtolower(trim($generic_subject->subject->name)) == "computer science"){
-                        if (($key = array_search(19, $removing_ids)) !== false) {
-                            unset($removing_ids[$key]);
-                        }
-                    }
-                    if(strtolower(trim($generic_subject->subject->name)) == "home science"){
-                        if (($key = array_search(23, $removing_ids)) !== false) {
-                            unset($removing_ids[$key]);
-                        }
-                    }
-                    if(strtolower(trim($generic_subject->subject->name)) == "psychology"){
-                        if (($key = array_search(24, $removing_ids)) !== false) {
-                            unset($removing_ids[$key]);
-                        }
-                    }
-                    if(strtolower(trim($generic_subject->subject->name)) == "sociology"){
-                        if (($key = array_search(25, $removing_ids)) !== false) {
-                            unset($removing_ids[$key]);
-                        }
-                    }
-                    if(strtolower(trim($generic_subject->subject->name)) == "boro"){
-                        if (($key = array_search(26, $removing_ids)) !== false) {
-                            unset($removing_ids[$key]);
-                        }
-                    }
-                    if(stripos(strtolower(trim($generic_subject->subject->name)), "tourism") !== false || stripos(strtolower(trim($generic_subject->subject->name)), "ttm") !== false){
-                        if (($key = array_search(27, $removing_ids)) !== false) {
-                            unset($removing_ids[$key]);
-                        }
-                    }
-                }
-                $fee_structures = $fee_structures->whereNotIn("fee_head_id", $removing_ids);
-              }
-              @endphp
               @forelse($fee_structures as $key => $fee_structure)
-              @php
-              // $total = $total + $fee_structure->amount;
-              // $free_total = $free_total + (($fee_structure->is_free==1)?0:$fee_structure->amount);
-              @endphp
               <div class="row fee-row">
                 <div class="{{$application->free_admission=='yes'?'col-4':'col-6'}} head-name">
                   <p>{{$fee_structure->feeHead->name}} </p>
                 </div>
                 <div class="{{$application->free_admission=='yes'?'col-4':'col-6'}} div-amount">
                   <p>
-                    <input type="hidden" name="fee_ids[{{$key}}]" value="{{$fee_structure->id}}">
+                    <input type="hidden" name="fee_ids[{{$key}}]" value="{{$fee_structure->fee_id}}">
                     <input type="hidden" name="fee_head_ids[{{$key}}]" value="{{$fee_structure->fee_head_id}}">
                     <input type="hidden" name="is_frees[{{$key}}]" value="{{$application->free_admission=='yes'?(($fee_structure->is_free==1)?1:0):0}}" class="form-control" required>
                     @if($application->free_admission=='yes')

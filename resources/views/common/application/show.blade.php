@@ -13,7 +13,7 @@
               </p>
             </div>
           </td class="padding-xs">
-          <td width="20%"  class="padding-xs"><img style="max-width: 80;" class="avatar avatar-xxl" src="{{asset($application->passport)}}"></td>
+          <td width="20%"  class="padding-xs"><img style="max-width: 80;" class="avatar avatar-xxl" src="{{(strpos($application->passport, '.') !== false) ? asset($application->passport) : asset('public/images/user.png')}}"></td>
         </tr>
       </tbody>
     </table>
@@ -39,9 +39,9 @@
           </tr>
           <tr>
             <td class="padding-xs">Gender</td>
-            <td class="padding-xs bold ">{{$application->gender}}</td>
+            <td class="padding-xs bold ">{{$application->gender ?? 'N/A'}}</td>
             <td class="padding-xs">Religion</td>
-            <td class="padding-xs bold">{{$application->religion}}</td>
+            <td class="padding-xs bold">{{$application->religion ?? 'N/A'}}</td>
           </tr>
           <tr>
             <td class="padding-xs">Date of Birth</td>
@@ -51,21 +51,21 @@
           </tr>
           <tr>
             <td class="padding-xs">Father's Name</td>
-            <td class="padding-xs bold">{{$application->fathers_name}}</td>
+            <td class="padding-xs bold">{{$application->fathers_name ?? 'N/A'}}</td>
             <td class="padding-xs">Mother's Name</td>
-            <td class="padding-xs bold">{{$application->mothers_name}}</td>
+            <td class="padding-xs bold">{{$application->mothers_name ?? 'N/A'}}</td>
           </tr>
           <tr>
             <td class="padding-xs">last Board/University</td>
-            <td class="padding-xs bold">{{$application->last_board_or_university}} ({{$application->last_board_or_university_state}})</td>
+            <td class="padding-xs bold">{{$application->last_board_or_university}} {{$application->last_board_or_university_state ? '('.$application->last_board_or_university_state.')':''}}</td>
             <td class="padding-xs">Year</td>
             <td class="padding-xs bold">{{$application->year}}</td>
           </tr>
           <tr>
             <td class="padding-xs">Caste</td>
-            <td class="padding-xs bold">{{$application->caste->name}}</td>
+            <td class="padding-xs bold">{{$application->caste->name ?? 'N/A'}}</td>
             <td class="padding-xs">Annual Income</td>
-            <td class="padding-xs bold">{{$application->annual_income}}</td>
+            <td class="padding-xs bold">{{$application->annual_income ?? 'N/A'}}</td>
           </tr>
           <tr>
             <td class="padding-xs">Co-Curricular</td>
@@ -79,38 +79,39 @@
           </tr>
           <tr>
             <td class="padding-xs">Contact Number</td>
-            <td class="padding-xs bold">{{$application->mobile_no}}</td>
+            <td class="padding-xs bold">{{$application->mobile_no ?? 'N/A'}}</td>
             <td class="padding-xs">E-mail</td>
-            <td class="padding-xs bold">{{$application->email}}</td>
+            <td class="padding-xs bold">{{$application->email ?? 'N/A'}}</td>
           </tr>
           <tr>
             <td class="padding-xs">Last Exam Roll</td>
-            <td class="padding-xs bold">{{$application->last_exam_roll}}</td>
+            <td class="padding-xs bold">{{$application->last_exam_roll ?? 'N/A'}}</td>
             <td class="padding-xs">Last Exam No</td>
-            <td class="padding-xs bold">{{$application->last_exam_no}}</td>
+            <td class="padding-xs bold">{{$application->last_exam_no ?? 'N/A'}}</td>
           </tr>
           <tr>
             <td class="padding-xs">Total Marks Secured</td>
-            <td class="padding-xs bold">{{$application->all_total_marks}}</td>
+            <td class="padding-xs bold">{{$application->all_total_marks ?? 'N/A'}}</td>
             <td class="padding-xs">Precentage</td>
-            <td class="padding-xs bold">{{$application->percentage}}%</td>
+            <td class="padding-xs bold">{{$application->percentage ? $application->percentage.'%':'N/A'}}</td>
           </tr>
           <tr>
             <td class="padding-xs">According to Marksheet</td>
-            <td class="padding-xs bold">{{$application->total_marks_according_marksheet}}</td>
+            <td class="padding-xs bold">{{$application->total_marks_according_marksheet ?? 'N/A'}}</td>
             <td class="padding-xs">Free Admission</td>
-            <td class="padding-xs bold">{{ucwords($application->free_admission)}}</td>
+            <td class="padding-xs bold">{{ucwords($application->free_admission ?? 'N/A')}}</td>
           </tr>
+          @if(is_new_admission($application->semester_id))
           <tr>
             <td colspan="4">
               <table class="table table-bordered">
-                <tdead>
+                <thead>
                   <tr>
                     <td class="padding-xs">Subjects offered in previous examination</td>
                     <td class="padding-xs">Total Marks</td>
                     <td class="padding-xs">Marks Secured</td>
                   </tr>
-                </tdead>
+                </thead>
                 <tbody>
                   @foreach(range(1, 6) as $number)
                   <tr>
@@ -123,24 +124,26 @@
               </table>
             </td>
           </tr>
+          @endif
           <tr>
             <td class="padding-xs bold" colspan="4">Application Details</td>
           </tr>
           <tr>
             <td class="padding-xs">Application Number</td>
             <td class="padding-xs">Course</td>
-            <td class="padding-xs" colspan="2">Stream</td>
-            {{-- <td class="padding-xs">Subjects</td> --}}
+            <td class="padding-xs">Stream</td>
+            <td class="padding-xs">Semester</td>
           </tr>
           <tr>
-            <td class="padding-xs bold">{{$application->id}}</td>                      
+            <td class="padding-xs bold">{{$application->id}}</td>
             <td class="padding-xs bold">{{$application->course->name}}</td>
-            <td class="padding-xs bold" colspan="2">{{$application->appliedStream->stream->name}}</td>
+            <td class="padding-xs bold">{{$application->appliedStream->stream->name}}</td>
+            <td class="padding-xs bold">{{$application->semester->name}}</td>
             {{-- <td class="padding-xs">
               @if($preferences)
                 @foreach($preferences as $preference)
                   @foreach($preference as $appliedSubject)
-                      {{$appliedSubject->subject->name}} 
+                      {{$appliedSubject->subject->name}}
                       @if($appliedSubject->is_major==1)
                       (Major)
                       @elseif($appliedSubject->is_compulsory==1)
@@ -154,7 +157,7 @@
                 @endforeach
               @else
                 @foreach($appliedSubjects as $appliedSubject)
-                    {{$appliedSubject->subject->name}} 
+                    {{$appliedSubject->subject->name}}
                     <br>
                 @endforeach
               @endif
@@ -205,7 +208,7 @@
     <table >
       <tbody>
         <tr>
-          <td><img style="width: 160px; height: 60px; max-width: 160px; max-height: 60px;" src="{{asset($application->sign)}}"></td>
+          <td><img style="width: 160px; height: 60px; max-width: 160px; max-height: 60px;" src="{{(strpos($application->sign, '.') !== false) ? asset($application->sign) : asset('public/images/sign.png')}}"></td>
         </tr>
         <tr>
           <td class="bold">Signature of the Applicant</td>

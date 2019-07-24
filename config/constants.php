@@ -2,7 +2,7 @@
 return [
 	'current_time' => time(),
 	'up_time' => '2019-06-23 11:21:00',
-	'down_time' => '2019-06-23 10:31:00',
+	'down_time' => '2019-08-23 10:31:00',
 
 	'helpline_no' => '9706533599',
 	'helpline_mail' => 'darrangcollegeadmission@gmail.com',
@@ -16,7 +16,8 @@ return [
 	'sms_senderid' => 'DRGCLG',
 	'sms_url' => 'http://t.instaclicksms.in/sendsms.jsp',
 
-	// payment gateway
+    // payment gateway
+    'url' => 'https://pgi.billdesk.com/pgidsk/PGIMerchantPayment',
 	'redirect_url' => 'http://68.183.87.189/darrang-college/payment-response',
 	'merchant_id' => 'DARRANGCOL',
     'security_id' => 'darrangcol',

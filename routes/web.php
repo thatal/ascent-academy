@@ -55,24 +55,45 @@ Route::group(['prefix' => 'application'], function () {
         'as' => 'student.application.update',
         'uses' => 'Student\ApplicationController@update',
     ])->middleware('apply-time');
-    Route::get('/payment-receipt/{application}', [
-        'as' => 'student.application.payment-receipt',
-        'uses' => 'Student\ApplicationController@paymentReceipt',
-    ]);
     Route::get('/download-application/{application}', [
         'as' => 'student.application.download-application',
         'uses' => 'Student\ApplicationController@downloadApplication',
     ]);
+    // for application payment
+    Route::post('/make-payment', [
+        'as' => 'student.application.make-payment',
+        'uses' => 'Student\ApplicationController@makePayment',
+    ])->middleware('apply-time');
+    Route::post('/payment-response', [
+        'as' => 'student.application.payment-response',
+        'uses' => 'Student\ApplicationController@paymentResponse',
+    ])->middleware('apply-time');
+    Route::get('/payment-receipt/{application}', [
+        'as' => 'student.application.payment-receipt',
+        'uses' => 'Student\ApplicationController@paymentReceipt',
+    ]);
 });
 
-Route::post('/make-payment', [
-    'as' => 'student.make-payment',
-    'uses' => 'Student\ApplicationController@makePayment',
-])->middleware('apply-time');
-Route::post('/payment-response', [
-    'as' => 'student.payment-response',
-    'uses' => 'Student\ApplicationController@paymentResponse',
-])->middleware('apply-time');
+
+// for admission payment
+Route::group(['prefix' => 'admission'], function () {
+    Route::post('/fee-detail', [
+        'as' => 'student.admission.fee-detail',
+        'uses' => 'Student\AdmissionController@feeDetail',
+    ])->middleware('apply-time');
+    Route::post('/make-payment', [
+        'as' => 'student.admission.make-payment',
+        'uses' => 'Student\AdmissionController@makePayment',
+    ])->middleware('apply-time');
+    Route::post('/payment-response', [
+        'as' => 'student.admission.payment-response',
+        'uses' => 'Student\AdmissionController@paymentResponse',
+    ])->middleware('apply-time');
+    Route::get('/payment-receipt/{application}', [
+        'as' => 'student.admission.payment-receipt',
+        'uses' => 'Student\AdmissionController@paymentReceipt',
+    ]);
+});
 
 Route::group(['prefix' => 'api'], function () {
     Route::get('/semester', [
@@ -161,6 +182,7 @@ Route::get("/change-application-table-prev-student", function () {
                 'gender' => trim($application->gender, " "),
                 'fathers_name' => trim($application->fathers_name, " "),
                 'last_board_or_university' => trim($application->last_board_or_university, " "),
+                'payment_status' => 1,
             ];
             Application::where('id', $application->id)->update($data);
         }

@@ -25,20 +25,35 @@ Application
                 <a href="{{ route('student.application.edit',[$application->uuid]) }}" class="btn btn-warning">Edit</a>
               </div>
               @elseif($application->is_confirmed==1)
-                @if($application->payment_status==0)
-                <div class="col-auto">
-                  <form method="post" action="{{ route('student.make-payment') }}">
-                    @csrf
-                    <input type="hidden" name="application_uuid" value="{{$application->uuid}}">
-                    <button type="submit" class="btn btn-success">Make Payment</button>
-                  </form>
-                </div>
-                @elseif($application->payment_status==1)
-                  <a href="{{ route('student.application.download-application',$application->uuid) }}" class="btn btn-primary">Download</a>
+                @if(is_new_admission($application->semester_id))
+                    @if($application->payment_status==0)
+                    <div class="col-auto">
+                    <form method="post" action="{{ route('student.application.make-payment') }}">
+                        @csrf
+                        <input type="hidden" name="application_uuid" value="{{$application->uuid}}">
+                        <button type="submit" class="btn btn-success">Make Payment</button>
+                    </form>
+                    </div>
+                    @elseif($application->payment_status==1)
+                    <a href="{{ route('student.application.download-application',$application->uuid) }}" class="btn btn-primary">Download</a>
+                    @endif
+                @else
+                    @if($application->payment_status==2)
+                        <div class="col-auto">
+                            <form method="post" action="{{ route('student.admission.fee-detail') }}">
+                                @csrf
+                                <input type="hidden" name="application_uuid" value="{{$application->uuid}}">
+                                <button type="submit" class="btn btn-success">Fee Details</button>
+                            </form>
+                        </div>
+                    @elseif($application->payment_status==3)
+                    <a href="{{ route('student.application.download-application',$application->uuid) }}" class="btn btn-primary">Download</a>
+                    <a href="{{ route('student.admission.payment-receipt',$application->uuid) }}" class="btn btn-primary">Download Receipt</a>
+                    @endif
                 @endif
               @endif
               @if($application->status==1)
-              Approved <button type="button" class="btn btn-primary btn-sm ml-2"><i class="fa fa-print" aria-hidden="true"></i> Print</button>
+              {{-- <button type="button" class="btn btn-primary btn-sm ml-2"><i class="fa fa-print" aria-hidden="true"></i> Print</button> --}}
               @elseif($application->status==2)
               <span class="tag tag-red"> On Hold Because of {{$application->on_hold_reason}}</span>
               @endif
