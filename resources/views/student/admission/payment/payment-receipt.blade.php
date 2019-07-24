@@ -4,6 +4,41 @@ Payment
 @endsection
 
 @section('css')
+<style>
+    .double-border {
+        border: 3px double #ddd;
+        padding: 12px 60px !important;
+    }
+
+    .receipt-head {
+        font-style: italic;
+        font-size: 18px;
+    }
+
+    @media print {
+        #reciept-print {
+            font-size: 25px;
+        }
+
+        .receipt-head {
+            font-size: 27px !important;
+        }
+
+        .college-title {
+            font-size: 30px !important;
+            margin-bottom: 0.2em !important;
+        }
+
+        td,
+        th {
+            font-size: 25px;
+        }
+
+        body {
+            font-size: 25px;
+        }
+    }
+</style>
 @stop
 
 @section('content')
@@ -18,15 +53,17 @@ Payment
                             <div class="col-auto mr-auto">
                                 <h3 class="card-title">Receipt</h3>
                             </div>
-                            <div class="col-auto">
-                                <a href="{{ route('student.application.index') }}" class="btn btn-warning">Application
-                                    List</a>
+                            <div class="col-auto mr-right">
+                                <button type="button" class="btn btn-primary" onclick="printDiv('reciept-print')"><i
+                                        class="fa fa-print"></i> Print</button>
                             </div>
                         </div>
                     </div>
                     <div class="card-body">
                         <div class="col-md-8 offset-md-2">
-                            @include('student.admission.payment.receipt-table')
+                            <div id="reciept-print">
+                                @include('student.admission.payment.receipt-table')
+                            </div>
                         </div>
                     </div>
                     <div class="card-footer text-right">
@@ -44,5 +81,5 @@ Payment
 
 
 @section('js')
-
+@include('common.admin-staff.admission.receipt-js')
 @stop

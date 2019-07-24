@@ -1,6 +1,7 @@
 <?php
 use App\Models\Application;
 use App\Models\Student;
+use App\Models\Subject;
 
 /*
 |--------------------------------------------------------------------------
@@ -85,7 +86,7 @@ Route::group(['prefix' => 'admission'], function () {
         'as' => 'student.admission.make-payment',
         'uses' => 'Student\AdmissionController@makePayment',
     ])->middleware('apply-time');
-    Route::post('/payment-response', [
+    Route::get('/payment-response', [
         'as' => 'student.admission.payment-response',
         'uses' => 'Student\AdmissionController@paymentResponse',
     ])->middleware('apply-time');
@@ -185,6 +186,26 @@ Route::get("/change-application-table-prev-student", function () {
                 'payment_status' => 1,
             ];
             Application::where('id', $application->id)->update($data);
+        }
+    } catch (\Exception $e) {
+        DB::rollback();
+        dd($e);
+    }
+    DB::commit();
+    // dump($applications);
+    dd('done');
+});
+Route::get("/change-subject-table-with-semester", function () {
+    DB::beginTransaction();
+    try {
+        $subjects = Subject::get();
+        foreach ($subjects as $subject) {
+            if (in_array($subject->stream_id,[1,2,3])) {
+                $data['semester_id'] = 1;
+            } elseif (in_array($subject->stream_id,[4,5,6,7,8,9,10])) {
+                $data['semester_id'] = 3;
+            }
+            Subject::where('id', $subject->id)->update($data);
         }
     } catch (\Exception $e) {
         DB::rollback();
