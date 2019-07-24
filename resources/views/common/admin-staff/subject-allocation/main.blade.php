@@ -270,6 +270,24 @@
         </select>
     </div>
 </div>
+
+@elseif($application->course_id == 3)
+<div class="row">
+    <div class="col-md-4 col-lg-4">
+        <div class="form-group">
+            <label class="form-control-label">Major Subject</label>
+            <select class="form-control form-control-sm subjects major" name="subjects[0]" required data-subject-no="Major Subject">
+                <option value="" selected disabled>--SELECT--</option>
+                @if($major_subjects->count() == 0)
+                <option value="NA" @isset($application) selected @endisset>NA</option>
+                @endif
+                @foreach($major_subjects->sortBy("name")->values()->all() as $subject)
+                <option value="{{$subject->id}}" {{(old("subjects[0]", findSubjectInAppliedSubject($application->appliedSubjects, $subject->id)) == $subject->id ? "selected" : "")}}>{{$subject->name}}</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+</div>
 @else
 <p>Subject Selection is not available for <strong>Regular Course</strong> just select practical or without practical.</p>
 @endif
