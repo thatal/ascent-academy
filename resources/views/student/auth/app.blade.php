@@ -38,7 +38,7 @@
 
   <style>
     .scroll_vertical {
-    height: 380px;
+    height: 600px;
     overflow: auto;
     padding: 8px;
     margin-bottom:20px;
@@ -118,7 +118,7 @@ Step 2: Click "Apply Now" in your dashboard to proceed with the application form
 
 Step 3: Pay Rs.250.00 charged for the online registration & the prospectus using an online payment gateway.
 
-Step 4: Take a print out of the information submitted. This printout needs to be carried at the time of Admission along with the original documents. 
+Step 4: Take a print out of the information submitted. This printout needs to be carried at the time of Admission along with the original documents.
 Please keep the following information handy for online submission
 Before filling application form, please scan and store the following documents as separate files. The same needs to be uploaded as required during the ‘On-line Application’ process.
 
@@ -129,10 +129,10 @@ Mandatory documents:
 3. Scanned copy of the Marksheet (PNG/JPEG/JPG) (1 MB Max)
 Optional documents
 4. Scanned copy of Pass Certificate (PNG/JPEG/JPG)(1 MB Max)
-5.Scanned copy of Caste Certificate (Mandatory document only  if the applicant belongs to OBC/SC/ST) (PNG/JPEG/JPG)(1 MB Max) 
+5.Scanned copy of Caste Certificate (Mandatory document only  if the applicant belongs to OBC/SC/ST) (PNG/JPEG/JPG)(1 MB Max)
 6. Scanned copy of Co-Curricular Certificate (Mandatory document only if the applying under Co-Curricular Reservation Category) (PNG/JPEG/JPG)(1 MB Max)
 7. Scanned copy of Gap Certificate (Mandatory document only if gap in studies is applicable. Certificate by Gazette officer / Affidavit) (PNG/JPEG/JPG)(1 MB Max)
-8. Scanned copy of Latest Income Certificate (Mandatory document if applying for free admission and family income below 1 Lakhs) and Image of Tree Plantation(PNG/JPEG/JPG)(1 MB Max) 
+8. Scanned copy of Latest Income Certificate (Mandatory document if applying for free admission and family income below 1 Lakhs) and Image of Tree Plantation(PNG/JPEG/JPG)(1 MB Max)
 9. Scanned copy of Differently Abled (Mandatory document if  applicant is under Differently Abled Category) (PNG/JPEG/JPG)(1 MB Max)
 - PLEASE ENSURE THAT THE ABOVE SCANNED DOCUMENTS ARE SELF ATTESTED.
 - PLEASE ENSURE THAT THE SCANNED DOCUMENT FILES LISTED ABOVE ARE LEGIBLE AND READABLE.
@@ -145,23 +145,23 @@ IMPORTANT! The email ID and mobile number used for registration must belong to t
 The email address and mobile number must be valid and functional. Communications shall be sent
 only to the registered email address or mobile number.
 
-Go to the website www.darrangcollege.in. Click on Sign Up (New Registration) or Sign In (Already Registered). 
+Go to the website www.darrangcollege.in. Click on Sign Up (New Registration) or Sign In (Already Registered).
 Follow the form and enter the information as required. The applicant should provide their own mobile number for OTP verification. The applicant should also use the valid email address as future communications.
-Once the registration is successful the user would be redirected to the dashboard page where 
+Once the registration is successful the user would be redirected to the dashboard page where
 the applicant have to fill up the necessary information in the form. The items marked in (*) are compulsory and needs to be submitted online.
-Once the application form is submitted the user can opt to modify / edit the submitted information. 
+Once the application form is submitted the user can opt to modify / edit the submitted information.
 Once the user “confirms” the information submission then the user doesn’t get any option of modification and the user would be redirected to the payment page. Once the user payment process
-is over the user can download the filled up application form, payment receipt, uploaded documents. 
+is over the user can download the filled up application form, payment receipt, uploaded documents.
 
-Note : 
+Note :
 
 The online application will be treated as incomplete on the following points.
 1. Mandatory documents not uploaded
-2. Payment process not completed 
+2. Payment process not completed
 </pre>
 
-{{-- 
-            <ol class="instruction">  
+{{--
+            <ol class="instruction">
             <li> CLICK ON NEW REGISTRATION TO REGISTER YOURSELF</li>
 
             <li>ON SUCCESSFUL REGISTRATION, THE APPLICANT WILL RECEIVE AN OTP ON HIS/HER REGISTERED MOBILE NUMBER. RESEND OTP OPTION IS AVAILABLE INCASE OTP IS NOT RECEIVED.</li>

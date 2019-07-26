@@ -2,6 +2,7 @@
 use App\Models\Application;
 use App\Models\Student;
 use App\Models\Subject;
+use App\Models\TempUid;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,21 +76,20 @@ Route::group(['prefix' => 'application'], function () {
     ]);
 });
 
-
 // for admission payment
 Route::group(['prefix' => 'admission'], function () {
     Route::post('/fee-detail', [
         'as' => 'student.admission.fee-detail',
         'uses' => 'Student\AdmissionController@feeDetail',
-    ])->middleware('apply-time');
+    ]);
     Route::post('/make-payment', [
         'as' => 'student.admission.make-payment',
         'uses' => 'Student\AdmissionController@makePayment',
-    ])->middleware('apply-time');
-    Route::get('/payment-response', [
+    ])->middleware('admission-time');
+    Route::post('/payment-response', [
         'as' => 'student.admission.payment-response',
         'uses' => 'Student\AdmissionController@paymentResponse',
-    ])->middleware('apply-time');
+    ])->middleware('admission-time');
     Route::get('/payment-receipt/{application}', [
         'as' => 'student.admission.payment-receipt',
         'uses' => 'Student\AdmissionController@paymentReceipt',
@@ -114,7 +114,11 @@ Route::group(['prefix' => 'api'], function () {
 Route::group(['prefix' => '/'], function () {
     Route::get('/login', 'Student\Auth\LoginController@showLoginForm')->name('student.login');
     Route::post('/login', 'Student\Auth\LoginController@login');
+    Route::post('/renewal/login', 'Student\Auth\LoginController@renewal')->name('student.renewal.login');
     Route::get('/logout', 'Student\Auth\LoginController@logout')->name('student.logout');
+
+    Route::get('/renewal/personal-info', 'Student\DashboardController@personalInfoEdit')->name('student.renewal.personal-info.edit');
+    Route::post('/renewal/personal-info', 'Student\DashboardController@personalInfoUpdate');
 
     Route::get('/register', 'Student\Auth\RegisterController@showRegistrationForm')->name('student.register')->middleware('apply-time');
     Route::get('/otp', 'Student\Auth\RegisterController@otp')->name('student.otp');
@@ -159,16 +163,37 @@ Route::get("/change-student-table-prev-student", function () {
     foreach ($students as $student) {
         $data = [
             'uuid' => (String) Str::uuid(),
+            'name' => trim($student->name, " "),
             'mobile_no' => trim(urlencode($student->mobile_no), "%C2%A0+"),
             'password' => bcrypt(trim(urlencode($student->mobile_no), "%C2%A0+")),
+            'is_person_info_updated' => 0,
         ];
         Student::where('id', $student->id)->update($data);
     }
     dd('done');
 });
+Route::get("/reject-non-admitted-application", function () {
+    DB::beginTransaction();
+    try {
+        $applications = Application::where('course_id', 1)
+                                ->whereIn('status', [0, 1, 2])
+                                ->whereDate('created_at', '!=', '2019-01-01 00:00:00')
+                                // ->orderBy('id','DESC')
+                                ->update(['status'=> 7]);
+    } catch (\Exception $e) {
+        DB::rollback();
+        dd($e);
+    }
+    DB::commit();
+    dd('done');
+});
 Route::get("/change-application-table-prev-student", function () {
     DB::beginTransaction();
     try {
+        Application::where('course_id', 1)
+            ->whereIn('status', [1, 2])
+            ->whereDate('created_at', '!=', '2019-01-01 00:00:00')
+            ->get();
         $applications = Application::whereDate('created_at', '2019-01-01 00:00:00')->get();
         foreach ($applications as $application) {
             if ($application->caste_id == 2 || $application->caste_id == 6) {
@@ -183,7 +208,7 @@ Route::get("/change-application-table-prev-student", function () {
                 'gender' => trim($application->gender, " "),
                 'fathers_name' => trim($application->fathers_name, " "),
                 'last_board_or_university' => trim($application->last_board_or_university, " "),
-                'payment_status' => 1,
+                'payment_status' => 2,
             ];
             Application::where('id', $application->id)->update($data);
         }
@@ -200,9 +225,9 @@ Route::get("/change-subject-table-with-semester", function () {
     try {
         $subjects = Subject::get();
         foreach ($subjects as $subject) {
-            if (in_array($subject->stream_id,[1,2,3])) {
+            if (in_array($subject->stream_id, [1, 2, 3])) {
                 $data['semester_id'] = 1;
-            } elseif (in_array($subject->stream_id,[4,5,6,7,8,9,10])) {
+            } elseif (in_array($subject->stream_id, [4, 5, 6, 7, 8, 9, 10])) {
                 $data['semester_id'] = 3;
             }
             Subject::where('id', $subject->id)->update($data);
@@ -215,6 +240,18 @@ Route::get("/change-subject-table-with-semester", function () {
     // dump($applications);
     dd('done');
 });
+
+// Route::get("/change-tempuid-table-prev-student", function () {
+//     dd('not working');
+//     $temps = TempUid::get();
+//     foreach ($temps as $temp) {
+//         $data = [
+//             'uid' => trim(urlencode($temp->uid), "%C2%A0+")
+//         ];
+//         TempUid::where('id', $temp->id)->update($data);
+//     }
+//     dd('done');
+// });
 
 // });
 

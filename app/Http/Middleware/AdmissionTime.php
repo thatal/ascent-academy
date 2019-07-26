@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class ApplyTime
+class AdmissionTime
 {
     /**
      * Handle an incoming request.
@@ -13,14 +13,13 @@ class ApplyTime
      * @param  \Closure  $next
      * @return mixed
      */
-
     public function handle($request, Closure $next)
     {
         // $date = date('Y-m-d H:i:s');
         $message = '';
         $current_time = config('constants.current_time');
-        $up_time = strtotime(config('constants.apply_up_time'));
-        $down_time = strtotime(config('constants.apply_down_time'));
+        $up_time = strtotime(config('constants.admission_up_time'));
+        $down_time = strtotime(config('constants.admission_down_time'));
         if($current_time <= $up_time){
             $date = dateFormat($up_time, 'd-m-Y h:i a');
             $message = "Online application will be available from {$date}";

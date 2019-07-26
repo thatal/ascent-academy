@@ -97,6 +97,12 @@ function getFeeStructure($application, $fee_structures)
         }
         $fee_structures = $fee_structures->whereNotIn("fee_head_id", $removing_ids);
     }
+    if ($application->course_id == 1) {
+        $removing_ids = [28];
+        if($application->free_admission != "yes"){
+            $fee_structures = $fee_structures->whereNotIn("fee_head_id", $removing_ids);
+        }
+    }
     return [
         'fee_structures'    =>  $fee_structures,
         'self_ids'          =>  $self_ids

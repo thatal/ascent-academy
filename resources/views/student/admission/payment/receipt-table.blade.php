@@ -48,7 +48,12 @@
                     <th>Semester/Year</th>
                     <td>: {{$application->semester->name}}</td>
                     <th>UID</th>
+                    @isset($temp_receipt)
+                    <td>: {{$application->tempUid->uid ?? 'NA'}}</td>
+                    @endisset
+                    @isset($receipt)
                     <td>: {{$application->admittedStudent->uid ?? 'NA'}}</td>
+                    @endisset
                 </tr>
             </tbody>
         </table>
@@ -122,8 +127,10 @@
             </tfoot>
         </table>
         @isset($checksum)
-        <input type="hidden" name="msg" value="{{ $checksum }}">
-        <button type="submit" class="btn btn-primary">Proceed to Pay</button>
+            @if(config('constants.current_time') >= strtotime(config('constants.admission_up_time')) && config('constants.current_time') <= strtotime(config('constants.admission_down_time')))
+                <input type="hidden" name="msg" value="{{ $checksum }}">
+                <button type="submit" class="btn btn-primary">Proceed to Pay</button>
+            @endif
         @endisset
     </div>
 </div>

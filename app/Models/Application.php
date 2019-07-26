@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Application extends Model
 {
     use SoftDeletes;
-    
+
     protected $guarded = [
         'id'
     ];
@@ -68,6 +68,10 @@ class Application extends Model
     {
         return $this->hasOne('App\Models\OnlinePayment', 'application_id', 'id')->where('status',1);
     }
+    public function tempUid()
+    {
+        return $this->hasOne('App\Models\TempUid', 'application_id', 'id');
+    }
 
 
     public static $rules = [
@@ -87,7 +91,7 @@ class Application extends Model
         'annual_income'     => 'required|numeric',
         'religion'          => 'required|max:100',
         'caste_id'          => 'required|exists:castes,id',
-        
+
         'present_vill_or_town'  => 'required|max:255|min:1',
         'present_city'          => 'required|max:255|min:1',
         'present_state'         => 'required|max:255|min:1',
@@ -101,18 +105,18 @@ class Application extends Model
         'permanent_district'        => 'required|max:255|min:1',
         'permanent_pin'             => 'required|digits:6|numeric',
         // 'permanent_nationality'     => 'required|max:255|min:1',
-        
+
         'last_board_or_university'  => 'required|max:100|min:1',
         'last_exam_roll'            => 'required|max:100|min:1',
         'last_exam_no'          => 'required|max:100|min:1',
         'sub_1_name'            => 'required|max:100|min:1',
         'sub_1_total'           => 'required|between:0,100|numeric',
         'sub_1_score'           => 'required|between:0,100|numeric',
-        
+
         'sub_2_name'            => 'required|max:100|min:1',
         'sub_2_total'           => 'required|between:0,100|numeric',
         'sub_2_score'           => 'required|between:0,100|numeric',
-        
+
         'sub_3_name'            => 'required|max:100|min:1',
         'sub_3_total'           => 'required|between:0,100|numeric',
         'sub_3_score'           => 'required|between:0,100|numeric',
@@ -132,7 +136,7 @@ class Application extends Model
         'sub_6_score'           => 'required|between:0,100|numeric',
 
         'all_total_marks'       => 'required|numeric',
-        
+
         'percentage'            => 'required|numeric',
         'blood_group'           => 'required',
         'total_marks_according_marksheet'           => 'required|numeric',

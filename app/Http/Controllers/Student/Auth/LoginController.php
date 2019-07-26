@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Session;
+use App\Models\TempUid;
+use App\Models\Student;
 
 class LoginController extends Controller
 {
@@ -69,7 +71,7 @@ class LoginController extends Controller
 
                     $request->session()->invalidate();
                     $message = $student->otp." is your OTP.";
-     
+
                     $mobile = $student->mobile_no;
 
                     sendSMS($mobile,$message);
@@ -101,5 +103,22 @@ class LoginController extends Controller
     public function username()
     {
         return 'mobile_no';
+    }
+
+    public function renewal(Request $request)
+    {
+        $temp_uid = TempUid::where('uid',$request->uid)->first();
+        if(!$temp_uid){
+            Session::flash('error_uid','UID not available');
+            return back();
+        }
+        $student = Student::find($temp_uid->student_id);
+        auth()->login($student);
+        if($student->is_person_info_updated==0){
+            Session::flash('success','Logged in successfully. Now update your personal information');
+            return redirect()->route('student.renewal.personal-info.edit');
+        }
+        Session::flash('success','Logged in successfully');
+        return redirect()->route('student.application.index');
     }
 }

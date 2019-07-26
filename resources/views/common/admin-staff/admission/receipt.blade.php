@@ -16,7 +16,7 @@
           <div class="card-body">
           <div class="container-fluid">
           <div class="row">
-           <div class="col-md-8 offset-md-2"> 
+           <div class="col-md-8 offset-md-2">
             <div id="reciept-print">
             <div class="container">
               <div class="row ">
@@ -104,7 +104,7 @@
                       <td align="right">Signature</td>
                     </tr>
                     <tr>
-                      <td align="left">Collected By {{$application->receipt->collectedBy->name}}</td>
+                      <td align="left">Collected By {{$application->receipt->collectedBy->name ?? 'NA'}}</td>
                       <td align="right"></td>
                     </tr>
                   </table>

@@ -10,6 +10,7 @@ use App\Models\TempAdmissionCollection;
 use App\Models\TempAdmissionReceipt;
 use App\Models\AdmissionCollection;
 use App\Models\AdmissionReceipt;
+use App\Models\AdmittedStudent;
 use DB;
 use Exception;
 use Illuminate\Http\Request;
@@ -60,7 +61,7 @@ class AdmissionController extends Controller
             }
 
             $admission_receipt_data = [
-                'uid' => 'aaa',
+                'uid' => $application->tempUid->uid,
                 'student_id' => $application->student_id,
                 'application_id' => $application->id,
                 'total' => $total,
@@ -77,6 +78,8 @@ class AdmissionController extends Controller
                         'fee_id' => $fee_structure->fee_id,
                         'fee_head_id' => $fee_structure->fee_head_id,
                         'is_free' => $fee_structure->is_free,
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s'),
                     ];
                     if ($application->free_admission == 'yes') {
                         if (in_array($fee_structure->fee_head_id, $self_ids)) {
@@ -95,6 +98,7 @@ class AdmissionController extends Controller
                 }
                 TempAdmissionCollection::insert($datas);
             }
+
             $checksum = $this->generateCheckSum($request, $temp_receipt->id, $temp_receipt->total);
         } catch (Exception $e) {
             dd($e);
@@ -116,7 +120,7 @@ class AdmissionController extends Controller
 
         // $str = 'TESTME|UATTXN0001|NA|2|NA|NA|NA|INR|NA|R|NA|NA|NA|F|Andheri|Mumbai|02240920005|support@billdesk.com|NA|NA|NA|https://www.billdesk.com';
 
-        $str = $merchant_id . '|' . $application_id . '|NA|' . $amount . '|NA|NA|NA|INR|NA|R|NA|NA|NA|F|' . $application->student_id . '|' . $application->student->email . '|' . $application->student->mobile_no . '|'.$temp_receipt_id.'|NA|NA|NA|' . $redirect_url;
+        $str = $merchant_id . '|' . $application_id . '|NA|' . 0.01 . '|NA|NA|NA|INR|NA|R|NA|NA|NA|F|' . $application->student_id . '|' . $application->student->email . '|' . $application->student->mobile_no . '|'.$temp_receipt_id.'|NA|NA|NA|' . $redirect_url;
         // dd($str);
         $checksum = hash_hmac('sha256', $str, $checksum_key, false);
         $checksum = strtoupper($checksum);
@@ -152,13 +156,6 @@ class AdmissionController extends Controller
                     $student_id = $res_data[16];
                     $temp_receipt_id = $res_data[19];
                     $res_data = explode('|', $str);
-                    // $application_id = 5955;
-                    // $transaction_id = 123456;
-                    // $amount = 3860;
-                    // $transaction_date = '2019-07-24';
-                    // $code = '0300';
-                    // $student_id = 7281;
-                    // $temp_receipt_id = $request->get('temp_receipt_id');
                     $application = Application::where('id', $application_id)->first();
                     if ($application->payment_status == 3) {
                         Session::flash('error', 'Payment has been already done');
@@ -170,42 +167,55 @@ class AdmissionController extends Controller
                         'temp_receipt_id' => $temp_receipt_id,
                         'transaction_id' => $transaction_id,
                         'transaction_date' => $transaction_date,
-                        'biller_response' => '$str',
+                        'biller_response' => $str,
                         'amount' => $amount,
                         'code' => $code,
                     ];
                     if ($code == '0300') {
                         $online_payment_data['status'] = 1;
                         $application->payment_status = 3;
+                        $application->admission_done_by = 'Student';
+                        $application->admission_done_by_id = auth()->id();
+                        $application->selected_category_id = $application->category_id;
                         $application->save();
-                        $message = "Payment Successfull for application ID- {$application->id}. Now you can download the receipt.";
 
+                        $receipt = $this->moveFromTempToOriginal($request, $temp_receipt_id);
+                        $admitted_student_data = [
+                            'application_id' => $application_id,
+                            'course_id' => $application->course_id,
+                            'stream_id' => $application->appliedStream->stream_id,
+                            'semester_id' => $application->semester_id,
+                            'student_id' => $student_id,
+                            'uid' => $application->tempUid->uid,
+                            'year' => date('Y'),
+                            'admission_done_by' => 'Student',
+                            'admission_done_by_id' => auth()->id(),
+                        ];
+                        AdmittedStudent::create($admitted_student_data);
+                        $message = "Payment Successfull for application ID- {$application->id}. Now you can download the receipt.";
                         $mobile = $application->mobile_no;
 
                         sendSMS($mobile, $message);
-                        // Session::flash('success', 'Payment successfully done. Now You can download your receipt');
                     } else {
                         $online_payment_data['status'] = 0;
-                        // Session::flash('error', 'Payment Unsuccessfull');
                     }
                     OnlinePayment::create($online_payment_data);
-                    $receipt = $this->moveFromTempToOriginal($request, $temp_receipt_id);
                 }
             }
         } catch (Exception $e) {
-            dd($e);
+            // dd($e);
             DB::rollback();
             Log::error($e);
             Session::flash('error', 'Something went wrong');
             return redirect()->route('student.application.index');
         }
         DB::commit();
-        $receipt_count = AdmissionReceipt::where('year',date('Y'))->count();
-        $receipt_no  = str_pad($receipt_count, 4,"0000", STR_PAD_LEFT);
-        $receipt_no = date('y').'-'.$receipt_no;
-        $receipt->receipt_no = $receipt_no;
-        $receipt->save();
         if ($code == '0300') {
+            $receipt_count = AdmissionReceipt::where('year',date('Y'))->count();
+            $receipt_no  = str_pad($receipt_count, 4,"0000", STR_PAD_LEFT);
+            $receipt_no = date('y').'-'.$receipt_no;
+            $receipt->receipt_no = $receipt_no;
+            $receipt->save();
             Session::flash('success', 'Payment successfully done. Now You can download your application');
             return redirect()->route('student.admission.payment-receipt', $application->uuid);
         } else {
@@ -226,6 +236,8 @@ class AdmissionController extends Controller
         $collection_datas = $temp_collections->toArray();
         foreach ($collection_datas as $key => $collection_data) {
             $collection_datas[$key]['receipt_id']= $receipt->id;
+            $collection_datas[$key]['created_at']= date('Y-m-d H:i:s');
+            $collection_datas[$key]['updated_at']= date('Y-m-d H:i:s');
         }
         $collections = AdmissionCollection::insert($collection_datas);
         return $receipt;

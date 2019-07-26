@@ -24,7 +24,7 @@ Application
                 @if(auth()->user()->admittedStudent()->exists())
                 UID : {{auth()->user()->admittedStudent->uid}}
                 @endif
-                @if(config('constants.current_time') >= strtotime(config('constants.up_time')) && config('constants.current_time') <= strtotime(config('constants.down_time')))
+                @if(config('constants.current_time') >= strtotime(config('constants.apply_up_time')) && config('constants.current_time') <= strtotime(config('constants.apply_down_time')))
                 <a href="{{route('student.application.create')}}" class="btn btn-primary">Apply</a>
                 @endif
               </div>
