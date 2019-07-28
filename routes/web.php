@@ -158,14 +158,12 @@ Route::get("/merit-list-change", function () {
 });
 
 Route::get("/change-student-table-prev-student", function () {
-    dd('not authorized');
+    // dd('not authorized');
     $students = Student::whereDate('created_at', '2019-01-01 00:00:00')->get();
     foreach ($students as $student) {
         $data = [
             'uuid' => (String) Str::uuid(),
-            'name' => trim($student->name, " "),
-            'mobile_no' => trim(urlencode($student->mobile_no), "%C2%A0+"),
-            'password' => bcrypt(trim(urlencode($student->mobile_no), "%C2%A0+")),
+            'password' => bcrypt($student->mobile_no),
             'is_person_info_updated' => 0,
         ];
         Student::where('id', $student->id)->update($data);
@@ -175,7 +173,7 @@ Route::get("/change-student-table-prev-student", function () {
 Route::get("/reject-non-admitted-application", function () {
     DB::beginTransaction();
     try {
-        $applications = Application::where('course_id', 1)
+        Application::where('course_id', 1)
                                 ->whereIn('status', [0, 1, 2])
                                 ->whereDate('created_at', '!=', '2019-01-01 00:00:00')
                                 // ->orderBy('id','DESC')
@@ -190,38 +188,19 @@ Route::get("/reject-non-admitted-application", function () {
 Route::get("/change-application-table-prev-student", function () {
     DB::beginTransaction();
     try {
-        $aa = Application::whereHas('appliedSubjects',function($query){
-            $query->whereHas('subject',function($q){
-                $q->where('has_practical',1);
-            });
-        })
-            ->whereDate('created_at', '2019-01-01 00:00:00')
-            ->paginate();dd($aa);
+
         $applications = Application::whereDate('created_at', '2019-01-01 00:00:00')->get();
         foreach ($applications as $application) {
             if ($application->caste_id == 2 || $application->caste_id == 6) {
-                $application['category_id'] = 2;
+                $category_id = 2;
             } else {
-                $application['category_id'] = $application->caste_id;
+                $category_id = $application->caste_id;
             }
 
             $data = [
                 'uuid' => (String) Str::uuid(),
-                'mobile_no' => trim(urlencode($application->mobile_no), "%C2%A0+"),
-                'fullname' => trim($application->fullname, " "),
-                'gender' => trim($application->gender, " "),
-                'fathers_name' => trim($application->fathers_name, " "),
-                'last_board_or_university' => trim($application->last_board_or_university, " "),
-                'payment_status' => 2,
+                'category_id' => $category_id,
             ];
-            $data['with_practical'] = 0;
-            foreach ($application->appliedSubjects as $key => $appliedSubject) {
-                if($appliedSubject->subject->has_practical==1){
-                    $data['with_practical'] = 0;
-                }
-            }
-            dump($appliedSubject->subject->has_practical);
-            dump($data['with_practical']);
             Application::where('id', $application->id)->update($data);
         }
     } catch (\Exception $e) {
@@ -229,7 +208,6 @@ Route::get("/change-application-table-prev-student", function () {
         dd($e);
     }
     DB::commit();
-    // dump($applications);
     dd('done');
 });
 Route::get("/change-subject-table-with-semester", function () {
@@ -252,20 +230,6 @@ Route::get("/change-subject-table-with-semester", function () {
     // dump($applications);
     dd('done');
 });
-
-// Route::get("/change-tempuid-table-prev-student", function () {
-//     dd('not working');
-//     $temps = TempUid::get();
-//     foreach ($temps as $temp) {
-//         $data = [
-//             'uid' => trim(urlencode($temp->uid), "%C2%A0+")
-//         ];
-//         TempUid::where('id', $temp->id)->update($data);
-//     }
-//     dd('done');
-// });
-
-// });
 
 Route::group(['prefix' => 'admin'], function () {
     Route::get('/', function () {

@@ -22,7 +22,8 @@ return [
     // payment gateway
     'url' => 'https://pgi.billdesk.com/pgidsk/PGIMerchantPayment',
 	'redirect_url_application' => 'http://68.183.87.189/darrang-college/payment-response',
-	'redirect_url_admission' => 'http://localhost/darrang-college/admission/payment-response',
+	// 'redirect_url_admission' => 'http://localhost/darrang-college/admission/payment-response',
+	'redirect_url_admission' => 'http://68.183.87.189/darrang-college/admission/payment-response',
 	'merchant_id' => 'DARRANGCOL',
     'security_id' => 'darrangcol',
     'checksum_key' => 'Wkbpw4zoFB5tQJq5A257isEejDqGXnYL'

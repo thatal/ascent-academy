@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Student;
 use App\Http\Controllers\Controller;
 use App\Models\Application;
 use App\Models\Student;
+use DB;
 use Illuminate\Http\Request;
-use DB,Session;
+use Log;
+use Session, Validator;
 
 class DashboardController extends Controller
 {
@@ -39,18 +41,38 @@ class DashboardController extends Controller
                 'mobile_no' => $request->mobile_no,
                 'email' => $request->email,
             ];
+            $rules = [
+                'mobile_no'       => 'required|numeric|unique:students',
+                'email'      => 'required|max:255',
+
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return back()->withErrors($validator);
+            }
             Application::where('student_id', auth()->id())->update($data);
             $data['password'] = bcrypt($request->mobile_no);
             $data['is_person_info_updated'] = 1;
             Student::where('id', auth()->id())->update($data);
-        } catch (\Exception $th) {
+        } catch (Illuminate\Database\QueryException $e) {dd('a');
+            $errorCode = $e->errorInfo[1];
+            if ($errorCode == 1062) {
+                DB::rollback();
+                Log::error($e->getMessage());
+                Session::flash('error', 'Mobile No is taken');
+                return back();
+            }
+        } catch (\Exception $e) {
             DB::rollback();
-            Session::flash('error','Something went wrong');
+            Log::error($e->getMessage());
+            Session::flash('error', 'Something went wrong');
             return back();
         }
         DB::commit();
-        Session::flash('success','Successfully Updated');
-        return  redirect()->route('student.application.index');
+        Session::flash('success', 'Successfully Updated');
+        return redirect()->route('student.application.index');
     }
 
     /**
