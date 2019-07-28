@@ -97,6 +97,7 @@ class AdmissionController extends Controller
                     array_push($datas, $data);
                 }
                 TempAdmissionCollection::insert($datas);
+                saveLogs(auth()->id(), auth()->user()->username, 'Student', "Temp fee structure created for application id {$application->id} with temp receipt id {$temp_receipt->id}");
             }
 
             $checksum = $this->generateCheckSum($request, $temp_receipt->id, $temp_receipt->total);
@@ -120,7 +121,7 @@ class AdmissionController extends Controller
 
         // $str = 'TESTME|UATTXN0001|NA|2|NA|NA|NA|INR|NA|R|NA|NA|NA|F|Andheri|Mumbai|02240920005|support@billdesk.com|NA|NA|NA|https://www.billdesk.com';
 
-        $str = $merchant_id . '|' . $application_id . '|NA|' . 0.01 . '|NA|NA|NA|INR|NA|R|NA|NA|NA|F|' . $application->student_id . '|' . $application->student->email . '|' . $application->student->mobile_no . '|'.$temp_receipt_id.'|NA|NA|NA|' . $redirect_url;
+        $str = $merchant_id . '|' . $application_id . '|NA|' . $amount . '|NA|NA|NA|INR|NA|R|NA|NA|NA|F|' . $application->student_id . '|' . $application->student->email . '|' . $application->student->mobile_no . '|'.$temp_receipt_id.'|NA|NA|NA|' . $redirect_url;
         // dd($str);
         $checksum = hash_hmac('sha256', $str, $checksum_key, false);
         $checksum = strtoupper($checksum);
@@ -200,6 +201,7 @@ class AdmissionController extends Controller
                         $online_payment_data['status'] = 0;
                     }
                     OnlinePayment::create($online_payment_data);
+                    saveLogs(auth()->id(), auth()->user()->username, 'Student', "Payment response for application id {$application->id} with code {$code}");
                 }
             }
         } catch (Exception $e) {
@@ -216,6 +218,7 @@ class AdmissionController extends Controller
             $receipt_no = date('y').'-'.$receipt_no;
             $receipt->receipt_no = $receipt_no;
             $receipt->save();
+            saveLogs(auth()->id(), auth()->user()->username, 'Student', "Receipt generated with receipt id  {$receipt->id} and receipt no {$receipt_no}");
             Session::flash('success', 'Payment successfully done. Now You can download your application');
             return redirect()->route('student.admission.payment-receipt', $application->uuid);
         } else {

@@ -35,10 +35,10 @@ function getFeeStructure($application, $fee_structures)
 {
     $total = 0;
     $free_total = 0;
-    $removing_ids = [19, 21, 22, 23, 24, 25, 26, 27, 28];
-    $self_ids = [19, 21, 22, 23, 24, 25, 26, 27, 28];
     // for only degree
     if ($application->course_id == 2) {
+        $removing_ids = [19, 21, 22, 23, 24, 25, 26, 27, 28];
+        $self_ids = [19, 21, 22, 23, 24, 25, 26, 27, 28];
         // condition should == because removing id may different from fee structure
         if (in_array($application->appliedStream->stream_id, [4, 6])) {
             // for major subjects
@@ -98,10 +98,22 @@ function getFeeStructure($application, $fee_structures)
         $fee_structures = $fee_structures->whereNotIn("fee_head_id", $removing_ids);
     }
     if ($application->course_id == 1) {
-        $removing_ids = [28];
-        if($application->free_admission != "yes"){
-            $fee_structures = $fee_structures->whereNotIn("fee_head_id", $removing_ids);
+        $removing_ids = [19, 28];
+        $self_ids = [19, 28];
+        if($application->free_admission == "yes"){
+            if (($key = array_search(28, $removing_ids)) !== false) {
+                unset($removing_ids[$key]);
+            }
         }
+        $applied_subjects = $application->appliedSubjects;
+        foreach ($applied_subjects as $index_g => $applied_subject) {
+            if (strtolower(trim($applied_subject->subject->name)) == "computer science") {
+                if (($key = array_search(19, $removing_ids)) !== false) {
+                    unset($removing_ids[$key]);
+                }
+            }
+        }
+        $fee_structures = $fee_structures->whereNotIn("fee_head_id", $removing_ids);
     }
     return [
         'fee_structures'    =>  $fee_structures,

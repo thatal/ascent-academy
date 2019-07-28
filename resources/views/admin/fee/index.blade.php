@@ -43,7 +43,7 @@ Fee
                     <option value="{{$semester->id}}" {{Input::get('semester')==$semester->id?'selected':''}}>{{$semester->name}}</option>
                     @endforeach
                   </select>
-                  
+
                 </div>
               </div>
               <div class="col-md-3 col-lg-3">
@@ -73,8 +73,8 @@ Fee
                   <label class="form-label">Gender</label>
                   <select name="gender" class="form-control">
                     <option value="">Select Year</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
+                    <option value="Male" {{(Input::get('gender')=='Male')?'selected':''}}>Male</option>
+                    <option value="Female" {{(Input::get('gender')=='Female')?'selected':''}}>Female</option>
                   </select>
                 </div>
               </div>
@@ -83,8 +83,8 @@ Fee
                   <label class="form-label">Practical</label>
                   <select name="practical" class="form-control">
                     <option value="">Select Year</option>
-                    <option value="With">With</option>
-                    <option value="Without">Without</option>
+                    <option value="With" {{(Input::get('practical')=='With')?'selected':''}}>With</option>
+                    <option value="Without" {{(Input::get('practical')=='Without')?'selected':''}}>Without</option>
                   </select>
                 </div>
               </div>
@@ -94,7 +94,7 @@ Fee
                   <select name="financial_year" class="form-control" required>
                     <option value="">Select Financial Year</option>
                     @foreach($financial_years as $value)
-                    <option value="{{$value->financial_year}}">{{$value->financial_year}}</option>
+                    <option value="{{$value->financial_year}}" {{(Input::get('financial_year')==$value->financial_year)?'selected':''}}>{{$value->financial_year}}</option>
                     @endforeach
                   </select>
                 </div>

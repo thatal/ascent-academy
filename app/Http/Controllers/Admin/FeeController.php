@@ -46,6 +46,10 @@ class FeeController extends Controller
             $fees = $fees->where('gender',$gender);
         }
         if($practical){
+            if($practical=='With')
+                $practical = 1;
+            if($practical=='Without')
+                $practical = 0;
             $fees = $fees->where('practical',$practical);
         }
         if($financial_year){
@@ -123,7 +127,7 @@ class FeeController extends Controller
                     ];
                     $fee_structure = FeeStructure::create($data);
                 }
-                
+
             }
         } catch (Exception $e) {
             DB::rollback();
@@ -202,7 +206,7 @@ class FeeController extends Controller
                     ];
                     $fee_structure = FeeStructure::create($data);
                 }
-                
+
             }
         } catch (Exception $e) {
             DB::rollback();
