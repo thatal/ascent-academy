@@ -230,6 +230,23 @@ Route::get("/change-subject-table-with-semester", function () {
     // dump($applications);
     dd('done');
 });
+Route::get("/delete-failed-student", function () {
+    DB::beginTransaction();
+    try {
+        $failed_students = DB::table('failed_student')->get();
+        foreach ($failed_students as $failed_student) {
+            $temp = TempUid::where('uid',$failed_student->uid)->first();
+            Student::where('id',$temp->student_id)->delete();
+            TempUid::where('uid',$failed_student->uid)->delete();
+        }
+    } catch (\Exception $e) {
+        DB::rollback();
+        dd($e);
+    }
+    DB::commit();
+    // dump($applications);
+    dd('done');
+});
 
 Route::group(['prefix' => 'admin'], function () {
     Route::get('/', function () {

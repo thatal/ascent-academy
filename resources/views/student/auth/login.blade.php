@@ -46,7 +46,8 @@ Login
         </form>
     </div>
 </div>
-<div class="card">
+@if(config('constants.current_time') >= strtotime(config('constants.admission_up_time')) &&
+config('constants.current_time') <= strtotime(config('constants.admission_down_time'))) <div class="card">
     <div class="card-body p-6">
         <div class="card-title">Renewal Form</div>
         @include('common/layouts/alert')
@@ -73,6 +74,7 @@ Login
             </div>
         </form>
     </div>
-</div>
+    </div>
+    @endif
 
-@endsection
+    @endsection

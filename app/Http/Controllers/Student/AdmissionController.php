@@ -126,6 +126,9 @@ class AdmissionController extends Controller
         $checksum = hash_hmac('sha256', $str, $checksum_key, false);
         $checksum = strtoupper($checksum);
         $checksum = $str . "|" . $checksum;
+        Log::debug('checksum');
+        Log::debug($application_id);
+        Log::debug($checksum);
         return $checksum;
         // echo $checksum;
         // return view('student.application.make-payment', compact('application_id', 'application', 'amount', 'checksum'));
