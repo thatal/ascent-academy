@@ -67,10 +67,6 @@ config('constants.current_time') <= strtotime(config('constants.admission_down_t
             </div>
             <div class="form-footer">
                 <button type="submit" class="btn btn-primary btn-block">Sign In (Already Admitted)</button>
-                @if(config('constants.current_time') >= strtotime(config('constants.apply_up_time')) &&
-                config('constants.current_time') <= strtotime(config('constants.apply_down_time'))) <a
-                    href="{{route('student.register')}}" class="btn btn-info btn-block">Sign Up (New Registration)</a>
-                    @endif
             </div>
         </form>
     </div>
