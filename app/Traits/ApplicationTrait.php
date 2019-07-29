@@ -64,7 +64,7 @@ trait ApplicationTrait
         $years = Application::select('year')->distinct()->get();
         $reservations = '';
 
-        $applications = Application::where('is_confirmed',1)->where('payment_status',1);
+        $applications = Application::where('is_confirmed',1)->whereIn('payment_status',[1,3]);
         if($application_no){
             $applications = $applications->where('id',$application_no);
         }
@@ -152,7 +152,7 @@ trait ApplicationTrait
         return $data;
     }
     public function index(Request $request)
-    {   
+    {
         $data = $this->applicationList($request,'paginate');
         $applications = $data['applications'];
         $courses = $data['courses'];
@@ -164,9 +164,9 @@ trait ApplicationTrait
         $selected_stream = $data['selected_stream'];
         $boards = $data['boards'];
         if(auth()->guard('admin')->check()){
-            $view = 'admin.application.index'; 
+            $view = 'admin.application.index';
         }elseif(auth()->guard('staff')->check()){
-            $view = 'staff.application.index'; 
+            $view = 'staff.application.index';
         }
         return view($view,compact('applications','castes','courses','semesters','streams','years','reservations','selected_stream','boards'));
     }
@@ -194,9 +194,9 @@ trait ApplicationTrait
             $appliedSubjects = $application->appliedSubjects;
         }
         if(auth()->guard('admin')->check()){
-            $view = 'admin.application.show'; 
+            $view = 'admin.application.show';
         }elseif(auth()->guard('staff')->check()){
-            $view = 'staff.application.show'; 
+            $view = 'staff.application.show';
         }
         return view($view,compact('application','appliedSubjects','preferences'));
     }
@@ -224,9 +224,9 @@ trait ApplicationTrait
         });
 
         if(auth()->guard('admin')->check()){
-            $view = 'admin.application.edit'; 
+            $view = 'admin.application.edit';
         }elseif(auth()->guard('staff')->check()){
-            $view = 'staff.application.edit'; 
+            $view = 'staff.application.edit';
         }
         return view($view,compact('application','castes','courses','semesters','streams','applied_stream','applied_course','applied_subs', 'stream_wise_subjects'));
     }
@@ -234,11 +234,11 @@ trait ApplicationTrait
     public function update(Request $request, Application $application)
     {
         if(auth()->guard('admin')->check()){
-            $view = 'admin.application.show'; 
+            $view = 'admin.application.show';
         }elseif(auth()->guard('staff')->check()){
-            $view = 'staff.application.show'; 
+            $view = 'staff.application.show';
         }
-        
+
         // Log::info($request->all());
         // dd($request->all());
         $path = 'public/uploads/'.auth()->id().'/';
@@ -276,18 +276,18 @@ trait ApplicationTrait
                 'permanent_district' => $request->permanent_district,
                 'permanent_pin'     => $request->permanent_pin,
                 'permanent_nationality' => $request->permanent_nationality,
-                
+
                 'last_board_or_university' => ( $request->other_board_university ? $request->other_board_university:  $request->last_board_or_university),
                 'last_exam_roll'    => $request->last_exam_roll,
                 'last_exam_no'      => $request->last_exam_no,
                 'sub_1_name'        => $request->sub_1_name,
                 'sub_1_total'       => $request->sub_1_total,
                 'sub_1_score'       => $request->sub_1_score,
-                
+
                 'sub_2_name'        => $request->sub_2_name,
                 'sub_2_total'       => $request->sub_2_total,
                 'sub_2_score' => $request->sub_2_score,
-                
+
                 'sub_3_name' => $request->sub_3_name,
                 'sub_3_total' => $request->sub_3_total,
                 'sub_3_score' => $request->sub_3_score,
@@ -308,13 +308,13 @@ trait ApplicationTrait
 
                 'total_marks_according_marksheet' => $request->total_marks_according_marksheet,
                 'all_total_marks' => $request->all_total_marks,
-                
+
                 'percentage' => $request->percentage,
                 // 'year' => date('Y'),
                 'blood_group' => $request->blood_group,
                 // 'passport' => $path.$docs['passport_name'],
                 // 'sign' => $path.$docs['sign_name'],
-                
+
             ];
             // if ($application_data['passport'] != "") {
             //     unset($application_data["passport"]);
@@ -323,7 +323,7 @@ trait ApplicationTrait
             //     unset($application_data["sign"]);
             // }
 /*            $attachment_data = [
-                
+
                 'marksheet' => ($docs['marksheet_name'])? $path.$docs['marksheet_name'] : '',
                 'pass_certificate' => ($docs['pass_certificate_name'])? $path.$docs['pass_certificate_name'] : '',
                 'caste_certificate' => ($docs['caste_certificate_name'])? $path.$docs['caste_certificate_name'] : '',
@@ -333,7 +333,7 @@ trait ApplicationTrait
                 'income_certificate' => ($docs['income_certificate'])? $path.$docs['income_certificate'] : '',
                 'image_of_tree_plantation' => ($docs['image_of_tree_plantation'])? $path.$docs['image_of_tree_plantation'] : '',
             ];*/
-            
+
             if ($request->co_curricular) {
                 $application_data['co_curricular'] = 1;
             }else{
@@ -360,13 +360,13 @@ trait ApplicationTrait
             // dd($request->all());
             $edited_data = \Arr::except($application->toArray(), ["applied_major_subjects","applied_subjects","applied_stream", "student", "course", "semester", "caste", "attachments", "receipt", "admitted_student", "payment_receipt"]);
             if(auth()->guard('admin')->check()){
-                $user_id = auth()->guard('admin')->id(); 
-                $username = auth()->guard('admin')->user()->username; 
-                $guard = 'Admin'; 
+                $user_id = auth()->guard('admin')->id();
+                $username = auth()->guard('admin')->user()->username;
+                $guard = 'Admin';
             }elseif(auth()->guard('staff')->check()){
-                $user_id = auth()->guard('staff')->id(); 
-                $username = auth()->guard('staff')->user()->username; 
-                $guard = 'Staff'; 
+                $user_id = auth()->guard('staff')->id();
+                $username = auth()->guard('staff')->user()->username;
+                $guard = 'Staff';
             }
             $edited_data["edited_by_id"] = $user_id;
             $edited_data["edited_by"] = $guard;
@@ -378,7 +378,7 @@ trait ApplicationTrait
             EditedApplication::create($edited_data);
             // $application->appliedSubjects()->delete();
             // $application->save();
-            
+
             /*$file_validation_rule = Application::$file_rules;
             $file_validation_rule["marksheet"] = str_replace("required|", "", $file_validation_rule["marksheet"]);
             $validator = Validator::make( $request->all(), $file_validation_rule);
@@ -406,7 +406,7 @@ trait ApplicationTrait
                             ->where("application_id", $application->id)
                             ->whereIn("doc_name", $needed_to_delete_file)
                             ->delete();
-                Attachment::insert($attachment_create_data);   
+                Attachment::insert($attachment_create_data);
             }*/
 
 
@@ -425,12 +425,12 @@ trait ApplicationTrait
         event(new ApplicationEdited("Application No {$application->id} Has Been Edited",$application,getSeatDetails()));
         Session::flash("success", "Application successfully updated.");
         return redirect()->route($view,[$application->uuid]);
-    
+
     }
 
     public function storeDocs($request)
     {
-        
+
         $destinationPath = public_path('uploads/'.auth()->id());
         $passport_name = '';
         $sign_name = '';
@@ -440,17 +440,17 @@ trait ApplicationTrait
         if (request()->hasFile('passport')) {
             $passport = request()->file('passport');
             $passport_name = date('dmYHis')."-passport." . $passport->getClientOriginalExtension();
-            $passport->move($destinationPath."/", $passport_name);    
+            $passport->move($destinationPath."/", $passport_name);
         }
         if (request()->hasFile('sign')) {
             $sign = request()->file('sign');
             $sign_name = date('dmYHis')."-sign." . $sign->getClientOriginalExtension();
-            $sign->move($destinationPath."/", $sign_name);    
+            $sign->move($destinationPath."/", $sign_name);
         }
         if (request()->hasFile('marksheet')) {
             $marksheet = request()->file('marksheet');
             $marksheet_name = date('dmYHis')."-marksheet." . $marksheet->getClientOriginalExtension();
-            // $marksheet->move($destinationPath, $marksheet_name);    
+            // $marksheet->move($destinationPath, $marksheet_name);
 
             // update code with Image compression
             $marksheet_image = Image::make($marksheet);
@@ -461,12 +461,12 @@ trait ApplicationTrait
         if (request()->hasFile('pass_certificate')) {
             $pass_certificate = request()->file('pass_certificate');
             $pass_certificate_name = date('dmYHis')."-pass_certificate." . $pass_certificate->getClientOriginalExtension();
-            // $pass_certificate->move($destinationPath, $pass_certificate_name);   
+            // $pass_certificate->move($destinationPath, $pass_certificate_name);
 
             // update code with Image compression
             $pass_certificate_image = Image::make($pass_certificate);
             // save file as jpg with medium quality
-            $pass_certificate_image->save($destinationPath."/".$pass_certificate_name, 60); 
+            $pass_certificate_image->save($destinationPath."/".$pass_certificate_name, 60);
             $pass_certificate_image->destroy();
         }
         if (request()->hasFile('caste_certificate')) {
@@ -553,7 +553,7 @@ trait ApplicationTrait
             'income_certificate'        => $income_certificate_name,
             'image_of_tree_plantation'  => $image_of_tree_plantation_name,
         ];
-    
+
     }
 
     private function createOnlyStream($request, $application) {
@@ -583,15 +583,15 @@ trait ApplicationTrait
         if(auth()->guard('admin')->check()){
             $application->verified_by = "Admin";
             $application->verified_by_id = auth()->guard('admin')->id();
-            $user_id = auth()->guard('admin')->id(); 
-            $username = auth()->guard('admin')->user()->username; 
-            $guard = 'Admin'; 
+            $user_id = auth()->guard('admin')->id();
+            $username = auth()->guard('admin')->user()->username;
+            $guard = 'Admin';
         }elseif(auth()->guard('staff')->check()){
             $application->verified_by = "Staff";
             $application->verified_by_id = auth()->guard('staff')->id();
-            $user_id = auth()->guard('staff')->id(); 
-            $username = auth()->guard('staff')->user()->username; 
-            $guard = 'Staff'; 
+            $user_id = auth()->guard('staff')->id();
+            $username = auth()->guard('staff')->user()->username;
+            $guard = 'Staff';
         }
         $application->save();
         saveLogs($user_id, $username, $guard, "Application approved for {$application->id}");
@@ -609,15 +609,15 @@ trait ApplicationTrait
         if(auth()->guard('admin')->check()){
             $application->verified_by = "Admin";
             $application->verified_by_id = auth()->guard('admin')->id();
-            $user_id = auth()->guard('admin')->id(); 
-            $username = auth()->guard('admin')->user()->username; 
-            $guard = 'Admin'; 
+            $user_id = auth()->guard('admin')->id();
+            $username = auth()->guard('admin')->user()->username;
+            $guard = 'Admin';
         }elseif(auth()->guard('staff')->check()){
             $application->verified_by = "Staff";
             $application->verified_by_id = auth()->guard('staff')->id();
-            $user_id = auth()->guard('staff')->id(); 
-            $username = auth()->guard('staff')->user()->username; 
-            $guard = 'Staff'; 
+            $user_id = auth()->guard('staff')->id();
+            $username = auth()->guard('staff')->user()->username;
+            $guard = 'Staff';
         }
         $application->on_hold_reason = $request->reason;
         $application->save();
@@ -635,15 +635,15 @@ trait ApplicationTrait
         if(auth()->guard('admin')->check()){
             $application->rejected_by = "Admin";
             $application->rejected_by_id = auth()->guard('admin')->id();
-            $user_id = auth()->guard('admin')->id(); 
-            $username = auth()->guard('admin')->user()->username; 
-            $guard = 'Admin'; 
+            $user_id = auth()->guard('admin')->id();
+            $username = auth()->guard('admin')->user()->username;
+            $guard = 'Admin';
         }elseif(auth()->guard('staff')->check()){
             $application->rejected_by = "Staff";
             $application->rejected_by_id = auth()->guard('staff')->id();
-            $user_id = auth()->guard('staff')->id(); 
-            $username = auth()->guard('staff')->user()->username; 
-            $guard = 'Staff'; 
+            $user_id = auth()->guard('staff')->id();
+            $username = auth()->guard('staff')->user()->username;
+            $guard = 'Staff';
         }
         $application->rejection_reason = $request->reason;
         $application->save();
@@ -660,13 +660,13 @@ trait ApplicationTrait
     //     $application->selection_caste_id = $request->category;
     //     $application->save();
     //     if(auth()->guard('admin')->check()){
-    //         $user_id = auth()->guard('admin')->id(); 
-    //         $username = auth()->guard('admin')->user()->username; 
-    //         $guard = 'Admin'; 
+    //         $user_id = auth()->guard('admin')->id();
+    //         $username = auth()->guard('admin')->user()->username;
+    //         $guard = 'Admin';
     //     }elseif(auth()->guard('staff')->check()){
-    //         $user_id = auth()->guard('staff')->id(); 
-    //         $username = auth()->guard('staff')->user()->username; 
-    //         $guard = 'Staff'; 
+    //         $user_id = auth()->guard('staff')->id();
+    //         $username = auth()->guard('staff')->user()->username;
+    //         $guard = 'Staff';
     //     }
     //     saveLogs($user_id, $username, $guard, "Application selected for {$application->id}");
     //     Session::flash('success','Selected Successfully');
@@ -697,9 +697,9 @@ trait ApplicationTrait
         $selected_stream = $data['selected_stream'];
         $boards = $data['boards'];
         if(auth()->guard('admin')->check()){
-            $view = 'admin.application.live-merit-list'; 
+            $view = 'admin.application.live-merit-list';
         }elseif(auth()->guard('staff')->check()){
-            $view = 'staff.application.live-merit-list'; 
+            $view = 'staff.application.live-merit-list';
         }
         return view($view,compact('applications','castes','courses','semesters','streams','years','reservations','selected_stream','boards'));
     }
@@ -720,9 +720,9 @@ trait ApplicationTrait
             $reservations = Reservation::where('stream_id',$stream)->get();
         }
         if(auth()->guard('admin')->check()){
-            $view = 'admin.application.live-seat-available'; 
+            $view = 'admin.application.live-seat-available';
         }elseif(auth()->guard('staff')->check()){
-            $view = 'staff.application.live-seat-available'; 
+            $view = 'staff.application.live-seat-available';
         }
         $seat_details = getSeatDetails();
         return view($view,compact('reservations','majors','is_major','major_names','seat_details'));
@@ -731,9 +731,9 @@ trait ApplicationTrait
     public function icard()
     {
             if(auth()->guard('admin')->check()){
-                $view = 'admin.i-card.create'; 
+                $view = 'admin.i-card.create';
             }elseif(auth()->guard('staff')->check()){
-                $view = 'staff.i-card.create'; 
+                $view = 'staff.i-card.create';
             }
             return view($view);
     }
@@ -743,11 +743,11 @@ trait ApplicationTrait
             $uid = $request->uid;
             $admitted_student = AdmittedStudent::where('uid',$uid)->with('application.appliedStream.stream')->first();
             if(isset($admitted_student)){
-     
+
                 if(auth()->guard('admin')->check()){
-                    $view = 'admin.i-card.create'; 
+                    $view = 'admin.i-card.create';
                 }elseif(auth()->guard('staff')->check()){
-                    $view = 'staff.i-card.create'; 
+                    $view = 'staff.i-card.create';
                 }
                 return view($view,compact('admitted_student'));
             }
@@ -755,9 +755,9 @@ trait ApplicationTrait
                 return Redirect::back()->withInput()->withErrors(['No Record Found']);
             //$application = Application::where()
             // if(auth()->guard('admin')->check()){
-            //     $view = 'admin.i-card.create'; 
+            //     $view = 'admin.i-card.create';
             // }elseif(auth()->guard('staff')->check()){
-            //     $view = 'staff.i-card.create'; 
+            //     $view = 'staff.i-card.create';
             // }
            // return view($view);
     }

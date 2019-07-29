@@ -34,7 +34,7 @@
                     <option value="{{$semester->id}}" {{Input::get('semester')==$semester->id?'selected':''}}>{{$semester->name}}</option>
                     @endforeach
                   </select>
-                  
+
                 </div>
               </div>
               <div class="col-md-3 col-lg-3">
@@ -130,8 +130,9 @@
               </div>
               <div class="col-md-3 col-lg-3">
                 <div class="form-group">
-                  <label class="form-label">Order By Percentage</label>
+                  <label class="form-label">Order By Marks</label>
                   <select class="form-control" name="order_by_percentage">
+                    <option value="">Select Order By Marks</option>
                     <option value="DESC" {{(Input::get('order_by_percentage')=='DESC')?'selected':''}}>Descending</option>
                     <option value="ASC" {{(Input::get('order_by_percentage')=='ASC')?'selected':''}}>Ascending</option>
                   </select>
