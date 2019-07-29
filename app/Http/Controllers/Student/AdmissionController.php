@@ -178,6 +178,7 @@ class AdmissionController extends Controller
                     if ($code == '0300') {
                         $online_payment_data['status'] = 1;
                         $application->payment_status = 3;
+                        $application->status = 4;
                         $application->admission_done_by = 'Student';
                         $application->admission_done_by_id = auth()->id();
                         $application->selected_category_id = $application->category_id;
