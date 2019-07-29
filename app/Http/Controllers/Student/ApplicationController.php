@@ -197,6 +197,7 @@ class ApplicationController extends Controller
                 $application_rules["sub_1_total"] = str_replace("between:0,100", "between:0,2000", $application_rules["sub_1_total"]);
                 $application_rules["sub_1_score"] = str_replace("between:0,100", "between:0,2000", $application_rules["sub_1_score"]);
             }
+            Log::critical($application_rules);
             $validator = Validator::make($application_data, $application_rules);
             if ($validator->fails()) {
                 return redirect()->back()->with('error', "Whoops! looks like you have missed something. Please verify and submit again.")->withInput()->withErrors($validator);
