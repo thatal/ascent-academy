@@ -193,6 +193,10 @@ class ApplicationController extends Controller
             // dd($request->all());
             // validation here
             $application_rules = Application::$rules;
+            if($application_data["course_id"] == 3){
+                $application_data["sub_1_total"] = str_replace("between:0,100", "between:0,2000",$application_data["sub_1_total"]);
+                $application_data["sub_1_score"] = str_replace("between:0,100", "between:0,2000",$application_data["sub_1_score"]);
+            }
             $validator = Validator::make($application_data, $application_rules);
             if ($validator->fails()) {
                 return redirect()->back()->with('error', "Whoops! looks like you have missed something. Please verify and submit again.")->withInput()->withErrors($validator);

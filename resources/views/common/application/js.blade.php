@@ -864,6 +864,9 @@ $(document).ready(function() {
             echo 'hideAndDisabled("#subject_column");';
     @endphp
     // boardCondition();
+    if(parseInt($("#course_id").val()) == 1 || parseInt($("#course_id").val()) == 2 || parseInt($("#course_id").val()) == 3){
+        $("#course_id").trigger("change");
+    }
   $('#application')[0].reset();
 	$(".degree-science-major").find("tr").each(function(index, el) {
 		$(el).find("#subject-td-science-major").find(".form-group, .margin").hide();
