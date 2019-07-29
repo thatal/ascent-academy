@@ -304,6 +304,9 @@ $(document).ready(function(){
             }
             // annual income
             if($("#annual_income").val() < 100000 && $("#annual_income").val() != 0){
+                if($("#course_id").val() == 3){
+                    return true;
+                }
                 if($("input[name='free_admission']:checked").val() == 'yes'){
                     $("input[name='income_certificate'").rules("add",
                     {
@@ -555,7 +558,7 @@ $(document).ready(function(){
     changePlaceholderSubjects();
   })
 
-  $(".cell").on('keyup', function(){
+  $(".cell, .total_marks").on('keyup', function(){
     console.log("Key Upc from .cell");
     var sum = 0;
     var data ={
@@ -564,6 +567,7 @@ $(document).ready(function(){
   var compulsory_subject_marks  = [];
   var other_subject_marks       = [];
   var na_subjects_marks         = [];
+  var total_marks_for_pg        = 0;
     $(".cell").each(function(index, item){
         if ($(item).data("compulsory") == "yes") {
             if (isNaN(parseFloat($(item).val()))) {
@@ -583,9 +587,12 @@ $(document).ready(function(){
                 na_subjects_marks.push(0);
             }else
                 na_subjects_marks.push(parseFloat($(item).val()));
+        }else{
+            total_marks_for_pg += parseFloat($(".total_marks").eq(index).val());
         }
       // var val = $(item).val();
       // alert(val);
+      if($("#course_id").val() != 3){
         if($('#type_percentage').prop('checked') === true){
             if($(this).val() > 100){
               alert('Marks can not greater than 100');
@@ -599,6 +606,7 @@ $(document).ready(function(){
                 $(this).val('');
             }
         }
+      }
 
         // var get_val = $(this).val();
         // sum += Number(get_val);
@@ -627,7 +635,7 @@ $(document).ready(function(){
         if ($("#course_id").val() == 2) {
             // sum -= Math.min(...other_subject_marks);
             var percent = (sum/500)*100;
-        }else{
+        }else if($("#course_id").val() == 1){
             // var percent = (sum/600)*100;
             var calculation_total_marks = 0;
             $(".last_subjects").each(function(){
@@ -639,6 +647,10 @@ $(document).ready(function(){
             });
             calculation_total_marks = calculation_total_marks * 100;
             var percent = (sum/calculation_total_marks)*100;
+        }else if($("#course_id").val() == 3){
+            console.log("total_marks_for_pg");
+            console.log(total_marks_for_pg);
+            var percent =  (sum/total_marks_for_pg) * 100
         }
         var tmarks = sum;
     }
@@ -649,7 +661,7 @@ $(document).ready(function(){
             var percent = (tmarks/500)*100;
         }else if($("#course_id").val() == 1){
             var percent = (tmarks/500)*100;
-        }else{
+        }else if($("#course_id").val() == 2){
             var calculation_total_marks = 0;
             $(".last_subjects").each(function(){
                 if($(this).val().toLowerCase().replace(/\./g, "").trim() == "na"){
@@ -661,6 +673,12 @@ $(document).ready(function(){
             calculation_total_marks = calculation_total_marks * 100;
             var percent = (tmarks/calculation_total_marks)*100;
             // var percent = (tmarks/500)*100;
+        }else if($("#course_id").val() == 3){
+            console.log("total_marks_for_pg");
+            console.log(total_marks_for_pg);
+            // var percent =  (sum/total_marks_for_pg) * 100
+            percent = tmarks;
+            tmarks = Math.round((percent/100) * total_marks_for_pg);
         }
     }
 
@@ -1051,9 +1069,7 @@ $(document).ready(function() {
             $("#other_board_university").prop("required", false).val("");
     });
     $(document).on("input","#annual_income", function(){
-        console.log("Input Event Found.");
         var course_id = $("#course_id").val();
-        console.log(course_id);
         if(course_id == 3 || course_id.trim() == ""){
             return true;
         }
@@ -1205,6 +1221,8 @@ changePlaceholderSubjects = function(){
                 $(element).attr("placeholder","Subject "+(index +1));
             });
         }
+        $(".total_marks").prop("readonly", true);
+        $(".total_score").prop("max", 100);
     }else if(course_id == 2){
         // for degree
         // for percentage
@@ -1225,8 +1243,19 @@ changePlaceholderSubjects = function(){
                 }
             });
         }
-
+        $(".total_marks").prop("readonly", true);
+        $(".total_score").prop("max", 100);
         // for CGPA
+    }else if(course_id == 3){
+        $(".last_subjects").each(function(index, element){
+            if (index <1) {
+                $(element).attr("placeholder","MAJOR SUBJECT");
+            }else{
+                $(element).attr("placeholder","ELECTIVE");
+            }
+        });
+        $(".total_marks").prop("readonly", false);
+        $(".total_score").removeAttr("max");
     }
 }
 </script>

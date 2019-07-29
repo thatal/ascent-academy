@@ -45,7 +45,7 @@
 {{--   @include('common/application/course/hs/semester/semester')
 
   @include('common/application/course/hs/stream/stream') --}}
-{{-- 
+{{--
   @include('common/application/course/hs/subject/science')
 
   @include('common/application/course/hs/subject/arts')
@@ -57,7 +57,7 @@
   @include('common/application/course/degree/stream/stream') --}}
   {{-- Degree Science --}}
 
-  {{-- 
+  {{--
 
   @include('common/application/course/degree/subject/science-major')
   @include('common/application/course/degree/subject/science') --}}
@@ -66,7 +66,7 @@
   {{-- Degree Arts --}}
   {{-- @include('common/application/course/degree/semester/semester') --}}
 
-  {{-- 
+  {{--
 
   @include('common/application/course/degree/subject/arts-major')
   @include('common/application/course/degree/subject/arts') --}}
@@ -76,7 +76,7 @@
   {{-- @include('common/application/course/degree/semester/semester') --}}
 
   {{-- @include('common/application/course/degree/stream/stream') --}}
-{{-- 
+{{--
   @include('common/application/course/degree/subject/commerce-major')
   @include('common/application/course/degree/subject/commerce') --}}
   {{--/ Degree Commerce --}}
@@ -96,12 +96,12 @@
   <div class="col-md-6 col-lg-6">
     <div class="form-group">
       <label class="form-label">Mobile Number<span class="form-required">*</span></label>
-      <input type="number" class="form-control" name="mobile_no" placeholder="Mobile Number" autocomplete="off" 
+      <input type="number" class="form-control" name="mobile_no" placeholder="Mobile Number" autocomplete="off"
 
-      @if(isset($application)) 
-      value="{{$application->mobile_no}}" readonly="" 
+      @if(isset($application))
+      value="{{$application->mobile_no}}" readonly=""
       @else
-      value="{{auth()->user()->mobile_no}}" readonly="" 
+      value="{{auth()->user()->mobile_no}}" readonly=""
       @endif
 
        required  minlength="10" maxlength="10">
@@ -110,13 +110,13 @@
   <div class="col-md-6 col-lg-6">
     <div class="form-group">
       <label class="form-label">Email<span class="form-required">*</span></label>
-      <input type="email" class="form-control" name="email" placeholder="Email ID" autocomplete="off" 
+      <input type="email" class="form-control" name="email" placeholder="Email ID" autocomplete="off"
 
-      @if(isset($application)) 
-      value="{{$application->email}}" readonly="" 
+      @if(isset($application))
+      value="{{$application->email}}" readonly=""
 
       @else
-      value="{{auth()->user()->email}}" readonly="" 
+      value="{{auth()->user()->email}}" readonly=""
       @endif
 
       required>
@@ -179,7 +179,7 @@
       <input type="text" name="mothers_name" class="form-control" placeholder="Mother's Name" @isset($application) value="{{$application->mothers_name}}" @endisset required>
     </div>
   </div>
-  
+
   <div class="col-md-6 col-lg-6">
     <label><h4>Present Address</h4></label>
     <div class="form-group">
@@ -206,7 +206,7 @@
       <label class="form-label">Nationality<span class="form-required">*</span></label>
       <input type="text" name="present_nationality" class="form-control present_address" placeholder="Nationality" @isset($application) value="{{$application->present_nationality}}" @endisset required>
     </div>
-  </div> 
+  </div>
   <div class="col-md-6 col-lg-6">
     <label><h4>Permanent Address</h4></label>
     <label class="custom-control custom-checkbox custom-control-inline"><input type="checkbox" name="same" class="custom-control-input" id="address_same"><span class="custom-control-label">Same as present address </span></label>
@@ -248,20 +248,20 @@
     <div class="form-group">
       <label class="form-label">Free Admission <span class="form-required">*</span></label>
       <div class="custom-controls-stacked">
-          <label class="custom-control custom-radio custom-control-inline"><input type="radio" name="free_admission" value="yes" class="custom-control-input" 
+          <label class="custom-control custom-radio custom-control-inline"><input type="radio" name="free_admission" value="yes" class="custom-control-input"
             @if(isset($application))
-                {{$application->annual_income < 100000 ? "" : " disabled "}} 
-                {{$application->free_admission == "yes" ? " checked " : ""}} 
+                {{$application->annual_income < 100000 ? "" : " disabled "}}
+                {{$application->free_admission == "yes" ? " checked " : ""}}
             @else
                 disabled
             @endif
 
             ><span class="custom-control-label"> Yes</span></label>
-          <label class="custom-control custom-radio custom-control-inline"><input type="radio" name="free_admission" 
+          <label class="custom-control custom-radio custom-control-inline"><input type="radio" name="free_admission"
 
             @if(isset($application))
-                {{$application->annual_income < 100000 ? "" : " disabled "}} 
-                {{$application->free_admission == "no" ? " checked " : ""}} 
+                {{$application->annual_income < 100000 ? "" : " disabled "}}
+                {{$application->free_admission == "no" ? " checked " : ""}}
             @else
                 disabled checked
             @endif
@@ -286,7 +286,7 @@
       </select>
     </div>
   </div>
-  @php 
+  @php
     $last_board_or_university = (isset($application) ? $application->last_board_or_university : "")
   @endphp
   <div class="col-md-6 col-lg-6">
@@ -315,7 +315,7 @@
       @if(isset($application))
         value="{{in_array($application->last_board_or_university, ["SEBA","CBSE","ICSE","AHSEC"]) ? "" : $application->last_board_or_university}}"
       @else
-      value="" 
+      value=""
       @endif
       >
     </div>
@@ -343,7 +343,7 @@
   </div>
   <div class="col-md-12 col-lg-12">
     <div class="alert alert-warning">
-        <strong><i class="fa fa-info-circle"></i></strong> If 6<sup>th</sup> Subject not available write <strong>NA</strong> in subject and <strong>0</strong> in marks. Calculation will be made on remaining subjects.
+        <strong><i class="fa fa-info-circle"></i></strong> If any Subject not available write <strong>NA</strong> in subject and <strong>0</strong> in marks. Calculation will be made on remaining subjects.
     </div>
     <div class="form-group">
       <label class="form-label">Marks<span class="form-required">*</span></label>
@@ -382,7 +382,7 @@
   @php
     $readonly = "";
     if(auth()->guard('student')->check()){
-        $readonly = ' readonly '; 
+        $readonly = ' readonly ';
     }
   @endphp
   <div class="col-md-4 col-lg-4">
@@ -468,11 +468,11 @@
       <div class="col-md-6 col-lg-6">
         <div class="form-group">
           <label class="form-label">Caste Certificate (<span class="form-required">if caste is other than General.</span>)</label>
-          <input type="file" name="caste_certificate" value="" 
+          <input type="file" name="caste_certificate" value=""
           @if(isset($application))
             {{($application->caste_id == 1 ? "disabled" : "")}}
           @else
-          disabled 
+          disabled
           @endif
 
            id="caste_certificate">
@@ -491,7 +491,7 @@
           @if(isset($application))
             {{($application->is_gap ? "" : "disabled")}}
           @else
-            disabled 
+            disabled
           @endif
           >
               @isset($application)
@@ -509,7 +509,7 @@
             @if(isset($application))
                 {{($application->annual_income < 100000 ? "" : "disabled")}}
             @else
-                disabled 
+                disabled
             @endif
           >
               @isset($application)
@@ -527,7 +527,7 @@
             @if(isset($application))
                 {{($application->co_curricular == 1 ? "" : "disabled")}}
             @else
-                disabled 
+                disabled
             @endif
           >
               @isset($application)
@@ -546,7 +546,7 @@
             @if(isset($application))
                 {{($application->differently_abled == 1 ? "" : "disabled")}}
             @else
-                disabled 
+                disabled
             @endif
           >
               @isset($application)
@@ -565,7 +565,7 @@
             @if(isset($application))
                 {{($application->free_admission == "yes" ? "" : "disabled")}}
             @else
-                disabled 
+                disabled
             @endif
           >
               @isset($application)
