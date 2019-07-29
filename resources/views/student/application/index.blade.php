@@ -26,8 +26,10 @@ Application
                                 @endif
                                 @if(config('constants.current_time') >= strtotime(config('constants.apply_up_time')) &&
                                 config('constants.current_time') <= strtotime(config('constants.apply_down_time')))
+                                    @if($applications->count())
                                     @if($applications[0]->semester_id!=2)
                                     <a href="{{route('student.application.create')}}" class="btn btn-primary">Apply</a>
+                                    @endif
                                     @endif
                                 @endif
                             </div>
