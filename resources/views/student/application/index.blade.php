@@ -30,6 +30,8 @@ Application
                                     @if($applications[0]->semester_id!=2)
                                     <a href="{{route('student.application.create')}}" class="btn btn-primary">Apply</a>
                                     @endif
+                                    @else
+                                    <a href="{{route('student.application.create')}}" class="btn btn-primary">Apply</a>
                                     @endif
                                 @endif
                             </div>
