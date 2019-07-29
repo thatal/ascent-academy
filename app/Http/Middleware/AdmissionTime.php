@@ -22,7 +22,7 @@ class AdmissionTime
         $down_time = strtotime(config('constants.admission_down_time'));
         if($current_time <= $up_time){
             $date = dateFormat($up_time, 'd-m-Y h:i a');
-            $message = "Online application will be available from {$date}";
+            $message = "Online admission will be available from {$date}";
 
         }elseif($current_time >= $down_time){
             $message = 'Online application has been closed';
