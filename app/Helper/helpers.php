@@ -24,7 +24,7 @@ function dumpp($data)
 }
 function is_new_admission($semester_id)
 {
-    if (in_array($semester_id, [1, 3])) {
+    if (in_array($semester_id, [1, 3, 9])) {
         return 1;
     } else {
         return 0;

@@ -200,6 +200,7 @@ class ApplicationController extends Controller
             Log::critical($application_rules);
             $validator = Validator::make($application_data, $application_rules);
             if ($validator->fails()) {
+                Log::error($validator->errors());
                 return redirect()->back()->with('error', "Whoops! looks like you have missed something. Please verify and submit again.")->withInput()->withErrors($validator);
             }
             $validator->sometimes('free_admission', 'required|in:yes,no|nullable', function ($input) {
