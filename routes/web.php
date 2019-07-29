@@ -61,20 +61,22 @@ Route::group(['prefix' => 'application'], function () {
         'as' => 'student.application.download-application',
         'uses' => 'Student\ApplicationController@downloadApplication',
     ]);
-    // for application payment
-    Route::post('/make-payment', [
-        'as' => 'student.application.make-payment',
-        'uses' => 'Student\ApplicationController@makePayment',
-    ])->middleware('apply-time');
-    Route::post('/payment-response', [
-        'as' => 'student.application.payment-response',
-        'uses' => 'Student\ApplicationController@paymentResponse',
-    ])->middleware('apply-time');
-    Route::get('/payment-receipt/{application}', [
-        'as' => 'student.application.payment-receipt',
-        'uses' => 'Student\ApplicationController@paymentReceipt',
-    ]);
+
 });
+
+// for application payment
+Route::post('/make-payment', [
+    'as' => 'student.application.make-payment',
+    'uses' => 'Student\ApplicationController@makePayment',
+])->middleware('apply-time');
+Route::post('/payment-response', [
+    'as' => 'student.application.payment-response',
+    'uses' => 'Student\ApplicationController@paymentResponse',
+])->middleware('apply-time');
+Route::get('/payment-receipt/{application}', [
+    'as' => 'student.application.payment-receipt',
+    'uses' => 'Student\ApplicationController@paymentReceipt',
+]);
 
 // for admission payment
 Route::group(['prefix' => 'admission'], function () {
