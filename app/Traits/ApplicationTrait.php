@@ -351,6 +351,11 @@ trait ApplicationTrait
             }
 
             $application_rules  = Application::$rules;
+            if ($application_data["course_id"] == 3) {
+                $application_rules["sub_1_total"] = str_replace("between:0,100", "between:0,2000", $application_rules["sub_1_total"]);
+                $application_rules["sub_1_score"] = str_replace("between:0,100", "between:0,2000", $application_rules["sub_1_score"]);
+            }
+            Log::critical($application_rules);
             $validator = Validator::make( $application_data, $application_rules);
             if ($validator->fails()) {
                 // dump($request->all());
