@@ -193,7 +193,7 @@ class ApplicationController extends Controller
             // dd($request->all());
             // validation here
             $application_rules = Application::$rules;
-            if($application_data["course_id"] == 3){
+            if ($application_data["course_id"] == 3) {
                 $application_rules["sub_1_total"] = str_replace("between:0,100", "between:0,2000", $application_rules["sub_1_total"]);
                 $application_rules["sub_1_score"] = str_replace("between:0,100", "between:0,2000", $application_rules["sub_1_score"]);
             }
@@ -753,7 +753,7 @@ AppliedSubject::create($applied_subjects_data);
     {
 
         $msg = $request->msg;
-        Log::info($msg);
+        Log::debug('application payment response ->'.$msg);
         $checksum_key = config('constants.checksum_key');
 
         $checksum_value = substr(strrchr($msg, "|"), 1); //Last check sum value

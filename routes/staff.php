@@ -119,64 +119,64 @@ Route::group(['prefix' => 'admission'], function () {
 	]);
 });
 
-Route::group(['prefix' => 'fee-head'], function () {
-	Route::get('/',[
-		'as'=>'fee-head.index',
-		'uses' => 'Staff\FeeHeadController@index'
-	]);
-	Route::get('/create',[
-		'as'=>'fee-head.create',
-		'uses' => 'Staff\FeeHeadController@create'
-	]);
-	Route::post('/create',[
-		'as'=>'fee-head.store',
-		'uses' => 'Staff\FeeHeadController@store'
-	]);
-	Route::get('/show/{fee_head}',[
-		'as'=>'fee-head.show',
-		'uses' => 'Staff\FeeHeadController@show'
-	]);
-	Route::get('/edit/{fee_head}',[
-		'as'=>'fee-head.edit',
-		'uses' => 'Staff\FeeHeadController@edit'
-	]);
-	Route::post('/edit/{fee_head}',[
-		'as'=>'fee-head.update',
-		'uses' => 'Staff\FeeHeadController@update'
-	]);
-	Route::get('/delete/{fee_head}',[
-		'as'=>'fee-head.delete',
-		'uses' => 'Staff\FeeHeadController@destroy'
-	]);
-});
-Route::group(['prefix' => 'fee'], function () {
-	Route::get('/',[
-		'as'=>'fee.index',
-		'uses' => 'Staff\FeeController@index'
-	]);
-	Route::get('/create',[
-		'as'=>'fee.create',
-		'uses' => 'Staff\FeeController@create'
-	]);
-	Route::post('/create',[
-		'as'=>'fee.store',
-		'uses' => 'Staff\FeeController@store'
-	]);
-	Route::get('/show/{fee_head}',[
-		'as'=>'fee.show',
-		'uses' => 'Staff\FeeController@show'
-	]);
-	Route::get('/edit/{fee_head}',[
-		'as'=>'fee.edit',
-		'uses' => 'Staff\FeeController@edit'
-	]);
-	Route::post('/edit/{fee_head}',[
-		'as'=>'fee.update',
-		'uses' => 'Staff\FeeController@update'
-	]);
-	Route::get('/delete/{fee_head}',[
-		'as'=>'fee.delete',
-		'uses' => 'Staff\FeeController@destroy'
-	]);
-});
+// Route::group(['prefix' => 'fee-head'], function () {
+// 	Route::get('/',[
+// 		'as'=>'fee-head.index',
+// 		'uses' => 'Staff\FeeHeadController@index'
+// 	]);
+// 	Route::get('/create',[
+// 		'as'=>'fee-head.create',
+// 		'uses' => 'Staff\FeeHeadController@create'
+// 	]);
+// 	Route::post('/create',[
+// 		'as'=>'fee-head.store',
+// 		'uses' => 'Staff\FeeHeadController@store'
+// 	]);
+// 	Route::get('/show/{fee_head}',[
+// 		'as'=>'fee-head.show',
+// 		'uses' => 'Staff\FeeHeadController@show'
+// 	]);
+// 	Route::get('/edit/{fee_head}',[
+// 		'as'=>'fee-head.edit',
+// 		'uses' => 'Staff\FeeHeadController@edit'
+// 	]);
+// 	Route::post('/edit/{fee_head}',[
+// 		'as'=>'fee-head.update',
+// 		'uses' => 'Staff\FeeHeadController@update'
+// 	]);
+// 	Route::get('/delete/{fee_head}',[
+// 		'as'=>'fee-head.delete',
+// 		'uses' => 'Staff\FeeHeadController@destroy'
+// 	]);
+// });
+// Route::group(['prefix' => 'fee'], function () {
+// 	Route::get('/',[
+// 		'as'=>'fee.index',
+// 		'uses' => 'Staff\FeeController@index'
+// 	]);
+// 	Route::get('/create',[
+// 		'as'=>'fee.create',
+// 		'uses' => 'Staff\FeeController@create'
+// 	]);
+// 	Route::post('/create',[
+// 		'as'=>'fee.store',
+// 		'uses' => 'Staff\FeeController@store'
+// 	]);
+// 	Route::get('/show/{fee_head}',[
+// 		'as'=>'fee.show',
+// 		'uses' => 'Staff\FeeController@show'
+// 	]);
+// 	Route::get('/edit/{fee_head}',[
+// 		'as'=>'fee.edit',
+// 		'uses' => 'Staff\FeeController@edit'
+// 	]);
+// 	Route::post('/edit/{fee_head}',[
+// 		'as'=>'fee.update',
+// 		'uses' => 'Staff\FeeController@update'
+// 	]);
+// 	Route::get('/delete/{fee_head}',[
+// 		'as'=>'fee.delete',
+// 		'uses' => 'Staff\FeeController@destroy'
+// 	]);
+// });
 
