@@ -99,6 +99,7 @@ Report
                       <th>Application ID</th>
                       <th>Student ID</th>
                       <th>Student Name</th>
+                      <th>Amount</th>
                       <th>Code</th>
                       <th>Response</th>
                       <th>Status</th>
@@ -111,6 +112,7 @@ Report
                       <td>{{$online_payment->application_id}}</td>
                       <td>{{$online_payment->student_id}}</td>
                       <td>{{$online_payment->application->fullname}}</td>
+                      <td>{{$online_payment->amount}}</td>
                       <td>{{$online_payment->code}}</td>
                       <td>{{$online_payment->biller_response}}</td>
                       <td>{{$online_payment->status}}</td>
