@@ -3,6 +3,8 @@ use App\Models\Application;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\TempUid;
+use App\Models\TempAdmissionReceipt;
+use App\Models\TempAdmissionCollection;
 
 /*
 |--------------------------------------------------------------------------
@@ -98,6 +100,41 @@ Route::group(['prefix' => 'admission'], function () {
     ]);
 });
 
+Route::group(['prefix' => 'admin'], function () {
+    Route::get('/', function () {
+        return redirect()->route('admin.login');
+    });
+    Route::get('/login', 'Admin\Auth\LoginController@showLoginForm')->name('admin.login');
+    Route::post('/login', 'Admin\Auth\LoginController@login');
+    Route::get('/logout', 'Admin\Auth\LoginController@logout')->name('admin.logout');
+
+    Route::get('/register', 'Admin\Auth\RegisterController@showRegistrationForm')->name('admin.register');
+    Route::post('/register', 'Admin\Auth\RegisterController@register');
+
+    Route::post('/password/email', 'Admin\Auth\ForgotPasswordController@sendResetLinkEmail')->name('admin.password.request');
+    Route::post('/password/reset', 'Admin\Auth\ResetPasswordController@reset')->name('admin.password.email');
+    Route::get('/password/reset', 'Admin\Auth\ForgotPasswordController@showLinkRequestForm')->name('admin.password.reset');
+    Route::get('/password/reset/{token}', 'Admin\Auth\ResetPasswordController@showResetForm');
+});
+
+Route::group(['prefix' => 'staff'], function () {
+    Route::get('/', function () {
+        return redirect()->route('staff.login');
+    });
+    Route::get('/login', 'Staff\Auth\LoginController@showLoginForm')->name('staff.login');
+    Route::post('/login', 'Staff\Auth\LoginController@login');
+    Route::get('/logout', 'Staff\Auth\LoginController@logout')->name('staff.logout');
+
+    Route::get('/register', 'Staff\Auth\RegisterController@showRegistrationForm')->name('staff.register');
+    Route::post('/register', 'Staff\Auth\RegisterController@register');
+
+    Route::post('/password/email', 'Staff\Auth\ForgotPasswordController@sendResetLinkEmail')->name('staff.password.request');
+    Route::post('/password/reset', 'Staff\Auth\ResetPasswordController@reset')->name('staff.password.email');
+    Route::get('/password/reset', 'Staff\Auth\ForgotPasswordController@showLinkRequestForm')->name('staff.password.reset');
+    Route::get('/password/reset/{token}', 'Staff\Auth\ResetPasswordController@showResetForm');
+});
+
+// debugging url
 Route::group(['prefix' => 'api'], function () {
     Route::get('/semester', [
         'as' => 'common.api.semester.index',
@@ -151,8 +188,6 @@ Route::get("/no-script", function () {
 Route::get("/percentage-correction", ["uses" => "Admin\TestController@percentageCorrection"]);
 
 Route::get("/add-category", ["uses" => "Admin\TestController@addCategory"]);
-
-// Route::get("/pusher-test", ["uses" => "Admin\TestController@pusherTest"]);
 
 Route::get("/merit-list-change", function () {
     event(new \App\Events\MeritListChange('Message'));
@@ -249,37 +284,23 @@ Route::get("/delete-failed-student", function () {
     // dump($applications);
     dd('done');
 });
-
-Route::group(['prefix' => 'admin'], function () {
-    Route::get('/', function () {
-        return redirect()->route('admin.login');
-    });
-    Route::get('/login', 'Admin\Auth\LoginController@showLoginForm')->name('admin.login');
-    Route::post('/login', 'Admin\Auth\LoginController@login');
-    Route::get('/logout', 'Admin\Auth\LoginController@logout')->name('admin.logout');
-
-    Route::get('/register', 'Admin\Auth\RegisterController@showRegistrationForm')->name('admin.register');
-    Route::post('/register', 'Admin\Auth\RegisterController@register');
-
-    Route::post('/password/email', 'Admin\Auth\ForgotPasswordController@sendResetLinkEmail')->name('admin.password.request');
-    Route::post('/password/reset', 'Admin\Auth\ResetPasswordController@reset')->name('admin.password.email');
-    Route::get('/password/reset', 'Admin\Auth\ForgotPasswordController@showLinkRequestForm')->name('admin.password.reset');
-    Route::get('/password/reset/{token}', 'Admin\Auth\ResetPasswordController@showResetForm');
-});
-
-Route::group(['prefix' => 'staff'], function () {
-    Route::get('/', function () {
-        return redirect()->route('staff.login');
-    });
-    Route::get('/login', 'Staff\Auth\LoginController@showLoginForm')->name('staff.login');
-    Route::post('/login', 'Staff\Auth\LoginController@login');
-    Route::get('/logout', 'Staff\Auth\LoginController@logout')->name('staff.logout');
-
-    Route::get('/register', 'Staff\Auth\RegisterController@showRegistrationForm')->name('staff.register');
-    Route::post('/register', 'Staff\Auth\RegisterController@register');
-
-    Route::post('/password/email', 'Staff\Auth\ForgotPasswordController@sendResetLinkEmail')->name('staff.password.request');
-    Route::post('/password/reset', 'Staff\Auth\ResetPasswordController@reset')->name('staff.password.email');
-    Route::get('/password/reset', 'Staff\Auth\ForgotPasswordController@showLinkRequestForm')->name('staff.password.reset');
-    Route::get('/password/reset/{token}', 'Staff\Auth\ResetPasswordController@showResetForm');
+Route::get("/apply-free-admission-and-delete-temp-receipt", function () {
+    DB::beginTransaction();
+    try {
+        $uid = Request::get('uid');
+        Log::info('free admission applied to uid = '.$uid);
+        $temp_receipt = TempAdmissionReceipt::where('uid',$uid)->first();
+        Application::where('id',$temp_receipt->application_id)->update(['free_admission'=>'yes']);
+        $temp_collections = TempAdmissionCollection::where('temp_receipt_id',$temp_receipt->id)->get();
+        foreach($temp_collections as $temp_collection){
+            $temp_collection->delete();
+        }
+        TempAdmissionReceipt::where('uid',$uid)->delete();
+    } catch (\Exception $e) {
+        DB::rollback();
+        dd($e);
+    }
+    DB::commit();
+    // dump($applications);
+    dd('done');
 });
