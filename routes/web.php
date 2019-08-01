@@ -290,12 +290,17 @@ Route::get("/apply-free-admission-and-delete-temp-receipt", function () {
         $uid = Request::get('uid');
         Log::info('free admission applied to uid = '.$uid);
         $temp_receipt = TempAdmissionReceipt::where('uid',$uid)->first();
-        Application::where('id',$temp_receipt->application_id)->update(['free_admission'=>'yes']);
-        $temp_collections = TempAdmissionCollection::where('temp_receipt_id',$temp_receipt->id)->get();
-        foreach($temp_collections as $temp_collection){
-            $temp_collection->delete();
+        if($temp_receipt){
+            Application::where('id',$temp_receipt->application_id)->update(['free_admission'=>'yes']);
+            $temp_collections = TempAdmissionCollection::where('temp_receipt_id',$temp_receipt->id)->get();
+            foreach($temp_collections as $temp_collection){
+                $temp_collection->delete();
+            }
+            TempAdmissionReceipt::where('uid',$uid)->delete();
+        }else{
+            $temp = TempUid::where('uid',$uid)->first();
+            Application::where('id',$temp->application_id)->update(['free_admission'=>'yes']);
         }
-        TempAdmissionReceipt::where('uid',$uid)->delete();
     } catch (\Exception $e) {
         DB::rollback();
         dd($e);
