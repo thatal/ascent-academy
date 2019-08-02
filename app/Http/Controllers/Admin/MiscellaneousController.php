@@ -22,7 +22,7 @@ class MiscellaneousController extends Controller
         try{
             $application = Application::find($request->application_id);
             if($application->payment_status==1){
-                Session::flash('Error','Payment Already Updated');
+                Session::flash('error','Payment Already Updated');
                 return back();
             }
             $online_payment_data = [
