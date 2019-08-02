@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class AdmissionReceipt extends Model
 {
     use SoftDeletes;
-    
+
     protected $guarded = [
         'id'
     ];
@@ -16,7 +16,16 @@ class AdmissionReceipt extends Model
     public function getCreatedAtAttribute($date)
 	{
 	    return date('d-m-Y',strtotime($date));
-	}
+    }
+
+    public function application()
+    {
+        return $this->belongsTo('App\Models\Application', 'application_id');
+    }
+    public function student()
+    {
+        return $this->belongsTo('App\Models\Student', 'student_id');
+    }
 
 	public function collections()
     {

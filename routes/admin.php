@@ -52,7 +52,7 @@ Route::group(['prefix' => 'application'], function () {
 		'uses' => 'Admin\ApplicationController@reject'
 	]);
 
-	
+
 	// Route::post('/select/{application}',[
 	// 	'as'=>'application.select',
 	// 	'uses' => 'Admin\ApplicationController@select'
@@ -214,6 +214,21 @@ Route::group(['prefix' => 'report'], function () {
 	Route::get('/application-fees-collection',[
 		'as'=>'report.application-fees-collection.index',
 		'uses' => 'Admin\ReportController@applicationFeeCollection'
+    ]);
+    Route::get('/receipt',[
+		'as'=>'report.receipt.index',
+		'uses' => 'Admin\ReportController@receipt'
+	]);
+});
+
+Route::group(['prefix' => 'miscellaneous'], function () {
+	Route::get('/online-application-fee-create',[
+		'as'=>'miscellaneous.online-application-fee.create',
+		'uses' => 'Admin\MiscellaneousController@ApplicationFeeCreate'
+    ]);
+    Route::post('/online-application-fee-create',[
+		'as'=>'miscellaneous.online-application-fee.store',
+		'uses' => 'Admin\MiscellaneousController@ApplicationFeeStore'
 	]);
 });
 

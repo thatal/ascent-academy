@@ -59,21 +59,23 @@ Report
               </div>
               <div class="col-md-3 col-lg-3">
                 <div class="form-group">
-                  <label class="form-label">Status</label>
-                  <select name="status" class="form-control">
+                  <label class="form-label">Course</label>
+                  <select name="course_id" class="form-control">
                     <option value="">All</option>
-                    <option value="0" {{Input::get('status')=='0'?'selected':''}}>Unsuccessfull</option>
-                    <option value="1" {{Input::get('status')=='1'?'selected':''}}>Successfull</option>
+                    @foreach($courses as $course)
+                  <option value="{{$course->id}}" {{Input::get('course_id')==$course->id?'selected':''}}>{{$course->name}}</option>
+                    @endforeach
                   </select>
                 </div>
               </div>
               <div class="col-md-3 col-lg-3">
                 <div class="form-group">
-                  <label class="form-label">Fee Type</label>
-                  <select name="fee_type" class="form-control">
+                  <label class="form-label">Semester</label>
+                  <select name="semester_id" class="form-control">
                     <option value="">All</option>
-                    <option value="1" {{Input::get('fee_type')=='1'?'selected':''}}>Application Fee</option>
-                    <option value="2" {{Input::get('fee_type')=='2'?'selected':''}}>Renewal Fee</option>
+                    @foreach($semesters as $semester)
+                  <option value="{{$semester->id}}" {{Input::get('semester_id')==$semester->id?'selected':''}}>{{$semester->name}}</option>
+                    @endforeach
                   </select>
                 </div>
               </div>
@@ -95,7 +97,7 @@ Report
           <div class="card-header">
             <div class="row justify-content-between">
               <div class="col-auto mr-auto">
-                <h3 class="card-title">Application Fee Collections (Total Applications: {{$online_payments->total()}})</h3>
+                <h3 class="card-title">Application Fee Collections (Total Applications: {{$receipts->total()}})</h3>
               </div>
               <div class="col-auto">
                 Total Amount: {{getDecimal($total_amount)}}
@@ -109,30 +111,30 @@ Report
                   <thead>
                     <tr>
                       <th>#</th>
+                      <th>Receipt No</th>
+                      <th>Uid</th>
                       <th>Application ID</th>
                       <th>Student ID</th>
                       <th>Student Name</th>
                       <th>Course</th>
                       <th>Semester</th>
-                      <th>Amount</th>
-                      <th>Code</th>
-                      <th>Response</th>
-                      <th>Status</th>
+                      <th>Total</th>
+                      <th>Is Online</th>
                     </tr>
                   </thead>
                   <tbody>
-                    @forelse($online_payments as $key => $online_payment)
+                    @forelse($receipts as $key => $receipt)
                     <tr>
-                      <td>{{ $key+ 1 + ($online_payments->perPage() * ($online_payments->currentPage() - 1)) }}</td>
-                      <td>{{$online_payment->application_id}}</td>
-                      <td>{{$online_payment->student_id}}</td>
-                      <td>{{$online_payment->application->fullname}}</td>
-                      <td>{{$online_payment->application->course->name}}</td>
-                      <td>{{$online_payment->application->semester->name}}</td>
-                      <td>{{$online_payment->amount}}</td>
-                      <td>{{$online_payment->code}}</td>
-                      <td>{{$online_payment->biller_response}}</td>
-                      <td>{{$online_payment->status}}</td>
+                      <td>{{ $key+ 1 + ($receipts->perPage() * ($receipts->currentPage() - 1)) }}</td>
+                      <td>{{$receipt->receipt_no}}</td>
+                      <td>{{$receipt->uid}}</td>
+                      <td>{{$receipt->application_id}}</td>
+                      <td>{{$receipt->student_id}}</td>
+                      <td>{{$receipt->application->fullname}}</td>
+                      <td>{{$receipt->application->course->name}}</td>
+                      <td>{{$receipt->application->semester->name}}</td>
+                      <td>{{$receipt->total}}</td>
+                      <td>{{$receipt->is_online?'Yes':'No'}}</td>
                     </tr>
                     @empty
                     <tr>
@@ -141,7 +143,7 @@ Report
                     @endforelse
                   </tbody>
                 </table>
-                {{$online_payments->render()}}
+                {{$receipts->render()}}
               </div>
             </div>
           </div>
