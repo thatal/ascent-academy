@@ -46,6 +46,7 @@
 
           <div class="dropdown-menu dropdown-menu-arrow">
             <a href="{{route('admin.miscellaneous.online-application-fee.create')}}" class="dropdown-item">Application Fee Update</a>
+            <a href="{{route('admin.miscellaneous.online-admission-fee.create')}}" class="dropdown-item">Admission Fee Update</a>
           </div>
         </li>
         <li class="nav-item">

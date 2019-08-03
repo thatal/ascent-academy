@@ -24,7 +24,7 @@ class TestController extends Controller
 	    	$edited_data = \Arr::except($application->toArray(), ["applied_subjects","applied_stream", "student", "course", "semester", "caste", "attachments", "receipt", "admitted_student", "payment_receipt"]);
     		// degree 5 subject calculation
 			$compulsory_subjects_score 	= 0;
-			$other_subjects_score 	 		= [];	
+			$other_subjects_score 	 		= [];
 			$compulsory_subjects_score 	= $application->sub_1_score + $application->sub_2_score;
 			$other_subjects_score[$application->sub_3_name] 	= $application->sub_3_score;
 			$other_subjects_score[$application->sub_4_name] 	= $application->sub_4_score;
@@ -55,7 +55,7 @@ class TestController extends Controller
 		    					"old_total"			=> $application->all_total_marks,
 		    					"new_total"			=> $corrected_total,
 		    				];
-	    					
+
 		    				$application->percentage 		= round($percentage, 2);
 		    				$application->all_total_marks 	= $corrected_total;
 	    				}
@@ -107,7 +107,7 @@ class TestController extends Controller
 	    					"old_total"			=> $application->all_total_marks,
 	    					"new_total"			=> $corrected_total,
 	    				];
-    					
+
 	    				$application->percentage 		= round($percentage, 2);
 	    				$application->all_total_marks 	= $corrected_total;
     				}
@@ -133,7 +133,7 @@ class TestController extends Controller
 	    					"old_total"			=> $application->all_total_marks,
 	    					"new_total"			=> $corrected_total,
 	    				];
-    					
+
 	    				$application->percentage 		= round($percentage, 2);
 	    				$application->all_total_marks 	= $corrected_total;
     				}
@@ -151,7 +151,7 @@ class TestController extends Controller
 		    		$application->save();
 		    		EditedApplication::create($edited_data);
             	}
-            	
+
             } catch (\Exception $e) {
             	DB::rollback();
             }
@@ -163,7 +163,7 @@ class TestController extends Controller
 
     public function addCategory()
     {
-    	$applications = Application::get();
+    	$applications = Application::whereDate('created_at','2019-01-02 00:00:00')->get();
     	DB::beginTransaction();
     	try {
     		foreach ($applications as $key => $application) {
@@ -180,7 +180,7 @@ class TestController extends Controller
 
     	DB::commit();
     	dd('Successfull');
-    	
+
     }
     public function report_calculation() {
     	return $this->subject_wise_student();
@@ -387,4 +387,4 @@ class TestController extends Controller
     }
 
 }
-// 
+//

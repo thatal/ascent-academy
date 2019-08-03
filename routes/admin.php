@@ -229,6 +229,14 @@ Route::group(['prefix' => 'miscellaneous'], function () {
     Route::post('/online-application-fee-create',[
 		'as'=>'miscellaneous.online-application-fee.store',
 		'uses' => 'Admin\MiscellaneousController@ApplicationFeeStore'
+    ]);
+    Route::get('/online-admission-fee-create',[
+		'as'=>'miscellaneous.online-admission-fee.create',
+		'uses' => 'Admin\MiscellaneousController@AdmissionFeeCreate'
+    ]);
+    Route::post('/online-admission-fee-create',[
+		'as'=>'miscellaneous.online-admission-fee.store',
+		'uses' => 'Admin\MiscellaneousController@AdmissionFeeStore'
 	]);
 });
 
