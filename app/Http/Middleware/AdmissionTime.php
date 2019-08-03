@@ -25,7 +25,7 @@ class AdmissionTime
             $message = "Online admission will be available from {$date}";
 
         }elseif($current_time >= $down_time){
-            $message = 'Online application has been closed';
+            $message = 'Online admission has been closed';
         }
         if($message){
             $local_debug = isset($_SERVER['REMOTE_ADDR']) ? in_array($_SERVER['REMOTE_ADDR'], array('110.235.205.141')): false;

@@ -93,7 +93,7 @@ Route::group(['prefix' => 'admission'], function () {
     Route::post('/payment-response', [
         'as' => 'student.admission.payment-response',
         'uses' => 'Student\AdmissionController@paymentResponse',
-    ])->middleware('admission-time');
+    ]);
     Route::get('/payment-receipt/{application}', [
         'as' => 'student.admission.payment-receipt',
         'uses' => 'Student\AdmissionController@paymentReceipt',

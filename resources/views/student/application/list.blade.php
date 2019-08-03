@@ -70,13 +70,16 @@
                                         @endif
                                     @else
                                         @if($application->payment_status==2)
-                                            <div class="col-auto">
-                                                <form method="post" action="{{ route('student.admission.fee-detail') }}">
-                                                    @csrf
-                                                    <input type="hidden" name="application_uuid" value="{{$application->uuid}}">
-                                                    <button type="submit" class="btn btn-success">Fee Details</button>
-                                                </form>
-                                            </div>
+                                            @if(config('constants.current_time') >= strtotime(config('constants.admission_up_time')) &&
+                                                config('constants.current_time') <= strtotime(config('constants.admission_down_time')))
+                                                <div class="col-auto">
+                                                    <form method="post" action="{{ route('student.admission.fee-detail') }}">
+                                                        @csrf
+                                                        <input type="hidden" name="application_uuid" value="{{$application->uuid}}">
+                                                        <button type="submit" class="btn btn-success">Fee Details</button>
+                                                    </form>
+                                                </div>
+                                            @endif
                                         @elseif($application->payment_status==3)
                                             <a href="{{ route('student.application.download-application',$application->uuid) }}" class="btn btn-primary mr-2">Download</a>
                                             <a href="{{ route('student.admission.payment-receipt',$application->uuid) }}" class="btn btn-success">Receipt</a>
