@@ -2,7 +2,7 @@
 return [
 	'current_time' => time(),
 	'apply_up_time' => '2019-07-25 11:00:00',
-    'apply_down_time' => '2019-08-04 23:59:59',
+    'apply_down_time' => '2019-08-05 23:59:59',
 
 	'admission_up_time' => '2019-07-29 11:59:59',
 	'admission_down_time' => '2019-08-04 23:59:59',
