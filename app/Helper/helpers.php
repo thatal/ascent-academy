@@ -35,6 +35,7 @@ function getFeeStructure($application, $fee_structures)
 {
     $total = 0;
     $free_total = 0;
+    $self_ids = [19, 21, 22, 23, 24, 25, 26, 27, 28];
     // for only degree
     if ($application->course_id == 2) {
         $removing_ids = [19, 21, 22, 23, 24, 25, 26, 27, 28];

@@ -30,9 +30,53 @@ trait AdmissionTrait
     {
         if(auth()->guard('admin')->check()){
             $guard = 'admin';
+            $allocated_by_id = auth()->guard('admin')->id();
+            $allocated_by = 'Admin';
         }elseif(auth()->guard('staff')->check()){
             $guard = 'staff';
+            $allocated_by_id = auth()->guard('staff')->id();
+            $allocated_by = 'Staff';
         }
+        DB::beginTransaction();
+        try{
+            if($application->course_id == 3){
+                if(!$application->appliedSubjects()->exists()){
+                    if($application->appliedStream->stream_id==11){
+                        $subject_id = 459;
+                    }elseif($application->appliedStream->stream_id==12){
+                        $subject_id = 460;
+                    }elseif($application->appliedStream->stream_id==13){
+                        $subject_id = 461;
+                    }elseif($application->appliedStream->stream_id==14){
+                        $subject_id = 462;
+                    }elseif($application->appliedStream->stream_id==15){
+                        $subject_id = 463;
+                    }
+                    $data = [
+                        'uuid' => (String)Str::uuid(),
+                        'student_id' => $application->student_id,
+                        'application_id' => $application->id,
+                        'subject_id' => $subject_id,
+                        'is_compulsory' => 0,
+                        'is_major' => 1,
+                        'preference' => 0,
+                        'allocated_by_id' => $allocated_by_id,
+                        'allocated_by' => $allocated_by,
+                    ];
+                    $application->appliedSubjects()->create($data);
+                    $application->status = 3;
+                    $application->save();
+                }
+                // dd($application);
+            }
+        }catch(Exception $e){
+            dd($e);
+            DB::rollback();
+            Session::flash('error','Something went wrong');
+            Log::error($e);
+            return back();
+        }
+        DB::commit();
         if($application->status != 3){
             return redirect()->route($guard.".application.index")->with("error", "Subject not yet allocated");
         }
@@ -189,6 +233,14 @@ trait AdmissionTrait
                             })
                             ->where('status',4)
                             ->count() + 1;
+        }elseif($stream_id==12 || $stream_id==13){
+            $count  = Application::where('course_id',$application->course_id)
+                            ->where('semester_id',$application->semester_id)
+                            ->whereHas('appliedStream',function($query) use ($application){
+                                $query->where('stream_id',12)->orWhere('stream_id',12);
+                            })
+                            ->where('status',4)
+                            ->count() + 1;
         }else{
             $count  = Application::where('course_id',$application->course_id)
                             ->where('semester_id',$application->semester_id)
@@ -213,6 +265,14 @@ trait AdmissionTrait
             $stream_name = 'CD';
         elseif($stream_id==10)
             $stream_name = 'BT';
+        elseif($stream_id==11)
+            $stream_name = 'PA';
+        elseif($stream_id==12 || $stream_id==13)
+            $stream_name = 'PG';
+        elseif($stream_id==14)
+            $stream_name = 'PB';
+        elseif($stream_id==15)
+            $stream_name = 'PZ';
         // $uid = $year.$stream_name[0].$course_name[0].$uid;
 		$uid = $year.$stream_name.$uid;
         return $uid;

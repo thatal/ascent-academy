@@ -22,7 +22,7 @@
     <a href="javascript:void(0)" class="btn btn-primary" onclick="printdiv_result('print')" target="_blank"> Print I-Card</a>
     <div id="print">
       <table border="0" cellpadding="0" cellspacing="0" id="tbl" style="border-collapse: collapse;
-      
+
       background-color: {{$admitted_student->application->course_id==1?'#FFFF00':'#f5eea2'}}; width:312px; height:auto;">
 
         <tr>
@@ -120,14 +120,14 @@
 
                                             <font size="2">&nbsp;</font><b><font face="Verdana" size="1">Validity period</font></b>
 
-                                            @if($admitted_student->application->course_id == 1)
+                                            @if($admitted_student->application->course_id == 1 || $admitted_student->application->course_id == 3)
                                             <font color="#FF0000" size="2">
                                               <strong>{{$admitted_student->application->year}} - {{intval($admitted_student->application->year)+intval(2)}}</strong></font>
-                                              @else
+                                            @elseif($admitted_student->application->course_id == 2)
                                               <font color="#FF0000" size="2">
                                                 <strong>{{$admitted_student->application->year}}-{{intval($admitted_student->application->year)+intval(3)}}</strong></font>
-                                                @endif
-                                                &nbsp;&nbsp;&nbsp;  
+                                            @endif
+                                                &nbsp;&nbsp;&nbsp;
 
                                               </td>
 

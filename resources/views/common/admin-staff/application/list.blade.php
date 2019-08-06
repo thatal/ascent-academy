@@ -35,7 +35,7 @@
                       <th>Course</th>
                       <th>Semester</th>
                       <th>Stream</th>
-                      <th>Caste</th>{{-- 
+                      <th>Caste</th>{{--
                       <th>Co Curricular</th>
                       <th>Differently Abled</th> --}}
                       <th>Total Marks</th>
@@ -85,10 +85,10 @@
                         <div class="btn-group">
                           <a href="{{ auth()->guard('admin')->check()? route('admin.application.show',$application->uuid) : route('staff.application.show',$application->uuid)}}" class="btn btn-default" target="_blank"><i class="fa fa-eye"></i></a>
 
-                          @if($application->status<4) 
+                          @if($application->status<4)
                             <a href="{{ auth()->guard('admin')->check()? route('admin.application.edit',$application->uuid): route('staff.application.edit',$application->uuid) }}" class="btn btn-warning" target="_blank"><i class="fa fa-edit"></i> Edit</a>
                           @endif
-                          @if($application->status>2 && $application->status<4) 
+                          @if($application->status>2 && $application->status<4)
                             <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#rejectModel{{$key}}"><i class="fa fa-times"></i> Reject</button>
                             {{-- <a href="" class="btn btn-danger" target="_blank"><i class="fa fa-times"></i> Reject</a> --}}
                           @endif
@@ -96,13 +96,17 @@
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#verifyModel{{$key}}"><i class="fa fa-check"></i> Verify</button>
                             <button type="button" class="btn btn-gray" data-toggle="modal" data-target="#onHoldModel{{$key}}"><i class="fa fa-times"></i> On Hold</button>
                           @elseif($application->status==1||$application->status==2)
+                            @if($application->course_id==3)
+                            <a href="{{ auth()->guard('admin')->check()? route('admin.admission.create',$application->uuid) : route('staff.admission.create',$application->uuid) }}" class="btn btn-success" target="_blank"><i class="fa fa-arrow-right"></i> Proceed for Admission</a>
+                            @else
                             <a href="{{ auth()->guard('admin')->check()? route('admin.subject-allocation.create',$application->uuid) : route('staff.subject-allocation.create',$application->uuid) }}" class="btn btn-primary" target="_blank"><i class="fa fa-tasks"></i> Allocate Subject</a>
+                            @endif
                           @elseif($application->status==3)
                             <a href="{{ auth()->guard('admin')->check()? route('admin.subject-allocation.show',$application->uuid) : route('staff.subject-allocation.show',$application->uuid) }}" class="btn btn-primary" target="_blank"><i class="fa fa-eye"></i> Allocated Subjects</a>
                             <a href="{{ auth()->guard('admin')->check()? route('admin.admission.create',$application->uuid) : route('staff.admission.create',$application->uuid) }}" class="btn btn-success" target="_blank"><i class="fa fa-arrow-right"></i> Proceed for Admission</a>
                           @elseif($application->status==4)
                             <a href="{{ auth()->guard('admin')->check()? route('admin.admission.receipt',$application->uuid): route('staff.admission.receipt',$application->uuid) }}" class="btn btn-success"><i class="fa fa-list-alt"></i> Receipt</a>
-                             
+
                           @endif
                         </div>
                         <!-- The Verify Modal -->
@@ -377,9 +381,9 @@
                         </div>
                       </div>
                       <!-- /The Reject Modal -->
-                      
+
                       </td>
-                      
+
                     </tr>
                     @empty
                     <tr>
