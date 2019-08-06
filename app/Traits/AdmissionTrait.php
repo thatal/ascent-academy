@@ -193,7 +193,7 @@ trait AdmissionTrait
             return back();
         }/*dd('a');*/
         DB::commit();
-        $receipt_count = AdmissionReceipt::where('year',date('Y'))->count();
+        $receipt_count = AdmissionReceipt::withTrashed()->where('year',date('Y'))->count();
         $receipt_no  = str_pad($receipt_count, 4,"0000", STR_PAD_LEFT);
         $receipt_no = date('y').'-'.$receipt_no;
         $admission_receipt->receipt_no = $receipt_no;
