@@ -1,6 +1,7 @@
 @php
     $guard = (auth()->guard("admin")->check() ? "admin" : (auth()->guard("staff")->check() ? "staff" : ""));
     $subjects            = $application->appliedStream->stream->subjects;
+    $subjects            = $subjects->where('semester_id',$application->semester_id);
     $major_subjects      = $subjects->where("is_major", 1);
     $compulsory_subjects = $subjects->where("is_compulsory", 1);
     $other_subjects      = $subjects->where("is_compulsory", 0)->where("is_major", 0);
@@ -145,7 +146,7 @@
                 {!!$key!=0?'<br>':''!!}
                 {{$subject->name}} :<br>
                 @foreach($categories as $category)
-                {{$category->name}} : 
+                {{$category->name}} :
                   @if(array_key_exists($stream_id,$seat_details['admission_complete']))
                     @if(array_key_exists($subject->id,$seat_details['admission_complete'][$stream_id]))
                       @if(array_key_exists($category->id,$seat_details['admission_complete'][$stream_id][$subject->id]))
@@ -154,17 +155,17 @@
                       0
                       @endif
                     @else
-                    0 
+                    0
                     @endif
                   @else
-                  0 
-                  @endif 
+                  0
+                  @endif
                 /{{$seat_details['reservations'][$stream_id][$subject->id][$category->id] ?? 0}}
                 @endforeach
               @endforeach
             @else
-              @foreach($categories as $category) 
-                {{$category->name}} : 
+              @foreach($categories as $category)
+                {{$category->name}} :
                   @if(array_key_exists($stream_id,$seat_details['admission_complete']))
                     @if(array_key_exists($category->id,$seat_details['admission_complete'][$stream_id]))
                       {{$seat_details['admission_complete'][$stream_id][$category->id]}}
@@ -172,7 +173,7 @@
                     @endif
                   @else 0
                   @endif
-                /{{$seat_details['reservations'][$stream_id][$category->id] ?? 0}} 
+                /{{$seat_details['reservations'][$stream_id][$category->id] ?? 0}}
               @endforeach
             @endif
           </div>
@@ -194,7 +195,7 @@
                 {!!$key!=0?'<br>':''!!}
                 {{$subject->name}} :<br>
                 @foreach($categories as $category)
-                {{$category->name}} : 
+                {{$category->name}} :
                   @if(array_key_exists($stream_id,$seat_details['allocated_applications']))
                     @if(array_key_exists($subject->id,$seat_details['allocated_applications'][$stream_id]))
                       @if(array_key_exists($category->id,$seat_details['allocated_applications'][$stream_id][$subject->id]))
@@ -203,17 +204,17 @@
                       0
                       @endif
                     @else
-                    0 
+                    0
                     @endif
                   @else
-                  0 
-                  @endif 
+                  0
+                  @endif
                 /{{$seat_details['reservations'][$stream_id][$subject->id][$category->id] ?? 0}}
                 @endforeach
               @endforeach
             @else
-              @foreach($categories as $category) 
-                {{$category->name}} : 
+              @foreach($categories as $category)
+                {{$category->name}} :
                   @if(array_key_exists($stream_id,$seat_details['allocated_applications']))
                     @if(array_key_exists($category->id,$seat_details['allocated_applications'][$stream_id]))
                       {{$seat_details['allocated_applications'][$stream_id][$category->id]}}
@@ -221,7 +222,7 @@
                     @endif
                   @else 0
                   @endif
-                /{{$seat_details['reservations'][$stream_id][$category->id] ?? 0}} 
+                /{{$seat_details['reservations'][$stream_id][$category->id] ?? 0}}
               @endforeach
             @endif
           </div>

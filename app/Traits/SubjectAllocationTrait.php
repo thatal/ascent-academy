@@ -18,29 +18,29 @@ trait SubjectAllocationTrait {
 
     public function create(Request $request, Application $application) {
         if(auth()->guard('admin')->check()){
-            $view = 'admin.subject-allocation.create'; 
+            $view = 'admin.subject-allocation.create';
             $guard = "admin";
         }elseif(auth()->guard('staff')->check()){
-            $view = 'staff.subject-allocation.create'; 
+            $view = 'staff.subject-allocation.create';
             $guard = "staff";
         }
         if($application->status == 3){
             return redirect()->route($guard.".application.index")->with("error", "Subject is already allocated for selected candidate.");
         }
-        $seat_details = getSeatDetails($application->appliedStream->stream_id);
+        $seat_details = getSeatDetails($application->appliedStream->stream_id, $application->semester_id);
         $categories = Category::get();/*dd($seat_details);*/
         return view($view, compact('application', 'seat_details','categories'));
     }
     public function store(Request $request, Application $application)
     {
-        
+
         $current_date_time = date("Y-m-d H:i:s");
         if(auth()->guard('admin')->check()){
-            $view   = 'admin.application.show'; 
-            $guard  = 'admin'; 
+            $view   = 'admin.application.show';
+            $guard  = 'admin';
         }elseif(auth()->guard('staff')->check()){
-            $view   = 'staff.application.show'; 
-            $guard  = 'staff'; 
+            $view   = 'staff.application.show';
+            $guard  = 'staff';
         }
 
         if($application->status == 3){
@@ -63,7 +63,7 @@ trait SubjectAllocationTrait {
                 if($subject_obj){
                     $major = null;
                     $is_seat_available = 1;
-                    if(in_array($application->appliedStream->stream_id,[4,6,8])){    
+                    if(in_array($application->appliedStream->stream_id,[4,6,8])){
                         if($subject_obj->is_major==1){
                             $major = $subject_obj->id;
                             $is_seat_available = checkSeatAvailability($request, $application, $major);
@@ -111,9 +111,9 @@ trait SubjectAllocationTrait {
             }
             $application->save();
             \Log::info($free_admission_log);
-            
+
             saveLogs(auth()->guard($guard)->id(), auth()->guard($guard)->user()->username, ucwords($guard), "Subject allocation done for {$application->id}");
-            
+
         } catch (Exception $e) {
             // dd($e);
             DB::rollback();
@@ -130,11 +130,11 @@ trait SubjectAllocationTrait {
 
         $current_date_time = date("Y-m-d H:i:s");
         if(auth()->guard('admin')->check()){
-            $view   = 'admin.subject-allocation.edit'; 
-            $guard  = 'admin'; 
+            $view   = 'admin.subject-allocation.edit';
+            $guard  = 'admin';
         }elseif(auth()->guard('staff')->check()){
-            $view   = 'staff.subject-allocation.edit'; 
-            $guard  = 'staff'; 
+            $view   = 'staff.subject-allocation.edit';
+            $guard  = 'staff';
         }
 
         if($application->status != 3){
@@ -147,14 +147,14 @@ trait SubjectAllocationTrait {
         if($application->status != 3){
             return redirect()->route($guard.".application.index")->with("error", "Editing of subject allocation is not availbale.");
         }
-        
+
         $current_date_time = date("Y-m-d H:i:s");
         if(auth()->guard('admin')->check()){
-            $view   = 'admin.application.show'; 
-            $guard  = 'admin'; 
+            $view   = 'admin.application.show';
+            $guard  = 'admin';
         }elseif(auth()->guard('staff')->check()){
-            $view   = 'staff.application.show'; 
-            $guard  = 'staff'; 
+            $view   = 'staff.application.show';
+            $guard  = 'staff';
         }
 
         $validation_rules = $this->allocationValidationRules($application);
@@ -174,7 +174,7 @@ trait SubjectAllocationTrait {
                 if($subject_obj){
                     $major = null;
                     $is_seat_available = 1;
-                    if(in_array($application->appliedStream->stream_id,[4,6,8])){    
+                    if(in_array($application->appliedStream->stream_id,[4,6,8])){
                         if($subject_obj->is_major==1){
                             $major = $subject_obj->id;
                             $is_seat_available = checkSeatAvailability($request, $application, $major);
@@ -214,7 +214,7 @@ trait SubjectAllocationTrait {
             $application->with_practical = $request->get("practical");
             $application->selected_category_id = $request->get("category");
             $application->selected_category_reason = $request->get("reason");
-            $application->free_admission = $request->get("free_admission");            
+            $application->free_admission = $request->get("free_admission");
             $free_admission_log["new_free_admission"]    = $application->free_admission;
             $application->appliedSubjects()->delete();
             if(sizeof($applied_subject_data)){
@@ -222,9 +222,9 @@ trait SubjectAllocationTrait {
             }
             // dd($application);
             $application->save();
-            
+
             saveLogs(auth()->guard($guard)->id(), auth()->guard($guard)->user()->username, ucwords($guard), "Subject allocation editing done for {$application->id}");
-            
+
         } catch (Exception $e) {
             // dd($e);
             DB::rollback();
@@ -240,11 +240,11 @@ trait SubjectAllocationTrait {
     public function show(Application $application) {
         $current_date_time = date("Y-m-d H:i:s");
         if(auth()->guard('admin')->check()){
-            $view   = 'admin.subject-allocation.show'; 
-            $guard  = 'admin'; 
+            $view   = 'admin.subject-allocation.show';
+            $guard  = 'admin';
         }elseif(auth()->guard('staff')->check()){
-            $view   = 'staff.subject-allocation.show'; 
-            $guard  = 'staff'; 
+            $view   = 'staff.subject-allocation.show';
+            $guard  = 'staff';
         }
         return view($view, compact("application"));
     }
@@ -263,7 +263,7 @@ trait SubjectAllocationTrait {
                 "subjects.*"    => "required",
             ];
         }
-        
+
         return $validation_rules;
     }
 }

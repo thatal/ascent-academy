@@ -283,13 +283,16 @@ function findSubjectInAppliedSubject($appliedSubjects, $searching_id)
 //     ];
 // }
 
-function getSeatDetails($stream = null, $caste = null)
+function getSeatDetails($stream = null, $semester = null, $caste = null)
 {
     $applications = Application::whereIn('status', [3, 4]);
     if ($stream) {
         $applications = $applications->whereHas('appliedStream', function ($query) use ($stream) {
             $query->where('stream_id', $stream);
         });
+    }
+    if ($semester) {
+        $applications = $applications->where('semester_id', $semester);
     }
     if ($caste) {
         $applications = $applications->where('selected_category_id', $caste);
@@ -335,7 +338,7 @@ function getSeatDetails($stream = null, $caste = null)
                     });
             }
         })
-        ->toArray();
+        ->toArray();/* dd($admission_complete); */
     $reservations = Reservation::get();
     $reservations = $reservations->groupBy('stream_id')
         ->transform(function ($item, $key) {
@@ -365,8 +368,9 @@ function getSeatDetails($stream = null, $caste = null)
 function checkSeatAvailability($request, $application, $major = null)
 {
     $stream_id = $application->appliedStream->stream_id;
+    $semester_id = $application->semester_id;
     $category_id = $request->get("category");
-    $seat_details = getSeatDetails($stream_id, $category_id);
+    $seat_details = getSeatDetails($stream_id, $semester_id, $category_id);
     $allocated_applications_count = getCount($application, $seat_details, 'allocated_applications', $stream_id, $major, $category_id);
     $admitted_application_count = getCount($application, $seat_details, 'admission_complete', $stream_id, $major, $category_id);
     $reservation_count = getCount($application, $seat_details, 'reservations', $stream_id, $major, $category_id);
