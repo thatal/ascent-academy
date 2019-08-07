@@ -285,7 +285,7 @@ function findSubjectInAppliedSubject($appliedSubjects, $searching_id)
 
 function getSeatDetails($stream = null, $caste = null)
 {
-    $applications = Application::whereIn('status', [3, 4, 5, 6, 7]);
+    $applications = Application::whereIn('status', [3, 4, 5, 6]);
     if ($stream) {
         $applications = $applications->whereHas('appliedStream', function ($query) use ($stream) {
             $query->where('stream_id', $stream);
