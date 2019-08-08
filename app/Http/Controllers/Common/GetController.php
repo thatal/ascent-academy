@@ -19,7 +19,11 @@ class GetController extends Controller
     public function getSemester(Request $request)
     {
         $semesters = Semester::where('course_id',$request->course_id)->get();
-        $streams = Stream::where('course_id',$request->course_id)->get();
+        $streams = Stream::where('course_id',$request->course_id);
+        // if(!empty(config('constants.apply_stream'))){
+        //     $streams = $streams->whereIn('id',config('constants.apply_stream'));
+        // }
+        $streams = $streams->get();
         return response()->json([
         	'semesters' => $semesters,
         	'streams' => $streams,

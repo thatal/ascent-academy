@@ -48,7 +48,11 @@ class ApplicationController extends Controller
     public function create()
     {
         $castes = Caste::get();
-        $courses = Course::with("streams", "semesters")->get();
+        $courses = Course::with("streams", "semesters");
+        if(config('constants.apply_course')){
+            $courses = $courses->whereIn('id',config('constants.apply_course'));
+        }
+        $courses = $courses->get();
         // $application = [];
         $applied_course = [];
         $applied_subs = [];

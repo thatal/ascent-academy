@@ -15,7 +15,16 @@
                 <label class="form-label">Stream<span class="form-required">*</span></label>
                 <select name="stream_id" class="form-control" id="stream_id" required {{$disabled}}>
                     <option value="">Select Stream</option>
-                    @foreach($course->streams as $stream)
+                    @if(auth('student')->check())
+                        @php
+                            $streams = $course->streams->whereIn('id',config('constants.apply_stream'));
+                        @endphp
+                    @else
+                        @php
+                            $streams = $course->streams;
+                        @endphp
+                    @endif
+                    @foreach($streams as $stream)
                         <option value="{{$stream->id}}" @isset($application){{($application->appliedStream->stream_id==$stream->id)?'selected': ''}}@endisset>{{$stream->name}}</option>
                     @endforeach
                 </select>
