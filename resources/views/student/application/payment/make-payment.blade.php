@@ -54,7 +54,7 @@ Application
                     </tr>
                   </tbody>
                 </table>
-                @if(config('constants.current_time') >= strtotime(config('constants.admission_up_time')) && config('constants.current_time') <= strtotime(config('constants.admission_down_time')))
+                @if(config('constants.current_time') >= strtotime(config('constants.apply_up_time')) && config('constants.current_time') <= strtotime(config('constants.apply_down_time')))
                     <button type="submit" class="btn btn-primary">Proceed to Pay</button>
                 @endif
               </div>
