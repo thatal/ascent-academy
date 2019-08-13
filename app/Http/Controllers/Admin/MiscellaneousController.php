@@ -353,13 +353,25 @@ class MiscellaneousController extends Controller
         // for practical
         $aTmp1 = [];
         foreach($prev_collections as $aV){
-            if($aV['fee_head_id']==17)
-                $aTmp1[] = $aV['amount'];
+            // for hs practical fees is taken in com sc head
+            if($application->semester_id==1){
+                if($aV['fee_head_id']==19){
+                    $aTmp1[] = $aV['amount'];
+            }else{
+                if($aV['fee_head_id']==17)
+                    $aTmp1[] = $aV['amount'];
+            }
         }
         $aTmp2 = [];
         foreach($new_collections as $aV){
-            if($aV['fee_head_id']==17)
-            $aTmp2[] = $aV['amount'];
+            // for hs practical fees is taken in com sc head
+            if($application->semester_id==1){
+                if($aV['fee_head_id']==19)
+                    $aTmp2[] = $aV['amount'];
+            }else{
+                if($aV['fee_head_id']==17)
+                    $aTmp2[] = $aV['amount'];
+            }
         }
         if($aTmp1[0] > $aTmp2[0]){
             if($application->free_admission!='yes')
