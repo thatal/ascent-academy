@@ -31,6 +31,34 @@ function is_new_admission($semester_id)
     }
 }
 
+function is_new_application_open($application)
+{
+    if (config('constants.current_time') >= strtotime(config('constants.apply_up_time')) &&
+        config('constants.current_time') <= strtotime(config('constants.apply_down_time'))) {
+        if (in_array($application->course_id, config('constants.apply_course')) && in_array($application->semester_id, config('constants.apply_semester')) && in_array($application->appliedStream->semester_id, config('constants.apply_stream'))) {
+            return 1;
+        } else {
+            return 0;
+        }
+    } else {
+        return 0;
+    }
+}
+
+function is_new_admission_open($application)
+{
+    if (config('constants.current_time') >= strtotime(config('constants.admission_up_time')) &&
+        config('constants.current_time') <= strtotime(config('constants.admission_down_time'))) {
+        if (in_array($application->course_id, config('constants.admission_course')) && in_array($application->semester_id, config('constants.admission_stream')) && in_array($application->appliedStream->semester_id, config('constants.admission_semester'))) {
+            return 1;
+        } else {
+            return 0;
+        }
+    } else {
+        return 0;
+    }
+}
+
 function getFeeStructure($application, $fee_structures)
 {
     $total = 0;
@@ -39,7 +67,7 @@ function getFeeStructure($application, $fee_structures)
     if ($application->course_id == 1) {
         $removing_ids = [19, 28];
         $self_ids = [19, 28];
-        if($application->free_admission == "yes"){
+        if ($application->free_admission == "yes") {
             if (($key = array_search(28, $removing_ids)) !== false) {
                 unset($removing_ids[$key]);
             }
@@ -118,8 +146,8 @@ function getFeeStructure($application, $fee_structures)
     }
 
     return [
-        'fee_structures'    =>  $fee_structures,
-        'self_ids'          =>  $self_ids
+        'fee_structures' => $fee_structures,
+        'self_ids' => $self_ids,
     ];
 }
 
@@ -271,7 +299,7 @@ function getSeatDetails($stream = null, $semester = null, $caste = null)
                     });
             }
         })
-        ->toArray();/* dd($admission_complete); */
+        ->toArray(); /* dd($admission_complete); */
     $reservations = Reservation::get();
     $reservations = $reservations->groupBy('stream_id')
         ->transform(function ($item, $key) {

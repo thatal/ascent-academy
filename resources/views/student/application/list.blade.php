@@ -55,8 +55,7 @@
                                 @else
                                     @if(is_new_admission($application->semester_id))
                                         @if($application->payment_status==0)
-                                            @if(config('constants.current_time') >= strtotime(config('constants.apply_up_time')) &&
-                                            config('constants.current_time') <= strtotime(config('constants.apply_down_time')))
+                                            @if(is_new_application_open($application))
                                             <form
                                             method="post" action="{{ route('student.application.make-payment') }}">
                                                 @csrf
@@ -71,8 +70,7 @@
                                             @endif
                                     @else
                                         @if($application->payment_status==2)
-                                            @if(config('constants.current_time') >= strtotime(config('constants.admission_up_time')) &&
-                                                config('constants.current_time') <= strtotime(config('constants.admission_down_time')))
+                                            @if(is_new_admission_open($application))
                                                 <div class="col-auto">
                                                     <form method="post" action="{{ route('student.admission.fee-detail') }}">
                                                         @csrf
