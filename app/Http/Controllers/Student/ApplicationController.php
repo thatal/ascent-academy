@@ -36,7 +36,7 @@ class ApplicationController extends Controller
      */
     public function index()
     {
-        $applications = Application::with('student', 'course', 'semester', 'caste', 'appliedSubjects', 'appliedStream', 'attachments', 'receipt', 'admittedStudent', 'paymentReceipt')->where('student_id', auth()->id())->paginate();
+        $applications = Application::with('student', 'course', 'semester', 'caste', 'appliedSubjects', 'appliedStream', 'attachments', 'receipts', 'admittedStudent', 'paymentReceipt')->where('student_id', auth()->id())->paginate();
         return view('student.application.index', compact('applications'));
     }
 

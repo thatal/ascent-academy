@@ -67,7 +67,8 @@
                                         @elseif($application->payment_status==1)
                                             <a href="{{ route('student.application.download-application',$application->uuid) }}"
                                                 class="btn btn-success">Download</a>
-                                        @endif
+                                            <a href="{{ route('student.admission.payment-receipt',$application->uuid) }}" class="btn btn-success">Receipt</a>
+                                            @endif
                                     @else
                                         @if($application->payment_status==2)
                                             @if(config('constants.current_time') >= strtotime(config('constants.admission_up_time')) &&

@@ -41,7 +41,7 @@ Application
           <form name="application" id="application" method="post" action="{{route('student.application.store')}}"  enctype="multipart/form-data">
             <div class="card-body">
               @csrf
-              
+
               @include('common/application/form')
               {{-- <div class="row">
                 <div class="col-md-6 col-lg-6">
@@ -85,14 +85,14 @@ Application
                     <label class="radio-inline"><input type="radio" name="religion" value="Others" required> Others</label>
                   </div>
                 </div>
-                
+
                 <div class="col-md-6 col-lg-6">
                   <label>Present Address</label>
                   <div class="form-group">
                     <label class="form-label">Village / Town<span class="form-required">*</span></label>
                     <input type="text" name="present_vill_or_town" class="form-control" placeholder="Nationality" required>
                   </div>
-                </div> 
+                </div>
                 <div class="col-md-6 col-lg-6">
                   <label>Permanent Address</label>
                   <label><input type="checkbox" name="same"> Same as present address </label>
@@ -100,13 +100,13 @@ Application
                     <label class="form-label">Village / Town<span class="form-required">*</span></label>
                     <input type="text" name="permanent_vill_or_town" class="form-control" placeholder="Nationality" required>
                   </div>
-                </div> 
+                </div>
                 <div class="col-md-6 col-lg-6">
                   <div class="form-group">
                     <label class="form-label">City<span class="form-required">*</span></label>
                     <input type="text" name="present_city" class="form-control" placeholder="City" required>
                   </div>
-                </div> 
+                </div>
                 <div class="col-md-6 col-lg-6">
                   <div class="form-group">
                     <label class="form-label">City<span class="form-required">*</span></label>
@@ -136,7 +136,7 @@ Application
                     <label class="form-label">District<span class="form-required">*</span></label>
                     <input type="text" name="permanent_district" class="form-control" placeholder="District" required>
                   </div>
-                </div> 
+                </div>
                 <div class="col-md-6 col-lg-6">
                   <div class="form-group">
                     <label class="form-label">Pin<span class="form-required">*</span></label>
@@ -273,7 +273,7 @@ Application
                     <input type="file" name="caste_certificate" value="">
                   </div>
                 </div>
-                
+
 
               </div> --}}
 

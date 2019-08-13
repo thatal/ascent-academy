@@ -36,6 +36,24 @@ function getFeeStructure($application, $fee_structures)
     $total = 0;
     $free_total = 0;
     $self_ids = [19, 21, 22, 23, 24, 25, 26, 27, 28];
+    if ($application->course_id == 1) {
+        $removing_ids = [19, 28];
+        $self_ids = [19, 28];
+        if($application->free_admission == "yes"){
+            if (($key = array_search(28, $removing_ids)) !== false) {
+                unset($removing_ids[$key]);
+            }
+        }
+        $applied_subjects = $application->appliedSubjects;
+        foreach ($applied_subjects as $index_g => $applied_subject) {
+            if (strtolower(trim($applied_subject->subject->name)) == "computer science") {
+                if (($key = array_search(19, $removing_ids)) !== false) {
+                    unset($removing_ids[$key]);
+                }
+            }
+        }
+        $fee_structures = $fee_structures->whereNotIn("fee_head_id", $removing_ids);
+    }
     // for only degree
     if ($application->course_id == 2) {
         $removing_ids = [19, 21, 22, 23, 24, 25, 26, 27, 28];
@@ -98,24 +116,7 @@ function getFeeStructure($application, $fee_structures)
         }
         $fee_structures = $fee_structures->whereNotIn("fee_head_id", $removing_ids);
     }
-    if ($application->course_id == 1) {
-        $removing_ids = [19, 28];
-        $self_ids = [19, 28];
-        if($application->free_admission == "yes"){
-            if (($key = array_search(28, $removing_ids)) !== false) {
-                unset($removing_ids[$key]);
-            }
-        }
-        $applied_subjects = $application->appliedSubjects;
-        foreach ($applied_subjects as $index_g => $applied_subject) {
-            if (strtolower(trim($applied_subject->subject->name)) == "computer science") {
-                if (($key = array_search(19, $removing_ids)) !== false) {
-                    unset($removing_ids[$key]);
-                }
-            }
-        }
-        $fee_structures = $fee_structures->whereNotIn("fee_head_id", $removing_ids);
-    }
+
     return [
         'fee_structures'    =>  $fee_structures,
         'self_ids'          =>  $self_ids
@@ -214,74 +215,6 @@ function findSubjectInAppliedSubject($appliedSubjects, $searching_id)
         return "NA";
     }
 }
-
-// function getSeatDetailsAll()
-// {
-//     $applications = Application::whereIn('status',[3,4,5,6,7])->get();
-//     $allocated_applications = $applications->where('status',3);
-//     $allocated_applications = $allocated_applications->groupBy('appliedStream.stream_id')
-//                                     ->transform(function($item, $key) {
-//                                         if(in_array($key, [4,6,8])){
-//                                             return $item->groupBy('appliedMajorSubjects.subject_id')
-//                                                         ->transform(function($it, $ke) {
-//                                                             return $it->groupBy('selected_caste_category')
-//                                                                         ->transform(function($i, $k) {
-//                                                                             return $i->count();
-//                                                                     });
-//                                                 });
-//                                         }else{
-//                                             return $item->groupBy('selected_caste_category')
-//                                                     ->transform(function($i, $k) {
-//                                                         return $i->count();
-//                                                     });
-//                                         }
-//                                     })
-//                                     ->toArray();
-
-//     $admission_complete = $applications->where('status',4);
-//     $admission_complete = $admission_complete->groupBy('appliedStream.stream_id')
-//                                     ->transform(function($item, $key) {
-//                                         if(in_array($key, [4,6,8])){
-//                                             return $item->groupBy('appliedMajorSubjects.subject_id')
-//                                                         ->transform(function($it, $ke) {
-//                                                             return $it->groupBy('selected_caste_category')
-//                                                                         ->transform(function($i, $k) {
-//                                                                             return $i->count();
-//                                                                     });
-//                                                 });
-//                                         }else{
-//                                             return $item->groupBy('selected_caste_category')
-//                                                     ->transform(function($i, $k) {
-//                                                         return $i->count();
-//                                                     });
-//                                         }
-//                                     })
-//                                     ->toArray();
-//     $reservations = Reservation::get();
-//     $reservations = $reservations->groupBy('stream_id')
-//                                 ->transform(function($item, $key) {
-//                                     if(in_array($key, [4,6,8])){
-//                                         return $item->groupBy('major_id')
-//                                                     ->transform(function($it, $ke) {
-//                                                         return $it->groupBy('category_id')
-//                                                                     ->transform(function($i, $k) {
-//                                                                         return $i[0]->seat;
-//                                                                 });
-//                                             });
-//                                     }else{
-//                                         return $item->groupBy('category_id')
-//                                                 ->transform(function($i, $k) {
-//                                                     return $i[0]->seat;
-//                                                 });
-//                                     }
-//                                 })
-//                                 ->toArray();
-//     return [
-//         'allocated_applications'    => $allocated_applications,
-//         'admission_complete'        => $admission_complete,
-//         'reservations'              => $reservations,
-//     ];
-// }
 
 function getSeatDetails($stream = null, $semester = null, $caste = null)
 {

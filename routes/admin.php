@@ -117,6 +117,10 @@ Route::group(['prefix' => 'admission'], function () {
 		'as'=>'admission.receipt',
 		'uses' => 'Admin\AdmissionController@receipt'
 	]);
+	Route::post('/receipt-collected-by-update/',[
+		'as'=>'admission.receipt-collected-by-update',
+		'uses' => 'Admin\AdmissionController@receiptCollectedByUpdate'
+	]);
 });
 
 Route::group(['prefix' => 'fee-head'], function () {
@@ -237,6 +241,14 @@ Route::group(['prefix' => 'miscellaneous'], function () {
     Route::post('/online-admission-fee-create',[
 		'as'=>'miscellaneous.online-admission-fee.store',
 		'uses' => 'Admin\MiscellaneousController@AdmissionFeeStore'
+    ]);
+    Route::get('/edit-allocated-subject',[
+		'as'=>'miscellaneous.edit-allocated-subject.edit',
+		'uses' => 'Admin\MiscellaneousController@subjectAllocationEdit'
+    ]);
+    Route::post('/edit-allocated-subject',[
+		'as'=>'miscellaneous.edit-allocated-subject.update',
+		'uses' => 'Admin\MiscellaneousController@subjectAllocationUpdate'
 	]);
 });
 

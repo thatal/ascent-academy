@@ -77,7 +77,6 @@ class AdmissionController extends Controller
                         'application_id' => $application->id,
                         'fee_id' => $fee_structure->fee_id,
                         'fee_head_id' => $fee_structure->fee_head_id,
-                        'is_free' => $fee_structure->is_free,
                         'created_at' => date('Y-m-d H:i:s'),
                         'updated_at' => date('Y-m-d H:i:s'),
                     ];
@@ -85,13 +84,16 @@ class AdmissionController extends Controller
                         if (in_array($fee_structure->fee_head_id, $self_ids)) {
                             $data['free_amount'] = 0;
                             $data['amount'] = $fee_structure->amount;
+                            $data['is_free'] = 0;
                         } else {
                             $data['free_amount'] = $fee_structure->amount;
                             $data['amount'] = 0;
+                            $data['is_free'] = 1;
                         }
                     } else {
                         $data['free_amount'] = 0;
                         $data['amount'] = $fee_structure->amount;
+                        $data['is_free'] = 0;
                     }
                     $total += $data['amount'];
                     array_push($datas, $data);
@@ -252,7 +254,7 @@ class AdmissionController extends Controller
 
     public function paymentReceipt(Request $request, Application $application)
     {
-        $receipt = $application->receipt;
-        return view('student.admission.payment.payment-receipt', compact('application','receipt'));
+        $receipts = $application->receipts;
+        return view('student.admission.payment.payment-receipt', compact('application','receipts'));
     }
 }

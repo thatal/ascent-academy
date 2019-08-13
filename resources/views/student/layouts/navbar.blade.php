@@ -21,7 +21,15 @@
                             <a href="{{route('student.application.index')}}" class="dropdown-item">List</a>
                             @if(config('constants.current_time') >= strtotime(config('constants.apply_up_time')) &&
                             config('constants.current_time') <= strtotime(config('constants.apply_down_time')))
-                                <a href="{{route('student.application.create')}}" class="dropdown-item">Apply</a>
+                                @isset($applications)
+                                    @if($applications->count())
+                                        @if($applications[0]->semester_id!=2)
+                                        <a href="{{route('student.application.create')}}" class="dropdown-item">Apply</a>
+                                        @endif
+                                    @else
+                                    <a href="{{route('student.application.create')}}" class="dropdown-item">Apply</a>
+                                    @endif
+                                @endisset
                             @endif
                         </div>
                     </li>

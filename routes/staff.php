@@ -116,6 +116,10 @@ Route::group(['prefix' => 'admission'], function () {
 	Route::get('/receipt/{application}',[
 		'as'=>'admission.receipt',
 		'uses' => 'Staff\AdmissionController@receipt'
+    ]);
+    Route::post('/receipt-collected-by-update/',[
+		'as'=>'admission.receipt-collected-by-update',
+		'uses' => 'Staff\AdmissionController@receiptCollectedByUpdate'
 	]);
 });
 

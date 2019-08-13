@@ -12,7 +12,7 @@ class Application extends Model
     protected $guarded = [
         'id'
     ];
-    protected $with = ['appliedSubjects','appliedMajorSubjects','appliedStream.stream','student','course','semester','caste','attachments','receipt','admittedStudent','paymentReceipt'];
+    protected $with = ['appliedSubjects','appliedMajorSubjects','appliedStream.stream','student','course','semester','caste','attachments','receipts','admittedStudent','paymentReceipt'];
 
     public function getRouteKeyName()
     {
@@ -56,9 +56,13 @@ class Application extends Model
     {
         return $this->hasMany('App\Models\Attachment', 'application_id', 'id');
     }
-    public function receipt()
+    public function receipts()
     {
-        return $this->hasOne('App\Models\AdmissionReceipt', 'application_id', 'id');
+        return $this->hasMany('App\Models\AdmissionReceipt', 'application_id', 'id');
+    }
+    public function collections()
+    {
+        return $this->hasMany('App\Models\AdmissionCollection', 'application_id', 'id');
     }
     public function admittedStudent()
     {

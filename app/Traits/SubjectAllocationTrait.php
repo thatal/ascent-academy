@@ -144,6 +144,13 @@ trait SubjectAllocationTrait {
         return view($view, compact("application","categories"));
     }
     public function update(Request $request, Application $application) {
+        if(auth()->guard('admin')->check()){
+            $view   = 'admin.subject-allocation.edit';
+            $guard  = 'admin';
+        }elseif(auth()->guard('staff')->check()){
+            $view   = 'staff.subject-allocation.edit';
+            $guard  = 'staff';
+        }
         if($application->status != 3){
             return redirect()->route($guard.".application.index")->with("error", "Editing of subject allocation is not availbale.");
         }

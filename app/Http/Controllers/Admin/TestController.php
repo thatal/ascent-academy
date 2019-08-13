@@ -190,6 +190,7 @@ class TestController extends Controller
     public function subject_wise_student() {
     	$stream_id = 6;// for science major
         $stream_ids = [3];// for science major
+        $semester_ids = [9];// for science major
     	// $is_major = 1; // 1= yes , 0 = no
     	$selected_subuject_list = Subject::whereIn("stream_id", $stream_ids)->distinct("name")->orderBy("name", "ASC")->get()->groupBy("is_major")->values()->all();
   //   	$major_subject_list = ($selected_subuject_list[1] ?? []);
@@ -227,6 +228,7 @@ class TestController extends Controller
 	    $header_string = $stream->name;
 	    $admitted_students_major_subjects = AdmittedStudent::with("application.appliedMajorSubjects.subject", "application.appliedSubjects", "application.appliedStream.stream")
 	    		->whereIn("stream_id", $stream_ids)
+	    		->whereIn("semester_id", $semester_ids)
 	    		->whereHas("application", function($query){
 			    	return $query->has("appliedMajorSubjects", ">", 0);
 		    	})
@@ -247,12 +249,14 @@ class TestController extends Controller
                     "Applicant Name"    => $admitted_student->application->fullname,
                     "UUID"              => $admitted_student->uid,
                     "Stream"            => $admitted_student->application->appliedStream->stream->name,
+                    "Semester"          => $admitted_student->semester->name,
                 ];
             }
 	    });
 	    $subject_wise_admitted_student_non_major = [];
 	    $admitted_students_non_major_subjects = AdmittedStudent::with("application.appliedMajorSubjects.subject", "application.appliedSubjects")
 	    		->whereIn("stream_id", $stream_ids)
+	    		->whereIn("semester_id", $semester_ids)
 	    		->whereHas("application", function($query){
 			    	return $query->has("appliedSubjects", ">", 0);
 		    	})
@@ -270,6 +274,7 @@ class TestController extends Controller
                     "Applicant Name"    => $admitted_student->application->fullname,
                     "UUID"              => $admitted_student->uid,
                     "Stream"            => $admitted_student->application->appliedStream->stream->name,
+                    "Semester"          => $admitted_student->semester->name,
                 ];
 	    		if(isset($subject_wise_admitted_student_non_major[ucwords(trim($subject->subject->name))])){
 		    		$subject_wise_admitted_student_non_major[ucwords(trim($subject->subject->name))] +=1;

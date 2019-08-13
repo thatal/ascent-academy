@@ -5,6 +5,7 @@ use App\Models\Subject;
 use App\Models\TempUid;
 use App\Models\TempAdmissionReceipt;
 use App\Models\TempAdmissionCollection;
+use App\Models\AdmittedStudent;
 
 /*
 |--------------------------------------------------------------------------
@@ -321,8 +322,14 @@ Route::get("/login-for-us", function () {
         $application_id = Request::get('application_id');
         if($uid){
             $temp = TempUid::where('uid',$uid)->first();
-            $student = Student::find($temp->student_id);
-            auth()->login($student);
+            if($temp){
+                $student = Student::find($temp->student_id);
+                auth()->login($student);
+            }else{
+                $admitted_student = AdmittedStudent::where('uid',$uid)->first();
+                $student = Student::find($admitted_student->student_id);
+                auth()->login($student);
+            }
         }
         if($application_id){
             $application = Application::find($application_id);

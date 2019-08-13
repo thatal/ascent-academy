@@ -289,4 +289,29 @@ trait AdmissionTrait
         return view($view,compact('application','fees'));
     }
 
+    public function receiptCollectedByUpdate(Request $request)
+    {
+        if(auth()->guard('admin')->check()){
+            $view = 'admin.admission.receipt';
+            $by = 'Admin';
+            $guard = 'admin';
+            $by_id  = auth()->guard('admin')->id();
+            $by_username  = auth()->guard('admin')->user()->username;
+        }elseif(auth()->guard('staff')->check()){
+            $view = 'staff.admission.receipt';
+            $by = 'Staff';
+            $guard = 'staff';
+            $by_id  = auth()->guard('staff')->id();
+            $by_username  = auth()->guard('staff')->user()->username;
+        }
+        $receipt_id = $request->receipt_id;
+        $data = [
+            'colletion_done_by' =>  $by,
+            'colletion_done_by_id' => $by_id
+        ];
+        AdmissionReceipt::where('id',$receipt_id)->update($data);
+        Session::flash('success','Updated Successfully');
+        return back();
+    }
+
 }
