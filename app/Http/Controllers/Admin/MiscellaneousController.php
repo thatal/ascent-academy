@@ -361,10 +361,10 @@ class MiscellaneousController extends Controller
             if($aV['fee_head_id']==17)
             $aTmp2[] = $aV['amount'];
         }
-        if($aTmp1[0] >= $aTmp2[0]){
+        if($aTmp1[0] > $aTmp2[0]){
             if($application->free_admission!='yes')
                 array_push($need_to_return, 17);
-        }elseif($aTmp1[0] <= $aTmp2[0]){
+        }elseif($aTmp1[0] < $aTmp2[0]){
             array_push($need_to_collect, 17);
         }
         // end for practical
