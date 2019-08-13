@@ -73,13 +73,16 @@ function getFeeStructure($application, $fee_structures)
             }
         }
         $applied_subjects = $application->appliedSubjects;
-        // hs 1yr practical fees in taken under comp sc head
-        if($application->semester_id!=1){
-            foreach ($applied_subjects as $index_g => $applied_subject) {
-                if (strtolower(trim($applied_subject->subject->name)) == "computer science") {
-                    if (($key = array_search(19, $removing_ids)) !== false) {
-                        unset($removing_ids[$key]);
-                    }
+        foreach ($applied_subjects as $index_g => $applied_subject) {
+            if (strtolower(trim($applied_subject->subject->name)) == "computer science") {
+                if (($key = array_search(19, $removing_ids)) !== false) {
+                    unset($removing_ids[$key]);
+                }
+            }
+            // hs 1yr practical fees in taken under comp sc head
+            if($application->semester_id==1){
+                if (($key = array_search(19, $removing_ids)) !== false) {
+                    unset($removing_ids[$key]);
                 }
             }
         }
