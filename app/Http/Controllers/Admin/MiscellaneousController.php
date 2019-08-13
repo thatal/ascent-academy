@@ -368,41 +368,41 @@ class MiscellaneousController extends Controller
 
                 }
             }
-            $aTmp2 = [];
-            foreach ($new_collections as $aV) {
-                // for hs practical fees is taken in com sc head
-                if ($application->semester_id == 1) {
-                    if ($aV['fee_head_id'] == 19) {
-                        $aTmp2[] = $aV['amount'];
-                    }
-                } else {
-                    if ($aV['fee_head_id'] == 17) {
-                        $aTmp2[] = $aV['amount'];
-                    }
-                }
-            }
-            if ($aTmp1[0] > $aTmp2[0]) {
-                if ($application->free_admission != 'yes') {
-                    array_push($need_to_return, 17);
-                }
-            } elseif ($aTmp1[0] < $aTmp2[0]) {
-                array_push($need_to_collect, 17);
-            }
-            // end for practical
-            if (count($need_to_return)) {
-                dd('Rupam has not wrote this part(need to return)', $need_to_return, $prev_collections, $new_collections);
-            }
-            if (count($return_heads)) {
-                dd('Rupam has not wrote this part(return head)', $return_heads, $prev_collections, $new_collections);
-            } elseif (count($collect_heads)) {
-                foreach ($collect_heads as $collect_head) {
-                    array_push($need_to_collect, $collect_head);
-                }
-            }
-            return [
-                'need_to_collect' => $need_to_collect,
-                'need_to_return' => $need_to_return,
-            ];
         }
+        $aTmp2 = [];
+        foreach ($new_collections as $aV) {
+            // for hs practical fees is taken in com sc head
+            if ($application->semester_id == 1) {
+                if ($aV['fee_head_id'] == 19) {
+                    $aTmp2[] = $aV['amount'];
+                }
+            } else {
+                if ($aV['fee_head_id'] == 17) {
+                    $aTmp2[] = $aV['amount'];
+                }
+            }
+        }
+        if ($aTmp1[0] > $aTmp2[0]) {
+            if ($application->free_admission != 'yes') {
+                array_push($need_to_return, 17);
+            }
+        } elseif ($aTmp1[0] < $aTmp2[0]) {
+            array_push($need_to_collect, 17);
+        }
+        // end for practical
+        if (count($need_to_return)) {
+            dd('Rupam has not wrote this part(need to return)', $need_to_return, $prev_collections, $new_collections);
+        }
+        if (count($return_heads)) {
+            dd('Rupam has not wrote this part(return head)', $return_heads, $prev_collections, $new_collections);
+        } elseif (count($collect_heads)) {
+            foreach ($collect_heads as $collect_head) {
+                array_push($need_to_collect, $collect_head);
+            }
+        }
+        return [
+            'need_to_collect' => $need_to_collect,
+            'need_to_return' => $need_to_return,
+        ];
     }
 }
