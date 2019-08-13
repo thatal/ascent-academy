@@ -374,7 +374,7 @@ class MiscellaneousController extends Controller
                     $aTmp2[] = $aV['amount'];
                 }
             }
-        }dd($new_collections);
+        }
         if($aTmp1[0] > $aTmp2[0]){
             if($application->free_admission!='yes')
                 array_push($need_to_return, 17);
