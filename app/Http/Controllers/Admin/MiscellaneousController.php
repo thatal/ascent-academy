@@ -278,7 +278,7 @@ class MiscellaneousController extends Controller
                     $total += $data['amount'];
                     $datas->push($data);
                 }
-                $diff_collection = $this->diffInCollection($application->collections->toArray(),$datas);
+                $diff_collection = $this->diffInCollection($application, $application->collections->toArray(),$datas);
                 $need_to_collect = $diff_collection['need_to_collect'];
                 $need_to_return = $diff_collection['need_to_return'];
                 if(count($need_to_collect)){
@@ -336,7 +336,7 @@ class MiscellaneousController extends Controller
         return back();
     }
 
-    protected function diffInCollection($prev_collections, $new_collections)
+    protected function diffInCollection($application, $prev_collections, $new_collections)
     {
         $need_to_collect = [];
         $need_to_return = [];
@@ -362,7 +362,8 @@ class MiscellaneousController extends Controller
             $aTmp2[] = $aV['amount'];
         }
         if($aTmp1[0] >= $aTmp2[0]){
-            array_push($need_to_return, 17);
+            if($application->free_admission!='yes')
+                array_push($need_to_return, 17);
         }elseif($aTmp1[0] <= $aTmp2[0]){
             array_push($need_to_collect, 17);
         }
