@@ -369,10 +369,10 @@ class MiscellaneousController extends Controller
         }
         // end for practical
         if(count($need_to_return)){
-            dd('Rupam has not wrote this part', $need_to_return);
+            dd('Rupam has not wrote this part(need to return)', $need_to_return, $prev_collections, $new_collections);
         }
         if(count($return_heads)){
-            dd('Rupam has not wrote this part', $return_heads);
+            dd('Rupam has not wrote this part(return head)', $return_heads, $prev_collections, $new_collections);
         }elseif(count($collect_heads)){
             foreach($collect_heads as $collect_head){
                 array_push($need_to_collect, $collect_head);
