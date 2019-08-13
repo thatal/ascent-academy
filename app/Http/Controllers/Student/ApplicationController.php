@@ -867,4 +867,21 @@ AppliedSubject::create($applied_subjects_data);
             Redirect::back()->withInput()->withErrors($validator)->send();
         }
     }
+
+    public function selectSubjectCreate(Request $request, Application $application)
+    {
+        return view('student.application.select-subject',compact('application'));
+    }
+
+    public function selectSubjectStore(Request $request, Application $application)
+    {
+        try {
+            $application->is_confirmed == 1;
+            $application->save();
+        } catch (Exception $e) {
+            dd($e);
+        }
+        Session::flash('success','Subject Added Successfully');
+        return redirect()->route('student.application.index');
+    }
 }

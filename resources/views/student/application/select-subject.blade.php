@@ -1,6 +1,6 @@
-@extends('common.admin-app')
+@extends('common.student-app')
 @section('title')
-Subject Allocation Edit
+Select Subject
 @endsection
 
 @section('css')
@@ -14,11 +14,11 @@ Subject Allocation Edit
                 <div class="col-12">
                     <div class="card">
                         <form name="application" id="application" method="get"
-                            action="{{route('admin.miscellaneous.edit-allocated-subject.update')}}" autocomplete="off">
+                            action="{{route('student.application.select-subject.store')}}" autocomplete="off">
                             <div class="card-header">
                                 <div class="row justify-content-between">
                                     <div class="col-auto mr-auto">
-                                        <h3 class="card-title">Subject Allocation Edit</h3>
+                                        <h3 class="card-title">Select Subject</h3>
                                     </div>
                                 </div>
                             </div>
@@ -60,7 +60,7 @@ Subject Allocation Edit
             </div>
             @if(isset($application))
             @php
-            $guard = (auth()->guard("admin")->check() ? "admin" : (auth()->guard("staff")->check() ? "staff" : ""));
+            $guard = 'Student';
             $subjects = $application->appliedStream->stream->subjects->where('semester_id',$application->semester_id);
             $major_subjects = $subjects->where("is_major", 1);
             $compulsory_subjects = $subjects->where("is_compulsory", 1);
@@ -73,33 +73,20 @@ Subject Allocation Edit
                         <div class="card-header">
                             <div class="row justify-content-between">
                                 <div class="col-auto mr-auto">
-                                    <h3 class="card-title">Subject Allocation Edit</h3>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-4 col-lg-4">
-                                    <p>Name: {{$application->fullname}}</p>
-                                    <p>Application ID: {{$application->id}}</p>
-                                    <p>Is Free: <span class="tag tag-red">{{$application->free_admission}}</span></p>
-                                    @include('common.application.subject-allocated-list')
-
+                                    <h3 class="card-title">Select Subject</h3>
                                 </div>
                             </div>
                         </div>
                         <div class="card-body">
                             <form name="subject-allocation-form" id="subject-allocation-form" method="post"
-                                action="{{route('admin.miscellaneous.edit-allocated-subject.update')}}">
+                                action="{{route('student.application.select-subject.store',$application->uuid)}}">
                                 @csrf
-                                <input type="hidden" name="application_id" value="{{$application->id}}">
                                 @include("common.admin-staff.subject-allocation.main")
                                 <div class="text-right">
-                                    <button type="submit" class="btn btn-primary"> Update</button>
+                                    <button type="submit" class="btn btn-primary" onclick="return confirm('Are You Sure ?')"> Proceed</button>
                                 </div>
                             </form>
                         </div>
-                        @include('common.admin-staff.admission.receipt')
                     </div>
                 </div>
             </div>

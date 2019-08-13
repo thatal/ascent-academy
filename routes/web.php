@@ -64,6 +64,14 @@ Route::group(['prefix' => 'application'], function () {
         'as' => 'student.application.download-application',
         'uses' => 'Student\ApplicationController@downloadApplication',
     ]);
+    Route::get('/select-subject/{application}', [
+        'as' => 'student.application.select-subject.create',
+        'uses' => 'Student\ApplicationController@selectSubjectCreate',
+    ]);
+    Route::post('/select-subject/{application}', [
+        'as' => 'student.application.select-subject.store',
+        'uses' => 'Student\ApplicationController@selectSubjectStore',
+    ]);
 
 });
 
