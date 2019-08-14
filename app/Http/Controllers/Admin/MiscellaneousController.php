@@ -199,21 +199,22 @@ class MiscellaneousController extends Controller
             // dump($request->subjects, $subjects_not_deleted);
 
             $new_subjects = array_diff($request->subjects, $subjects_not_deleted);
-            dd($new_subjects);
             foreach($new_subjects as $new_subject){
-                $subject = Subject::find($new_subject);
-                $data = [
-                    'uuid' => (String)Str::uuid(),
-                    'application_id' => $application->id,
-                    'student_id' => $application->student_id,
-                    'subject_id' => $subject->id,
-                    'is_compulsory' => $subject->is_compulsory,
-                    'is_major' => $subject->is_major,
-                    'preference' => 0,
-                    'allocated_by_id' => $by_id,
-                    'allocated_by' => $by,
-                ];
-                AppliedSubject::create($data);
+                if($new_subject!='NA'){
+                    $subject = Subject::find($new_subject);
+                    $data = [
+                        'uuid' => (String)Str::uuid(),
+                        'application_id' => $application->id,
+                        'student_id' => $application->student_id,
+                        'subject_id' => $subject->id,
+                        'is_compulsory' => $subject->is_compulsory,
+                        'is_major' => $subject->is_major,
+                        'preference' => 0,
+                        'allocated_by_id' => $by_id,
+                        'allocated_by' => $by,
+                    ];
+                    AppliedSubject::create($data);
+                }
             }
             $application->load('appliedSubjects');
             // dump($application->appliedSubjects->pluck('subject_id')->toArray());
