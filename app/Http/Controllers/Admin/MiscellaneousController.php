@@ -199,6 +199,7 @@ class MiscellaneousController extends Controller
             // dump($request->subjects, $subjects_not_deleted);
 
             $new_subjects = array_diff($request->subjects, $subjects_not_deleted);
+            dd($new_subjects);
             foreach($new_subjects as $new_subject){
                 $subject = Subject::find($new_subject);
                 $data = [
