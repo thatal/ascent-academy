@@ -40,7 +40,8 @@ trait ApplicationTrait
         $status                 = $request->get("status");
         $order_by_percentage    = $request->get("order_by_percentage");
         $application_no         = $request->get("application_no");
-        $registration_no         = $request->get("registration_no");
+        $registration_no        = $request->get("registration_no");
+        $uid                    = $request->get("uid");
         $board                  = $request->get("board");
         $limit                  = $request->get("limit");
 
@@ -70,6 +71,11 @@ trait ApplicationTrait
         }
         if($registration_no){
             $applications = $applications->where('student_id',$registration_no);
+        }
+        if($uid){
+            $applications = $applications->whereHas('admittedStudent',function($query) use ($uid){
+                $query->where('uid',$uid);
+            });
         }
         if($course){
             $applications = $applications->where('course_id',$course);

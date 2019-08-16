@@ -169,6 +169,12 @@
               </div>
               <div class="col-md-3 col-lg-3">
                 <div class="form-group">
+                  <label class="form-label">UID</label>
+                  <input type="text" class="form-control required" name="uid" placeholder="UID" value="{{Input::get('uid')}}">
+                </div>
+              </div>
+              <div class="col-md-3 col-lg-3">
+                <div class="form-group">
                   <label class="form-label">Limit</label>
                   <input type="number" class="form-control required" name="limit" placeholder="Application No" value="{{Input::get('limit')??100}}">
                 </div>

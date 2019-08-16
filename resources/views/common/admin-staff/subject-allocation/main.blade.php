@@ -219,7 +219,7 @@
 </div>
 
 @elseif($application->course_id == 2 && in_array($application->appliedStream->stream_id, [8]))
-{{-- for DEGREE ARTS REGULAR --}}
+{{-- for DEGREE Commerce Honours --}}
 <div class="row">
     <div class="col-md-4 col-lg-4 form-group">
         <label class="form-control-label">Paper 1 Subject</label>

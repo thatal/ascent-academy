@@ -90,8 +90,8 @@ function getFeeStructure($application, $fee_structures)
     }
     // for only degree
     if ($application->course_id == 2) {
-        $removing_ids = [19, 21, 22, 23, 24, 25, 26, 27, 28, 29];
-        $self_ids = [19, 21, 22, 23, 24, 25, 26, 27, 28, 29];
+        $removing_ids = [19, 21, 22, 23, 24, 25, 26, 27, 28];
+        $self_ids = [19, 21, 22, 23, 24, 25, 26, 27, 28];
         if ($application->free_admission == "yes") {
             if (($key = array_search(28, $removing_ids)) !== false) {
                 unset($removing_ids[$key]);

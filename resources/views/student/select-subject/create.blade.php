@@ -33,9 +33,13 @@ Select Subject
                             <form name="subject-allocation-form" id="subject-allocation-form" method="post"
                                 action="{{route('student.select-subject.store',$application->uuid)}}">
                                 @csrf
+                                <div class="alert alert-info">
+                                    <strong>Notice !</strong> If subject not available then select NA(Not Available).
+                                </div>
                                 @include("common.admin-staff.subject-allocation.main")
                                 <div class="text-right">
-                                    <button type="submit" class="btn btn-primary" onclick="return confirm('Are You Sure ?')"> Proceed</button>
+                                    <button type="submit" class="btn btn-primary"
+                                        onclick="return confirm('Are You Sure ?')"> Proceed</button>
                                 </div>
                             </form>
                         </div>

@@ -163,7 +163,7 @@ class TestController extends Controller
 
     public function addCategory()
     {
-        $applications = Application::whereDate('created_at','2019-01-02 00:00:00')->get();
+        $applications = Application::whereDate('created_at','2019-01-04 00:00:00')->get();
         DB::beginTransaction();
         try {
             foreach ($applications as $key => $application) {
