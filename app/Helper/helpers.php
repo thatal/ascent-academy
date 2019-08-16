@@ -49,7 +49,7 @@ function is_new_admission_open($application)
 {
     if (config('constants.current_time') >= strtotime(config('constants.admission_up_time')) &&
         config('constants.current_time') <= strtotime(config('constants.admission_down_time'))) {
-        if (in_array($application->course_id, config('constants.admission_course')) && in_array($application->semester_id, config('constants.admission_stream')) && in_array($application->appliedStream->semester_id, config('constants.admission_semester'))) {
+        if (in_array($application->course_id, config('constants.admission_course')) && in_array($application->semester_id, config('constants.admission_stream')) && in_array($application->semester_id, config('constants.admission_semester'))) {
             return 1;
         } else {
             return 0;
@@ -90,8 +90,13 @@ function getFeeStructure($application, $fee_structures)
     }
     // for only degree
     if ($application->course_id == 2) {
-        $removing_ids = [19, 21, 22, 23, 24, 25, 26, 27, 28];
-        $self_ids = [19, 21, 22, 23, 24, 25, 26, 27, 28];
+        $removing_ids = [19, 21, 22, 23, 24, 25, 26, 27, 28, 29];
+        $self_ids = [19, 21, 22, 23, 24, 25, 26, 27, 28, 29];
+        if ($application->free_admission == "yes") {
+            if (($key = array_search(28, $removing_ids)) !== false) {
+                unset($removing_ids[$key]);
+            }
+        }
         // condition should == because removing id may different from fee structure
         if (in_array($application->appliedStream->stream_id, [4, 6])) {
             // for major subjects

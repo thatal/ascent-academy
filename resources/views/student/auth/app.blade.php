@@ -86,7 +86,7 @@
 
 <h5 style="color: red;">Please read the guidelines before filling up your online application form at the website www.darrangcollege.in. </h5>
 
-<p class="bold" style="color: red;">Online admission renewal is now closed for Higher Secondary 2nd year. {{-- Take a print out of the receipt generated after successfull payment. --}}</p>
+<p class="bold" style="color: red;">Online admission renewal is now open for Degree(Science & Arts)(3rd & 5th sem). Take a print out of the receipt generated after successfull payment.</p>
 {{-- <p class="bold" style="color: red;">Online form fillup is now again open for Higher Secondary</p> --}}
 <p class="bold" style="color: red;">Take a print out of the information submitted. This printout needs to be carried at the time of Admission along with the original documents. </p>
 

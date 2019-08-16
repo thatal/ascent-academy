@@ -64,13 +64,34 @@ Route::group(['prefix' => 'application'], function () {
         'as' => 'student.application.download-application',
         'uses' => 'Student\ApplicationController@downloadApplication',
     ]);
-    Route::get('/select-subject/{application}', [
-        'as' => 'student.application.select-subject.create',
-        'uses' => 'Student\ApplicationController@selectSubjectCreate',
+
+});
+// only for b. com
+Route::group(['prefix' => 'select-subject'], function () {
+
+    Route::get('/create/{application}', [
+        'as' => 'student.select-subject.create',
+        'uses' => 'Student\SelectSubjectController@create',
     ]);
-    Route::post('/select-subject/{application}', [
-        'as' => 'student.application.select-subject.store',
-        'uses' => 'Student\ApplicationController@selectSubjectStore',
+    Route::post('/create/{application}', [
+        'as' => 'student.select-subject.store',
+        'uses' => 'Student\SelectSubjectController@store',
+    ]);
+    Route::get('/show/{application}', [
+        'as' => 'student.select-subject.show',
+        'uses' => 'Student\SelectSubjectController@show',
+    ]);
+    Route::get('/confirm/{application}', [
+        'as' => 'student.select-subject.confirm',
+        'uses' => 'Student\SelectSubjectController@confirm',
+    ]);
+    Route::get('/edit/{application}', [
+        'as' => 'student.select-subject.edit',
+        'uses' => 'Student\SelectSubjectController@edit',
+    ]);
+    Route::post('/edit/{application}', [
+        'as' => 'student.select-subject.update',
+        'uses' => 'Student\SelectSubjectController@update',
     ]);
 
 });
@@ -204,8 +225,8 @@ Route::get("/merit-list-change", function () {
 });
 
 Route::get("/change-student-table-prev-student", function () {
-    dd('not authorized');
-    $students = Student::whereDate('created_at', '2019-01-02 00:00:00')->get();
+    // dd('not authorized');
+    $students = Student::whereDate('created_at', '2019-01-03 00:00:00')->get();
     foreach ($students as $student) {
         $data = [
             'uuid' => (String) Str::uuid(),
@@ -216,26 +237,26 @@ Route::get("/change-student-table-prev-student", function () {
     }
     dd('done');
 });
-Route::get("/reject-non-admitted-application", function () {
-    DB::beginTransaction();
-    try {
-        Application::where('course_id', 1)
-                                ->whereIn('status', [0, 1, 2])
-                                ->whereDate('created_at', '!=', '2019-01-01 00:00:00')
-                                // ->orderBy('id','DESC')
-                                ->update(['status'=> 7]);
-    } catch (\Exception $e) {
-        DB::rollback();
-        dd($e);
-    }
-    DB::commit();
-    dd('done');
-});
+// Route::get("/reject-non-admitted-application", function () {
+//     DB::beginTransaction();
+//     try {
+//         Application::where('course_id', 1)
+//                                 ->whereIn('status', [0, 1, 2])
+//                                 ->whereDate('created_at', '!=', '2019-01-01 00:00:00')
+//                                 // ->orderBy('id','DESC')
+//                                 ->update(['status'=> 7]);
+//     } catch (\Exception $e) {
+//         DB::rollback();
+//         dd($e);
+//     }
+//     DB::commit();
+//     dd('done');
+// });
 Route::get("/change-application-table-prev-student", function () {
     DB::beginTransaction();
     try {
 
-        $applications = Application::whereDate('created_at', '2019-01-02 00:00:00')->get();
+        $applications = Application::whereDate('created_at', '2019-01-03 00:00:00')->get();
         foreach ($applications as $application) {
             if ($application->caste_id == 2 || $application->caste_id == 6) {
                 $category_id = 2;
@@ -256,26 +277,26 @@ Route::get("/change-application-table-prev-student", function () {
     DB::commit();
     dd('done');
 });
-Route::get("/change-subject-table-with-semester", function () {
-    DB::beginTransaction();
-    try {
-        $subjects = Subject::get();
-        foreach ($subjects as $subject) {
-            if (in_array($subject->stream_id, [1, 2, 3])) {
-                $data['semester_id'] = 1;
-            } elseif (in_array($subject->stream_id, [4, 5, 6, 7, 8, 9, 10])) {
-                $data['semester_id'] = 3;
-            }
-            Subject::where('id', $subject->id)->update($data);
-        }
-    } catch (\Exception $e) {
-        DB::rollback();
-        dd($e);
-    }
-    DB::commit();
-    // dump($applications);
-    dd('done');
-});
+// Route::get("/change-subject-table-with-semester", function () {
+//     DB::beginTransaction();
+//     try {
+//         $subjects = Subject::get();
+//         foreach ($subjects as $subject) {
+//             if (in_array($subject->stream_id, [1, 2, 3])) {
+//                 $data['semester_id'] = 1;
+//             } elseif (in_array($subject->stream_id, [4, 5, 6, 7, 8, 9, 10])) {
+//                 $data['semester_id'] = 3;
+//             }
+//             Subject::where('id', $subject->id)->update($data);
+//         }
+//     } catch (\Exception $e) {
+//         DB::rollback();
+//         dd($e);
+//     }
+//     DB::commit();
+//     // dump($applications);
+//     dd('done');
+// });
 Route::get("/delete-failed-student", function () {
     DB::beginTransaction();
     try {

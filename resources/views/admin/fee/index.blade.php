@@ -129,7 +129,7 @@ Fee
             <div class="row">
               <div class="col-md-12">
                 @include('admin.fee.list')
-                {{$fees->render()}}
+                {{$fees->appends(request()->all())->links()}}
               </div>
             </div>
 
