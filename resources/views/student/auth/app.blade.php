@@ -65,7 +65,7 @@
         <div class="row">
             <div class="col text-center mb-6">
               <img src="{!!asset('public/images/logo.jpg') !!}" class="h-8" alt="">
-              <h3 class="title">Darrang College</h3>
+            <h3 class="title">{{env('APP_NAME')}}</h3>
             </div>
         </div>
         <div class="row">

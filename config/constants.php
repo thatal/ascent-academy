@@ -11,7 +11,7 @@ return [
     'admission_down_time' => '2019-08-25 23:59:59',
     'admission_course' => [2],
     'admission_stream' => [4,5,6,7],
-    'admission_semester' => [5,7],
+    'admission_semester' => [5],
 
 	'helpline_no' => '9706533599',
 	'helpline_mail' => 'darrangcollegeadmission@gmail.com',
