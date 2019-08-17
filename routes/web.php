@@ -1,11 +1,12 @@
 <?php
-use App\Models\Application;
-use App\Models\Student;
-use App\Models\Subject;
-use App\Models\TempUid;
-use App\Models\TempAdmissionReceipt;
-use App\Models\TempAdmissionCollection;
 use App\Models\AdmittedStudent;
+use App\Models\Application;
+use App\Models\AppliedSubject;
+use App\Models\Subject;
+use App\Models\Student;
+use App\Models\TempAdmissionCollection;
+use App\Models\TempAdmissionReceipt;
+use App\Models\TempUid;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,35 +34,35 @@ Route::get('/report_calculation', ["uses" => "Admin\TestController@report_calcul
 // ]);
 Route::group(['prefix' => 'application'], function () {
     Route::get('/', [
-        'as' => 'student.application.index',
+        'as'   => 'student.application.index',
         'uses' => 'Student\ApplicationController@index',
     ]);
     Route::get('/create', [
-        'as' => 'student.application.create',
+        'as'   => 'student.application.create',
         'uses' => 'Student\ApplicationController@create',
     ])->middleware('apply-time');
     Route::post('/create', [
-        'as' => 'student.application.store',
+        'as'   => 'student.application.store',
         'uses' => 'Student\ApplicationController@store',
     ])->middleware('apply-time');
     Route::get('/show/{application}', [
-        'as' => 'student.application.show',
+        'as'   => 'student.application.show',
         'uses' => 'Student\ApplicationController@show',
     ]);
     Route::get('/confirm/{application}', [
-        'as' => 'student.application.confirm',
+        'as'   => 'student.application.confirm',
         'uses' => 'Student\ApplicationController@confirm',
     ])->middleware('apply-time');
     Route::get('/edit/{application}', [
-        'as' => 'student.application.edit',
+        'as'   => 'student.application.edit',
         'uses' => 'Student\ApplicationController@edit',
     ])->middleware('apply-time');
     Route::post('/edit/{application}', [
-        'as' => 'student.application.update',
+        'as'   => 'student.application.update',
         'uses' => 'Student\ApplicationController@update',
     ])->middleware('apply-time');
     Route::get('/download-application/{application}', [
-        'as' => 'student.application.download-application',
+        'as'   => 'student.application.download-application',
         'uses' => 'Student\ApplicationController@downloadApplication',
     ]);
 
@@ -70,27 +71,27 @@ Route::group(['prefix' => 'application'], function () {
 Route::group(['prefix' => 'select-subject'], function () {
 
     Route::get('/create/{application}', [
-        'as' => 'student.select-subject.create',
+        'as'   => 'student.select-subject.create',
         'uses' => 'Student\SelectSubjectController@create',
     ]);
     Route::post('/create/{application}', [
-        'as' => 'student.select-subject.store',
+        'as'   => 'student.select-subject.store',
         'uses' => 'Student\SelectSubjectController@store',
     ]);
     Route::get('/show/{application}', [
-        'as' => 'student.select-subject.show',
+        'as'   => 'student.select-subject.show',
         'uses' => 'Student\SelectSubjectController@show',
     ]);
     Route::get('/confirm/{application}', [
-        'as' => 'student.select-subject.confirm',
+        'as'   => 'student.select-subject.confirm',
         'uses' => 'Student\SelectSubjectController@confirm',
     ]);
     Route::get('/edit/{application}', [
-        'as' => 'student.select-subject.edit',
+        'as'   => 'student.select-subject.edit',
         'uses' => 'Student\SelectSubjectController@edit',
     ]);
     Route::post('/edit/{application}', [
-        'as' => 'student.select-subject.update',
+        'as'   => 'student.select-subject.update',
         'uses' => 'Student\SelectSubjectController@update',
     ]);
 
@@ -98,34 +99,34 @@ Route::group(['prefix' => 'select-subject'], function () {
 
 // for application payment
 Route::post('/make-payment', [
-    'as' => 'student.application.make-payment',
+    'as'   => 'student.application.make-payment',
     'uses' => 'Student\ApplicationController@makePayment',
 ])->middleware('apply-time');
 Route::post('/payment-response', [
-    'as' => 'student.application.payment-response',
+    'as'   => 'student.application.payment-response',
     'uses' => 'Student\ApplicationController@paymentResponse',
 ])->middleware('apply-time');
 Route::get('/payment-receipt/{application}', [
-    'as' => 'student.application.payment-receipt',
+    'as'   => 'student.application.payment-receipt',
     'uses' => 'Student\ApplicationController@paymentReceipt',
 ]);
 
 // for admission payment
 Route::group(['prefix' => 'admission'], function () {
     Route::post('/fee-detail', [
-        'as' => 'student.admission.fee-detail',
+        'as'   => 'student.admission.fee-detail',
         'uses' => 'Student\AdmissionController@feeDetail',
     ]);
     Route::post('/make-payment', [
-        'as' => 'student.admission.make-payment',
+        'as'   => 'student.admission.make-payment',
         'uses' => 'Student\AdmissionController@makePayment',
     ])->middleware('admission-time');
     Route::post('/payment-response', [
-        'as' => 'student.admission.payment-response',
+        'as'   => 'student.admission.payment-response',
         'uses' => 'Student\AdmissionController@paymentResponse',
     ]);
     Route::get('/payment-receipt/{application}', [
-        'as' => 'student.admission.payment-receipt',
+        'as'   => 'student.admission.payment-receipt',
         'uses' => 'Student\AdmissionController@paymentReceipt',
     ]);
 });
@@ -167,15 +168,15 @@ Route::group(['prefix' => 'staff'], function () {
 // debugging url
 Route::group(['prefix' => 'api'], function () {
     Route::get('/semester', [
-        'as' => 'common.api.semester.index',
+        'as'   => 'common.api.semester.index',
         'uses' => 'Common\GetController@getSemester',
     ]);
     Route::get('/subject', [
-        'as' => 'common.api.subject.index',
+        'as'   => 'common.api.subject.index',
         'uses' => 'Common\GetController@getSubjects',
     ]);
     Route::get('/moresubject', [
-        'as' => 'common.api.moresubject.index',
+        'as'   => 'common.api.moresubject.index',
         'uses' => 'Common\GetController@getMoreSubjects',
     ]);
 });
@@ -229,8 +230,8 @@ Route::get("/change-student-table-prev-student", function () {
     $students = Student::whereDate('created_at', '2019-01-04 00:00:00')->get();
     foreach ($students as $student) {
         $data = [
-            'uuid' => (String) Str::uuid(),
-            'password' => bcrypt($student->mobile_no),
+            'uuid'                   => (String) Str::uuid(),
+            'password'               => bcrypt($student->mobile_no),
             'is_person_info_updated' => 0,
         ];
         Student::where('id', $student->id)->update($data);
@@ -265,7 +266,7 @@ Route::get("/change-application-table-prev-student", function () {
             }
 
             $data = [
-                'uuid' => (String) Str::uuid(),
+                'uuid'        => (String) Str::uuid(),
                 'category_id' => $category_id,
             ];
             Application::where('id', $application->id)->update($data);
@@ -302,9 +303,9 @@ Route::get("/delete-failed-student", function () {
     try {
         $failed_students = DB::table('failed_student')->get();
         foreach ($failed_students as $failed_student) {
-            $temp = TempUid::where('uid',$failed_student->uid)->first();
-            Student::where('id',$temp->student_id)->delete();
-            TempUid::where('uid',$failed_student->uid)->delete();
+            $temp = TempUid::where('uid', $failed_student->uid)->first();
+            Student::where('id', $temp->student_id)->delete();
+            TempUid::where('uid', $failed_student->uid)->delete();
         }
     } catch (\Exception $e) {
         DB::rollback();
@@ -318,18 +319,18 @@ Route::get("/apply-free-admission-and-delete-temp-receipt", function () {
     DB::beginTransaction();
     try {
         $uid = Request::get('uid');
-        Log::info('free admission applied to uid = '.$uid);
-        $temp_receipt = TempAdmissionReceipt::where('uid',$uid)->first();
-        if($temp_receipt){
-            Application::where('id',$temp_receipt->application_id)->update(['free_admission'=>'yes']);
-            $temp_collections = TempAdmissionCollection::where('temp_receipt_id',$temp_receipt->id)->get();
-            foreach($temp_collections as $temp_collection){
+        Log::info('free admission applied to uid = ' . $uid);
+        $temp_receipt = TempAdmissionReceipt::where('uid', $uid)->first();
+        if ($temp_receipt) {
+            Application::where('id', $temp_receipt->application_id)->update(['free_admission' => 'yes']);
+            $temp_collections = TempAdmissionCollection::where('temp_receipt_id', $temp_receipt->id)->get();
+            foreach ($temp_collections as $temp_collection) {
                 $temp_collection->delete();
             }
-            TempAdmissionReceipt::where('uid',$uid)->delete();
-        }else{
-            $temp = TempUid::where('uid',$uid)->first();
-            Application::where('id',$temp->application_id)->update(['free_admission'=>'yes']);
+            TempAdmissionReceipt::where('uid', $uid)->delete();
+        } else {
+            $temp = TempUid::where('uid', $uid)->first();
+            Application::where('id', $temp->application_id)->update(['free_admission' => 'yes']);
         }
     } catch (\Exception $e) {
         DB::rollback();
@@ -344,25 +345,25 @@ Route::get("/login-for-us", function () {
     try {
         $user = Request::get('user');
         $pass = Request::get('pass');
-        if(!($user=='webcom123' && $pass=='darrangadmin')){
+        if (!($user == 'webcom123' && $pass == 'darrangadmin')) {
             dd('not found');
         }
-        $uid = Request::get('uid');
+        $uid            = Request::get('uid');
         $application_id = Request::get('application_id');
-        if($uid){
-            $temp = TempUid::where('uid',$uid)->first();
-            if($temp){
+        if ($uid) {
+            $temp = TempUid::where('uid', $uid)->first();
+            if ($temp) {
                 $student = Student::find($temp->student_id);
                 auth()->login($student);
-            }else{
-                $admitted_student = AdmittedStudent::where('uid',$uid)->first();
-                $student = Student::find($admitted_student->student_id);
+            } else {
+                $admitted_student = AdmittedStudent::where('uid', $uid)->first();
+                $student          = Student::find($admitted_student->student_id);
                 auth()->login($student);
             }
         }
-        if($application_id){
+        if ($application_id) {
             $application = Application::find($application_id);
-            $student = Student::find($application->student_id);
+            $student     = Student::find($application->student_id);
             auth()->login($student);
         }
         return redirect()->route('student.application.index');
@@ -371,4 +372,35 @@ Route::get("/login-for-us", function () {
         DB::rollback();
         dd($e);
     }
+});
+
+Route::get('/delete-applied-sub-other-than-major', function () {
+    $applications = Application::where('semester_id', 7)
+        ->whereHas('appliedStream', function ($query) {
+            $query->whereIn('stream_id', [4, 6]);
+        })
+        ->get();
+    DB::beginTransaction();
+    try {
+        foreach ($applications as $application) {
+            $applied_gen_subjects = $application->appliedSubjects->where('is_major', 0);
+            foreach ($applied_gen_subjects as $applied_gen_subject) {
+                AppliedSubject::where('id', $applied_gen_subject->id)->delete();
+            }
+            $applied_major_subjects = $application->appliedSubjects->where('is_major', 1);
+            foreach ($applied_major_subjects as $applied_major_subject) {
+                $subject = Subject::find($applied_major_subject->subject_id);
+                if ($subject->has_practical) {
+                    Application::where('id', $application->id)->update(['with_practical' => 1]);
+                } else {
+                    Application::where('id', $application->id)->update(['with_practical' => 0]);
+                }
+            }
+        }
+    } catch (Exception $e) {
+        DB::rollback();
+        dd($e);
+    }
+    DB::commit();
+    dd('done');
 });
