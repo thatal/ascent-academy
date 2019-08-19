@@ -404,3 +404,37 @@ Route::get('/delete-applied-sub-other-than-major', function () {
     DB::commit();
     dd('done');
 });
+
+Route::get('/third-sem-psy-no-practical', function () {
+    $applications = Application::whereHas('appliedSubjects',function($query){
+                        $query->whereIn('subject_id',[502,529,536,549,558]);
+                    })
+                    ->where('semester_id',5)
+                    ->get();
+    $subjects = Subject::where('semester_id',5)->get();
+    DB::beginTransaction();
+    try{
+        foreach($applications as $application){
+            $has_practical = 0;
+            foreach($application->appliedSubjects as $appliedSubject){
+                if(!in_array($appliedSubject->subject_id,[502,529,536,549,558])){
+                    $sub = $subjects->where('id',$appliedSubject->subject_id)->first();
+                    if($sub->has_practical){
+                        $has_practical = 1;
+                    }
+                }
+            }
+            if($has_practical){
+                Log::debug('3rd psy');
+                Log::debug($application->id);
+                $application->with_practical = $has_practical;
+                $application->save();
+            }
+        }
+    }catch(Exception $e){
+        DB::rollback();
+        dd($e);
+    }
+    DB::commit();
+    dd('done');
+});

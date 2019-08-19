@@ -62,7 +62,9 @@ class SelectSubjectController extends Controller
             }
         } catch (Exception $e) {
             DB::rollback();
-            dd($e);
+            Log::critical($e);
+            Session::flash('error', 'Opps Something went wrong');
+            return back();
         }
         DB::commit();
         Session::flash('success', 'Subject Added Successfully');
