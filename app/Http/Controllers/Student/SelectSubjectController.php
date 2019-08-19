@@ -10,7 +10,7 @@ use DB;
 use Exception;
 use Illuminate\Http\Request;
 use Session;
-use Str;
+use Str, Log;
 
 class SelectSubjectController extends Controller
 {
