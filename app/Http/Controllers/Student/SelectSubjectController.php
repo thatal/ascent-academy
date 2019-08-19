@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
 use App\Models\Application;
+use App\Models\Subject;
+use App\Models\AppliedSubject;
 use DB;
 use Exception;
 use Illuminate\Http\Request;
@@ -14,13 +16,26 @@ class SelectSubjectController extends Controller
 {
     public function create(Request $request, Application $application)
     {
-        return view('student.application.select-subject.create', compact('application'));
+        $all_subjects = Subject::get();
+        $stream_wise_subjects = [];
+        $all_subjects->each(function ($subject, $key) use (&$stream_wise_subjects) {
+            $stream_wise_subjects[$subject->stream_id][$subject->subject_no][] = [
+                "id" => $subject->id,
+                "name" => $subject->name,
+                "pr" => $subject->subject_no,
+                "major" => $subject->is_major,
+                "cm" => $subject->is_compulsory,
+            ];
+        });
+        return view('student.select-subject.create', compact('application','stream_wise_subjects'));
     }
 
     public function store(Request $request, Application $application)
     {
         DB::beginTransaction();
         try {
+            $application->appliedSubjects()->delete();
+            $application->save();
             $applied_subject_data = [];
             if ($request->subjects) {
                 foreach ($request->subjects as $index => $subject_id) {
@@ -51,17 +66,17 @@ class SelectSubjectController extends Controller
         }
         DB::commit();
         Session::flash('success', 'Subject Added Successfully');
-        return redirect()->route('student.application.index');
+        return redirect()->route('student.select-subject.show',$application);
     }
 
     public function show(Request $request, Application $application)
     {
-        return view('student.application.select-subject.show', compact('application'));
+        return view('student.select-subject.show', compact('application'));
     }
 
     public function confirm(Request $request, Application $application)
     {
-        $application->is_confirmed;
+        $application->is_confirmed=1;
         $application->save();
         Session::flash('success', 'Subject Confirmed Successfully');
         return redirect()->route('student.application.index');
@@ -69,7 +84,18 @@ class SelectSubjectController extends Controller
 
     public function edit(Request $request, Application $application)
     {
-        return view('student.select-subject.edit', compact('application'));
+        $all_subjects = Subject::get();
+        $stream_wise_subjects = [];
+        $all_subjects->each(function ($subject, $key) use (&$stream_wise_subjects) {
+            $stream_wise_subjects[$subject->stream_id][$subject->subject_no][] = [
+                "id" => $subject->id,
+                "name" => $subject->name,
+                "pr" => $subject->subject_no,
+                "major" => $subject->is_major,
+                "cm" => $subject->is_compulsory,
+            ];
+        });
+        return view('student.select-subject.edit', compact('application','stream_wise_subjects'));
     }
 
     public function update(Request $request, Application $application)
@@ -109,6 +135,6 @@ class SelectSubjectController extends Controller
         }
         DB::commit();
         Session::flash('success', 'Subject Added Successfully');
-        return redirect()->route('student.application.index');
+        return redirect()->route('student.select-subject.show',$application);
     }
 }

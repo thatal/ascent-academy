@@ -44,59 +44,65 @@
                             <div class="btn-group">
                                 <a href="{{ route('student.application.show',$application->uuid) }}"
                                     class="btn btn-default"><i class="fa fa-eye"></i></a>
-                                    @if($application->is_confirmed==0)
-                                        @if(config('constants.current_time') >= strtotime(config('constants.apply_up_time')) &&
-                                    config('constants.current_time') <= strtotime(config('constants.apply_down_time')))
-                                    <a href="{{ route('student.application.edit',$application->uuid) }}"
-                                        class="btn btn-warning"><i class="fa fa-pencil"></i></a>
-                                        <a href="{{ route('student.application.confirm',$application->uuid) }}"
-                                            class="btn btn-success">Confirm</a>
-                                        @endif
-                                    @else
-                                    @if(is_new_admission($application->semester_id))
-                                        @if($application->payment_status==0)
-                                            @if(is_new_application_open($application))
-                                            <form method="post" action="{{ route('student.application.make-payment') }}">
-                                                @csrf
-                                                <input type="hidden" name="application_uuid" value="{{$application->uuid}}">
-                                                <button type="submit" class="btn btn-success">Make Payment</button>
-                                            </form>
-                                            @endif
-                                        @elseif($application->payment_status==1)
-                                        <a href="{{ route('student.application.download-application',$application->uuid) }}"
-                                            class="btn btn-success">Download</a>
-                                        <a href="{{ route('student.admission.payment-receipt',$application->uuid) }}"
-                                            class="btn btn-success">Receipt</a>
-                                        @endif
-                                    @else
-                                        @if($application->payment_status==2)
-                                            @if(is_new_admission_open($application))
-                                            <div class="col-auto">
-                                                {{-- select subject panel only for bcom --}}
-                                                @if(in_array($application->appliedStream->stream_id,[8]) && $application->is_confirmed==1)
-                                                <a href="{{ route('student.select-subject.show',$application->uuid) }}"
-                                                        class="btn btn-primary mr-2">Subjects</a>
-                                                @endif
-                                                @if(in_array($application->appliedStream->stream_id,[8]) && $application->is_confirmed==0)
-                                                <a href="{{ route('student.select-subject.create',$application->uuid) }}"
-                                                    class="btn btn-primary mr-2">Select Subject</a>
-                                                @else
-                                                <form method="post" action="{{ route('student.admission.fee-detail') }}">
-                                                    @csrf
-                                                    <input type="hidden" name="application_uuid" value="{{$application->uuid}}">
-                                                    <button type="submit" class="btn btn-success">Fee Details</button>
-                                                </form>
-                                                @endif
-                                            </div>
-                                            @endif
-                                            @elseif($application->payment_status==3)
-                                            <a href="{{ route('student.application.download-application',$application->uuid) }}"
-                                                class="btn btn-primary mr-2">Download</a>
-                                            <a href="{{ route('student.admission.payment-receipt',$application->uuid) }}"
-                                                class="btn btn-success">Receipt</a>
+                                @if($application->is_confirmed==0)
+                                    @if(config('constants.current_time') >= strtotime(config('constants.apply_up_time')) &&
+                                    config('constants.current_time') <= strtotime(config('constants.apply_down_time'))) <a
+                                    href="{{ route('student.application.edit',$application->uuid) }}"
+                                    class="btn btn-warning"><i class="fa fa-pencil"></i></a>
+                                    <a href="{{ route('student.application.confirm',$application->uuid) }}"
+                                        class="btn btn-success">Confirm</a>
+                                    @endif
+                                    @if($application->payment_status==2)
+                                        @if(is_new_admission_open($application))
+                                            @if(in_array($application->appliedStream->stream_id,[8]) &&
+                                            $application->is_confirmed==0)
+                                            <a href="{{ route('student.select-subject.create',$application->uuid) }}"
+                                                class="btn btn-primary mr-2">Select Subject</a>
                                             @endif
                                         @endif
                                     @endif
+                                    @else
+                                    @if(is_new_admission($application->semester_id))
+                                    @if($application->payment_status==0)
+                                    @if(is_new_application_open($application))
+                                    <form method="post" action="{{ route('student.application.make-payment') }}">
+                                        @csrf
+                                        <input type="hidden" name="application_uuid" value="{{$application->uuid}}">
+                                        <button type="submit" class="btn btn-success">Make Payment</button>
+                                    </form>
+                                    @endif
+                                    @elseif($application->payment_status==1)
+                                    <a href="{{ route('student.application.download-application',$application->uuid) }}"
+                                        class="btn btn-success">Download</a>
+                                    <a href="{{ route('student.admission.payment-receipt',$application->uuid) }}"
+                                        class="btn btn-success">Receipt</a>
+                                    @endif
+                                    @else
+                                    @if($application->payment_status==2)
+                                    @if(is_new_admission_open($application))
+                                    {{-- <div class="col-auto"> --}}
+                                        {{-- select subject panel only for bcom --}}
+                                        @if(in_array($application->appliedStream->stream_id,[8]) &&
+                                        $application->is_confirmed==1)
+                                        <a href="{{ route('student.select-subject.show',$application->uuid) }}"
+                                            class="btn btn-primary mr-2">Subjects</a>
+                                        @endif
+
+                                        <form method="post" action="{{ route('student.admission.fee-detail') }}">
+                                            @csrf
+                                            <input type="hidden" name="application_uuid" value="{{$application->uuid}}">
+                                            <button type="submit" class="btn btn-success">Fee Details</button>
+                                        </form>
+                                    {{-- </div> --}}
+                                    @endif
+                                    @elseif($application->payment_status==3)
+                                    <a href="{{ route('student.application.download-application',$application->uuid) }}"
+                                        class="btn btn-primary mr-2">Download</a>
+                                    <a href="{{ route('student.admission.payment-receipt',$application->uuid) }}"
+                                        class="btn btn-success">Receipt</a>
+                                    @endif
+                                    @endif
+                                @endif
                             </div>
                         </td>
                     </tr>

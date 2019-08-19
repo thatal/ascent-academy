@@ -24,3 +24,7 @@ VALUES (NULL, NULL, '11', 'Geography', '1', '0', '1', '1', 'GEOG', NULL, '2019-0
 
 INSERT INTO `reservations` (`id`, `course_id`, `stream_id`, `major_id`, `category_id`, `seat`, `deleted_at`, `created_at`, `updated_at`)
 VALUES (NULL, '1', '11', '268', '2', '1', NULL, '2019-07-23 00:00:00', '2019-07-23 00:00:00');
+
+
+--  19-08-2019
+ALTER TABLE `applied_subjects` CHANGE `allocated_by` `allocated_by` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;

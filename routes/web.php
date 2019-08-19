@@ -227,7 +227,7 @@ Route::get("/merit-list-change", function () {
 
 Route::get("/change-student-table-prev-student", function () {
     // dd('not authorized');
-    $students = Student::whereDate('created_at', '2019-01-04 00:00:00')->get();
+    $students = Student::whereDate('created_at', '2019-01-05 00:00:00')->get();
     foreach ($students as $student) {
         $data = [
             'uuid'                   => (String) Str::uuid(),
@@ -257,7 +257,7 @@ Route::get("/change-application-table-prev-student", function () {
     DB::beginTransaction();
     try {
 
-        $applications = Application::whereDate('created_at', '2019-01-04 00:00:00')->get();
+        $applications = Application::whereDate('created_at', '2019-01-05 00:00:00')->get();
         foreach ($applications as $application) {
             if ($application->caste_id == 2 || $application->caste_id == 6) {
                 $category_id = 2;

@@ -16,7 +16,7 @@ Application
                     <div class="card-header">
                         <div class="row justify-content-between">
                             <div class="col-auto mr-auto">
-                                <h3 class="card-title">Application Details</h3>
+                                <h3 class="card-title">Selected Subject Details</h3>
                             </div>
                             @if($application->is_confirmed==0)
                             <div class="col-auto">
@@ -32,9 +32,9 @@ Application
                     <div class="card-body">
 
                         <div class="row">
-                            <table width="100%">
+                            <table class="table table-bordered">
                                 <thead>
-                                    <tr>
+                                    <tr >
                                         <th>#</th>
                                         <th>Name</th>
                                         <th>Abbreviation</th>
@@ -42,7 +42,7 @@ Application
                                 </thead>
                                 <tbody>
                                     @foreach ($application->appliedSubjects as $key => $appliedSubject)
-                                    <tr class="text-center">
+                                    <tr >
                                         <td class="padding-xs">
                                             {{$key+1}}
                                         </td>
