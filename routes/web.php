@@ -412,6 +412,7 @@ Route::get('/third-sem-psy-no-practical', function () {
                     ->where('semester_id',5)
                     ->get();
     $subjects = Subject::where('semester_id',5)->get();
+    Subject::whereIn('id',[502,529,536,549,558])->update(['has_practical'=>0]);
     DB::beginTransaction();
     try{
         foreach($applications as $application){
