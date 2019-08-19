@@ -143,7 +143,7 @@ Report
                     @endforelse
                   </tbody>
                 </table>
-                {{$receipts->render()}}
+                {{$receipts->appends(request()->all())->render()}}
               </div>
             </div>
           </div>
