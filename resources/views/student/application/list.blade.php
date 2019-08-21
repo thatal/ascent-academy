@@ -19,7 +19,7 @@
                         <td>{{ $key+ 1 + ($applications->perPage() * ($applications->currentPage() - 1)) }}</td>
                         <td>{{ $application->id }}</td>
                         <td>{{ $application->fullname }}</td>
-                        <td>{{ ($application->course ? $application->course->name : "NA") }}</td>
+                        <td>{{ ($application->course ? $application->appliedStream->stream->abbreviation : "NA") }}</td>
                         <td>{{ ($application->semester ? $application->semester->name : "NA") }}</td>
                         <td>
                             @if(is_new_admission($application->semester_id))
@@ -54,7 +54,7 @@
                                     @endif
                                     @if($application->payment_status==2)
                                         @if(is_new_admission_open($application))
-                                            @if(in_array($application->appliedStream->stream_id,[8]) &&
+                                            @if(in_array($application->appliedStream->stream_id,[8,9]) &&
                                             $application->is_confirmed==0)
                                             <a href="{{ route('student.select-subject.create',$application->uuid) }}"
                                                 class="btn btn-primary mr-2">Select Subject</a>
@@ -82,7 +82,7 @@
                                     @if(is_new_admission_open($application))
                                     {{-- <div class="col-auto"> --}}
                                         {{-- select subject panel only for bcom --}}
-                                        @if(in_array($application->appliedStream->stream_id,[8]) &&
+                                        @if(in_array($application->appliedStream->stream_id,[8,9]) &&
                                         $application->is_confirmed==1)
                                         <a href="{{ route('student.select-subject.show',$application->uuid) }}"
                                             class="btn btn-primary mr-2">Subjects</a>

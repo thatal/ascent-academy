@@ -28,3 +28,6 @@ VALUES (NULL, '1', '11', '268', '2', '1', NULL, '2019-07-23 00:00:00', '2019-07-
 
 --  19-08-2019
 ALTER TABLE `applied_subjects` CHANGE `allocated_by` `allocated_by` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
+
+-- 21-08-2019
+select * FROM `applied_streams` WHERE exists (select * from temp_table where temp_table.id_1=applied_streams.student_id)

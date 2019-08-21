@@ -267,7 +267,7 @@
     @endforeach
 </div>
 
-@elseif($application->course_id == 2 && in_array($application->appliedStream->stream_id, [8]))
+@elseif($application->course_id == 2 && in_array($application->appliedStream->stream_id, [8,9]))
 {{-- for DEGREE Commerce Honours --}}
 @if($application->semester_id==3)
 <div class="row">
@@ -332,84 +332,318 @@
         </select>
     </div>
 </div>
-@elseif(in_array($application->semester_id,[5,7]))
-<div class="row">
-    <div class="col-md-4 col-lg-4 form-group">
-        <label class="form-control-label">Major Subject</label>
-        <select class="form-control form-control-sm subjects compulsory" name="subjects[0]" required
-            data-subject-no="Major Subject">
-            <option value="" selected disabled>--SELECT--</option>
-            @if($major_subjects->count() == 0)
-            <option value="NA" @isset($application) selected @endisset>NA</option>
-            @endif
-            @foreach($major_subjects->where("subject_no", 1)->sortBy("name")->values()->all() as $subject)
-            <option value="{{$subject->id}}"
-                {{(old("subjects[0]", findSubjectInAppliedSubject($application->appliedSubjects, $subject->id)) == $subject->id ? "selected" : "")}}>
-                {{$subject->name}}</option>
-            @endforeach
-        </select>
+@elseif(in_array($application->semester_id,[5]) && in_array($application->appliedStream->stream_id, [8]))
+    <div class="row">
+        <div class="col-md-4 col-lg-4 form-group">
+            <label class="form-control-label">Major Subject</label>
+            <select class="form-control form-control-sm subjects compulsory" name="subjects[0]" required
+                data-subject-no="Major Subject">
+                <option value="" selected disabled>--SELECT--</option>
+                @if($major_subjects->count() == 0)
+                <option value="NA" @isset($application) selected @endisset>NA</option>
+                @endif
+                @foreach($major_subjects->where("subject_no", 1)->sortBy("name")->values()->all() as $subject)
+                <option value="{{$subject->id}}"
+                    {{(old("subjects[0]", findSubjectInAppliedSubject($application->appliedSubjects, $subject->id)) == $subject->id ? "selected" : "")}}>
+                    {{$subject->name}}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-4 col-lg-4 form-group">
+            <label class="form-control-label">Compulsory Subject 1</label>
+            <select class="form-control form-control-sm subjects compulsory" name="subjects[1]" required
+                data-subject-no="Compulsory Subject 1">
+                <option value="" selected disabled>--SELECT--</option>
+                @if($compulsory_subjects->where("subject_no", 2)->count() == 0)
+                <option value="NA" @isset($application) selected @endisset>NA</option>
+                @endif
+                @foreach($compulsory_subjects->where("subject_no", 2)->sortBy("name")->values()->all() as $subject)
+                <option value="{{$subject->id}}"
+                    {{(old("subjects[1]", findSubjectInAppliedSubject($application->appliedSubjects, $subject->id)) == $subject->id ? "selected" : "")}}>
+                    {{$subject->name}}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-4 col-lg-4 form-group">
+            <label class="form-control-label">Subject 3</label>
+            <select class="form-control form-control-sm subjects compulsory" name="subjects[2]" required
+                data-subject-no="Subject 3">
+                <option value="" selected disabled>--SELECT--</option>
+                @if($other_subjects->where("subject_no", 3)->count() == 0)
+                <option value="NA" @isset($application) selected @endisset>NA</option>
+                @endif
+                @foreach($other_subjects->where("subject_no", 3)->sortBy("name")->values()->all() as $subject)
+                <option value="{{$subject->id}}"
+                    {{(old("subjects[2]", findSubjectInAppliedSubject($application->appliedSubjects, $subject->id)) == $subject->id ? "selected" : "")}}>
+                    {{$subject->name}}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-4 col-lg-4 form-group">
+            <label class="form-control-label">Subject 4</label>
+            <select class="form-control form-control-sm subjects compulsory" name="subjects[3]" required
+                data-subject-no="Subject 4">
+                <option value="" selected disabled>--SELECT--</option>
+                @if($other_subjects->where("subject_no", 4)->count() == 0)
+                <option value="NA" @isset($application) selected @endisset>NA</option>
+                @endif
+                @foreach($other_subjects->where("subject_no", 4)->sortBy("name")->values()->all() as $subject)
+                <option value="{{$subject->id}}"
+                    {{(old("subjects[3]", findSubjectInAppliedSubject($application->appliedSubjects, $subject->id)) == $subject->id ? "selected" : "")}}>
+                    {{$subject->name}}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-4 col-lg-4 form-group">
+            <label class="form-control-label">Subject 5</label>
+            <select class="form-control form-control-sm subjects compulsory" name="subjects[4]" required
+                data-subject-no="Subject 5">
+                <option value="" selected disabled>--SELECT--</option>
+                @if($other_subjects->where("subject_no", 5)->count() == 0)
+                <option value="NA" @isset($application) selected @endisset>NA</option>
+                @endif
+                @foreach($other_subjects->where("subject_no", 5)->sortBy("name")->values()->all() as $subject)
+                <option value="{{$subject->id}}"
+                    {{(old("subjects[4]", findSubjectInAppliedSubject($application->appliedSubjects, $subject->id)) == $subject->id ? "selected" : "")}}>
+                    {{$subject->name}}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-4 col-lg-4 form-group">
+            <label class="form-control-label">Compulsory Subject 2</label>
+            <select class="form-control form-control-sm subjects compulsory" name="subjects[5]" required
+                data-subject-no="Compulsory Subject 2">
+                <option value="" selected disabled>--SELECT--</option>
+                @if($compulsory_subjects->where("subject_no", 6)->count() == 0)
+                <option value="NA" @isset($application) selected @endisset>NA</option>
+                @endif
+                @foreach($compulsory_subjects->where("subject_no", 6)->sortBy("name")->values()->all() as $subject)
+                <option value="{{$subject->id}}"
+                    {{(old("subjects[5]", findSubjectInAppliedSubject($application->appliedSubjects, $subject->id)) == $subject->id ? "selected" : "")}}>
+                    {{$subject->name}}</option>
+                @endforeach
+            </select>
+        </div>
     </div>
-    <div class="col-md-4 col-lg-4 form-group">
-        <label class="form-control-label">Compulsory Subject</label>
-        <select class="form-control form-control-sm subjects compulsory" name="subjects[1]" required
-            data-subject-no="Compulsory Subject">
-            <option value="" selected disabled>--SELECT--</option>
-            @if($compulsory_subjects->where("subject_no", 2)->count() == 0)
-            <option value="NA" @isset($application) selected @endisset>NA</option>
-            @endif
-            @foreach($compulsory_subjects->where("subject_no", 2)->sortBy("name")->values()->all() as $subject)
-            <option value="{{$subject->id}}"
-                {{(old("subjects[1]", findSubjectInAppliedSubject($application->appliedSubjects, $subject->id)) == $subject->id ? "selected" : "")}}>
-                {{$subject->name}}</option>
-            @endforeach
-        </select>
+@elseif(in_array($application->semester_id,[5]) && in_array($application->appliedStream->stream_id, [9]))
+    <div class="row">
+        <div class="col-md-4 col-lg-4 form-group">
+            <label class="form-control-label">Compulsory Subject</label>
+            <select class="form-control form-control-sm subjects compulsory" name="subjects[0]" required
+                data-subject-no="Major Subject">
+                <option value="" selected disabled>--SELECT--</option>
+                @if($compulsory_subjects->where("subject_no", 1)->count() == 0)
+                <option value="NA" @isset($application) selected @endisset>NA</option>
+                @endif
+                @foreach($compulsory_subjects->where("subject_no", 1)->where("subject_no", 1)->sortBy("name")->values()->all() as $subject)
+                <option value="{{$subject->id}}"
+                    {{(old("subjects[0]", findSubjectInAppliedSubject($application->appliedSubjects, $subject->id)) == $subject->id ? "selected" : "")}}>
+                    {{$subject->name}}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-4 col-lg-4 form-group">
+            <label class="form-control-label">Compulsory Subject</label>
+            <select class="form-control form-control-sm subjects compulsory" name="subjects[1]" required
+                data-subject-no="Compulsory Subject">
+                <option value="" selected disabled>--SELECT--</option>
+                @if($compulsory_subjects->where("subject_no", 2)->count() == 0)
+                <option value="NA" @isset($application) selected @endisset>NA</option>
+                @endif
+                @foreach($compulsory_subjects->where("subject_no", 2)->sortBy("name")->values()->all() as $subject)
+                <option value="{{$subject->id}}"
+                    {{(old("subjects[1]", findSubjectInAppliedSubject($application->appliedSubjects, $subject->id)) == $subject->id ? "selected" : "")}}>
+                    {{$subject->name}}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-4 col-lg-4 form-group">
+            <label class="form-control-label">Subject 3</label>
+            <select class="form-control form-control-sm subjects compulsory" name="subjects[2]" required
+                data-subject-no="Subject 3">
+                <option value="" selected disabled>--SELECT--</option>
+                @if($other_subjects->where("subject_no", 3)->count() == 0)
+                <option value="NA" @isset($application) selected @endisset>NA</option>
+                @endif
+                @foreach($other_subjects->where("subject_no", 3)->sortBy("name")->values()->all() as $subject)
+                <option value="{{$subject->id}}"
+                    {{(old("subjects[2]", findSubjectInAppliedSubject($application->appliedSubjects, $subject->id)) == $subject->id ? "selected" : "")}}>
+                    {{$subject->name}}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-4 col-lg-4 form-group">
+            <label class="form-control-label">Subject 4</label>
+            <select class="form-control form-control-sm subjects compulsory" name="subjects[3]" required
+                data-subject-no="Subject 4">
+                <option value="" selected disabled>--SELECT--</option>
+                @if($other_subjects->where("subject_no", 4)->count() == 0)
+                <option value="NA" @isset($application) selected @endisset>NA</option>
+                @endif
+                @foreach($other_subjects->where("subject_no", 4)->sortBy("name")->values()->all() as $subject)
+                <option value="{{$subject->id}}"
+                    {{(old("subjects[3]", findSubjectInAppliedSubject($application->appliedSubjects, $subject->id)) == $subject->id ? "selected" : "")}}>
+                    {{$subject->name}}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-4 col-lg-4 form-group">
+            <label class="form-control-label">Subject 5</label>
+            <select class="form-control form-control-sm subjects compulsory" name="subjects[4]" required
+                data-subject-no="Subject 5">
+                <option value="" selected disabled>--SELECT--</option>
+                @if($other_subjects->where("subject_no", 5)->count() == 0)
+                <option value="NA" @isset($application) selected @endisset>NA</option>
+                @endif
+                @foreach($other_subjects->where("subject_no", 5)->sortBy("name")->values()->all() as $subject)
+                <option value="{{$subject->id}}"
+                    {{(old("subjects[4]", findSubjectInAppliedSubject($application->appliedSubjects, $subject->id)) == $subject->id ? "selected" : "")}}>
+                    {{$subject->name}}</option>
+                @endforeach
+            </select>
+        </div>
     </div>
-    <div class="col-md-4 col-lg-4 form-group">
-        <label class="form-control-label">Subject 3</label>
-        <select class="form-control form-control-sm subjects compulsory" name="subjects[2]" required
-            data-subject-no="Subject 3">
-            <option value="" selected disabled>--SELECT--</option>
-            @if($other_subjects->where("subject_no", 3)->count() == 0)
-            <option value="NA" @isset($application) selected @endisset>NA</option>
-            @endif
-            @foreach($other_subjects->where("subject_no", 3)->sortBy("name")->values()->all() as $subject)
-            <option value="{{$subject->id}}"
-                {{(old("subjects[2]", findSubjectInAppliedSubject($application->appliedSubjects, $subject->id)) == $subject->id ? "selected" : "")}}>
-                {{$subject->name}}</option>
-            @endforeach
-        </select>
+@elseif(in_array($application->semester_id,[7]) && in_array($application->appliedStream->stream_id, [8]))
+    <div class="row">
+        <div class="col-md-4 col-lg-4 form-group">
+            <label class="form-control-label">Major Subject</label>
+            <select class="form-control form-control-sm subjects compulsory" name="subjects[0]" required
+                data-subject-no="Major Subject">
+                <option value="" selected disabled>--SELECT--</option>
+                @if($major_subjects->count() == 0)
+                <option value="NA" @isset($application) selected @endisset>NA</option>
+                @endif
+                @foreach($major_subjects->where("subject_no", 1)->sortBy("name")->values()->all() as $subject)
+                <option value="{{$subject->id}}"
+                    {{(old("subjects[0]", findSubjectInAppliedSubject($application->appliedSubjects, $subject->id)) == $subject->id ? "selected" : "")}}>
+                    {{$subject->name}}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-4 col-lg-4 form-group">
+            <label class="form-control-label">Compulsory Subject</label>
+            <select class="form-control form-control-sm subjects compulsory" name="subjects[1]" required
+                data-subject-no="Compulsory Subject">
+                <option value="" selected disabled>--SELECT--</option>
+                @if($compulsory_subjects->where("subject_no", 2)->count() == 0)
+                <option value="NA" @isset($application) selected @endisset>NA</option>
+                @endif
+                @foreach($compulsory_subjects->where("subject_no", 2)->sortBy("name")->values()->all() as $subject)
+                <option value="{{$subject->id}}"
+                    {{(old("subjects[1]", findSubjectInAppliedSubject($application->appliedSubjects, $subject->id)) == $subject->id ? "selected" : "")}}>
+                    {{$subject->name}}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-4 col-lg-4 form-group">
+            <label class="form-control-label">Subject 3</label>
+            <select class="form-control form-control-sm subjects compulsory" name="subjects[2]" required
+                data-subject-no="Subject 3">
+                <option value="" selected disabled>--SELECT--</option>
+                @if($other_subjects->where("subject_no", 3)->count() == 0)
+                <option value="NA" @isset($application) selected @endisset>NA</option>
+                @endif
+                @foreach($other_subjects->where("subject_no", 3)->sortBy("name")->values()->all() as $subject)
+                <option value="{{$subject->id}}"
+                    {{(old("subjects[2]", findSubjectInAppliedSubject($application->appliedSubjects, $subject->id)) == $subject->id ? "selected" : "")}}>
+                    {{$subject->name}}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-4 col-lg-4 form-group">
+            <label class="form-control-label">Subject 4</label>
+            <select class="form-control form-control-sm subjects compulsory" name="subjects[3]" required
+                data-subject-no="Subject 4">
+                <option value="" selected disabled>--SELECT--</option>
+                @if($other_subjects->where("subject_no", 4)->count() == 0)
+                <option value="NA" @isset($application) selected @endisset>NA</option>
+                @endif
+                @foreach($other_subjects->where("subject_no", 4)->sortBy("name")->values()->all() as $subject)
+                <option value="{{$subject->id}}"
+                    {{(old("subjects[3]", findSubjectInAppliedSubject($application->appliedSubjects, $subject->id)) == $subject->id ? "selected" : "")}}>
+                    {{$subject->name}}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-4 col-lg-4 form-group">
+            <label class="form-control-label">Subject 5</label>
+            <select class="form-control form-control-sm subjects compulsory" name="subjects[4]" required
+                data-subject-no="Subject 5">
+                <option value="" selected disabled>--SELECT--</option>
+                @if($other_subjects->where("subject_no", 5)->count() == 0)
+                <option value="NA" @isset($application) selected @endisset>NA</option>
+                @endif
+                @foreach($other_subjects->where("subject_no", 5)->sortBy("name")->values()->all() as $subject)
+                <option value="{{$subject->id}}"
+                    {{(old("subjects[4]", findSubjectInAppliedSubject($application->appliedSubjects, $subject->id)) == $subject->id ? "selected" : "")}}>
+                    {{$subject->name}}</option>
+                @endforeach
+            </select>
+        </div>
     </div>
-    <div class="col-md-4 col-lg-4 form-group">
-        <label class="form-control-label">Subject 4</label>
-        <select class="form-control form-control-sm subjects compulsory" name="subjects[3]" required
-            data-subject-no="Subject 4">
-            <option value="" selected disabled>--SELECT--</option>
-            @if($other_subjects->where("subject_no", 4)->count() == 0)
-            <option value="NA" @isset($application) selected @endisset>NA</option>
-            @endif
-            @foreach($other_subjects->where("subject_no", 4)->sortBy("name")->values()->all() as $subject)
-            <option value="{{$subject->id}}"
-                {{(old("subjects[3]", findSubjectInAppliedSubject($application->appliedSubjects, $subject->id)) == $subject->id ? "selected" : "")}}>
-                {{$subject->name}}</option>
-            @endforeach
-        </select>
+@elseif(in_array($application->semester_id,[7]) && in_array($application->appliedStream->stream_id, [9]))
+    <div class="row">
+        <div class="col-md-4 col-lg-4 form-group">
+            <label class="form-control-label">Compulsory Subject</label>
+            <select class="form-control form-control-sm subjects compulsory" name="subjects[0]" required
+                data-subject-no="Major Subject">
+                <option value="" selected disabled>--SELECT--</option>
+                @if($compulsory_subjects->where("subject_no", 1)->count() == 0)
+                <option value="NA" @isset($application) selected @endisset>NA</option>
+                @endif
+                @foreach($compulsory_subjects->where("subject_no", 1)->where("subject_no", 1)->sortBy("name")->values()->all() as $subject)
+                <option value="{{$subject->id}}"
+                    {{(old("subjects[0]", findSubjectInAppliedSubject($application->appliedSubjects, $subject->id)) == $subject->id ? "selected" : "")}}>
+                    {{$subject->name}}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-4 col-lg-4 form-group">
+            <label class="form-control-label">Subject 2</label>
+            <select class="form-control form-control-sm subjects" name="subjects[1]" required
+                data-subject-no="Subject 2">
+                <option value="" selected disabled>--SELECT--</option>
+                @if($other_subjects->where("subject_no", 2)->count() == 0)
+                <option value="NA" @isset($application) selected @endisset>NA</option>
+                @endif
+                @foreach($other_subjects->where("subject_no", 2)->sortBy("name")->values()->all() as $subject)
+                <option value="{{$subject->id}}"
+                    {{(old("subjects[1]", findSubjectInAppliedSubject($application->appliedSubjects, $subject->id)) == $subject->id ? "selected" : "")}}>
+                    {{$subject->name}}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-4 col-lg-4 form-group">
+            <label class="form-control-label">Subject 3</label>
+            <select class="form-control form-control-sm subjects compulsory" name="subjects[2]" required
+                data-subject-no="Subject 3">
+                <option value="" selected disabled>--SELECT--</option>
+                @if($other_subjects->where("subject_no", 3)->count() == 0)
+                <option value="NA" @isset($application) selected @endisset>NA</option>
+                @endif
+                @foreach($other_subjects->where("subject_no", 3)->sortBy("name")->values()->all() as $subject)
+                <option value="{{$subject->id}}"
+                    {{(old("subjects[2]", findSubjectInAppliedSubject($application->appliedSubjects, $subject->id)) == $subject->id ? "selected" : "")}}>
+                    {{$subject->name}}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-4 col-lg-4 form-group">
+            <label class="form-control-label">Subject 4</label>
+            <select class="form-control form-control-sm subjects compulsory" name="subjects[3]" required
+                data-subject-no="Subject 5">
+                <option value="" selected disabled>--SELECT--</option>
+                @if($other_subjects->where("subject_no", 4)->count() == 0)
+                <option value="NA" @isset($application) selected @endisset>NA</option>
+                @endif
+                @foreach($other_subjects->where("subject_no", 4)->sortBy("name")->values()->all() as $subject)
+                <option value="{{$subject->id}}"
+                    {{(old("subjects[3]", findSubjectInAppliedSubject($application->appliedSubjects, $subject->id)) == $subject->id ? "selected" : "")}}>
+                    {{$subject->name}}</option>
+                @endforeach
+            </select>
+        </div>
     </div>
-    <div class="col-md-4 col-lg-4 form-group">
-        <label class="form-control-label">Subject 5</label>
-        <select class="form-control form-control-sm subjects compulsory" name="subjects[4]" required
-            data-subject-no="Subject 5">
-            <option value="" selected disabled>--SELECT--</option>
-            @if($other_subjects->where("subject_no", 5)->count() == 0)
-            <option value="NA" @isset($application) selected @endisset>NA</option>
-            @endif
-            @foreach($other_subjects->where("subject_no", 5)->sortBy("name")->values()->all() as $subject)
-            <option value="{{$subject->id}}"
-                {{(old("subjects[4]", findSubjectInAppliedSubject($application->appliedSubjects, $subject->id)) == $subject->id ? "selected" : "")}}>
-                {{$subject->name}}</option>
-            @endforeach
-        </select>
-    </div>
-</div>
 @endif
 
 @elseif($application->course_id == 3)
@@ -436,7 +670,7 @@
 <p>Subject Selection is not available for <strong>Regular Course</strong> just select practical or without practical.
 </p>
 @endif
-@if(!($application->appliedStream->stream_id==8 && in_array($application->semester_id,[5,7])))
+@if(!(in_array($application->appliedStream->stream_id,[8,9]) && in_array($application->semester_id,[5,7])))
 <div class="row">
     <div class="col-md-12 col-lg-12">
         <div class="form-group">
