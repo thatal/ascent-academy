@@ -18,7 +18,7 @@
             </style>
             <div class="d-flex order-lg-2 ml-auto">
                 <h4 style="font-size: 20px; color:red;" class="blink_me">Website will be down at 3pm today for
-                    maintainance kindly don't try pay before that time. </h4>
+                    maintainance kindly don't try to pay before that time. </h4>
                 {{-- <h4 style="font-size: 20px; margin-bottom: 0; line-height: 2rem;"><i class="fa fa-phone 2x"></i> Helpline : {{ config('constants.helpline_no')}}
                 </h4> --}}
             </div>
