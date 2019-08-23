@@ -8,7 +8,7 @@ return [
     'apply_semester' => [11],
 
 	'admission_up_time' => '2019-08-16 12:59:59',
-    'admission_down_time' => '2019-08-23 23:59:59',
+    'admission_down_time' => '2019-08-25 23:59:59',
     'admission_course' => [2],
     'admission_stream' => [4,5,6,7,8,9],
     'admission_semester' => [5,7],
