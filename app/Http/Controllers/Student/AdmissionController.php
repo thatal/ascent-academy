@@ -23,8 +23,12 @@ class AdmissionController extends Controller
     public function feeDetail(Request $request)
     {
         $application = Application::where('uuid', $request->application_uuid)->first();
-        $temp_receipt = TempAdmissionReceipt::where('application_id',$application->id)->first();
-        // TempAdmissionCollection::where('application_id',$application->id)->delete();
+        $temp_receipts = TempAdmissionReceipt::where('application_id',$application->id)
+                            ->wheredoesntHave('onlinePayment',function($q){
+                                    $q->where('status',1);
+                                })
+                            ->get();
+        $receipts = $application->receipts;
         $fee = Fee::where('course_id', $application->course_id)
             ->where('semester_id', $application->semester_id)
             ->where('stream_id', $application->appliedStream->stream_id)
@@ -68,7 +72,7 @@ class AdmissionController extends Controller
                 'year' => date('Y'),
                 'is_online' => 1
             ];
-            if(!$temp_receipt){
+            if(!$temp_receipts->count()){
                 $temp_receipt = TempAdmissionReceipt::create($admission_receipt_data);
                 foreach ($fee_structures as $fee_structure) {
                     $data = [
@@ -101,40 +105,17 @@ class AdmissionController extends Controller
                 TempAdmissionCollection::insert($datas);
                 saveLogs(auth()->id(), auth()->user()->mobile_no, 'Student', "Temp fee structure created for application id {$application->id} with temp receipt id {$temp_receipt->id}");
             }
-
-            $checksum = $this->generateCheckSum($request, $temp_receipt->id, $temp_receipt->total);
+            // $temp_receipts = TempAdmissionReceipt::where('application_id',$application->id)->get();
         } catch (Exception $e) {
             // dd($e);
             DB::rollback();
             return back();
         }
         DB::commit();
-        return view('student.admission.payment.fee-detail', compact('application', 'fee', 'fee_structures', 'self_ids','temp_receipt','checksum'));
+        return view('student.admission.payment.fee-detail', compact('application', 'fee', 'fee_structures', 'self_ids','temp_receipts','receipts'));
     }
 
-    private function generateCheckSum($request, $temp_receipt_id, $amount)
-    {
-        $application = Application::where('uuid', $request->application_uuid)->first();
-        $application_id = $application->id;
-        // $amount = config('constants.application_fee');
-        $redirect_url = config('constants.redirect_url_admission');
-        $merchant_id = config('constants.merchant_id');
-        $checksum_key = config('constants.checksum_key');
 
-        // $str = 'TESTME|UATTXN0001|NA|2|NA|NA|NA|INR|NA|R|NA|NA|NA|F|Andheri|Mumbai|02240920005|support@billdesk.com|NA|NA|NA|https://www.billdesk.com';
-
-        $str = $merchant_id . '|' . $application_id . '|NA|' . $amount . '|NA|NA|NA|INR|NA|R|NA|NA|NA|F|' . $application->student_id . '|' . $application->student->email . '|' . $application->student->mobile_no . '|'.$temp_receipt_id.'|NA|NA|NA|' . $redirect_url;
-        // dd($str);
-        $checksum = hash_hmac('sha256', $str, $checksum_key, false);
-        $checksum = strtoupper($checksum);
-        $checksum = $str . "|" . $checksum;
-        Log::debug('checksum');
-        Log::debug($application_id);
-        Log::debug($checksum);
-        return $checksum;
-        // echo $checksum;
-        // return view('student.application.make-payment', compact('application_id', 'application', 'amount', 'checksum'));
-    }
 
     public function paymentResponse(Request $request)
     {
@@ -255,6 +236,11 @@ class AdmissionController extends Controller
     public function paymentReceipt(Request $request, Application $application)
     {
         $receipts = $application->receipts;
+        // $temp_receipts = $application->tempReceipts()->where(function($query){
+        //     $query->doesntHave('onlinePayment',function($query){
+        //         $query->where('status',1);
+        //     });
+        // })->get();
         return view('student.admission.payment.payment-receipt', compact('application','receipts'));
     }
 }

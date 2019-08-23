@@ -64,6 +64,14 @@ class Application extends Model
     {
         return $this->hasMany('App\Models\AdmissionCollection', 'application_id', 'id');
     }
+    public function tempReceipts()
+    {
+        return $this->hasMany('App\Models\TempAdmissionReceipt', 'application_id', 'id');
+    }
+    public function tempCollections()
+    {
+        return $this->hasMany('App\Models\TempAdmissionCollection', 'application_id', 'id');
+    }
     public function admittedStudent()
     {
         return $this->hasOne('App\Models\AdmittedStudent', 'application_id', 'id');

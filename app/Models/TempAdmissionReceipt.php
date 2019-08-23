@@ -30,4 +30,9 @@ class TempAdmissionReceipt extends Model
         else
             return $this->belongsTo('App\Models\Staff', 'colletion_done_by_id', 'id');
     }
+
+    public function onlinePayment()
+    {
+        return $this->hasMany('App\Models\OnlinePayment', 'temp_receipt_id', 'id');
+    }
 }

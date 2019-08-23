@@ -2,8 +2,9 @@
 use App\Models\AdmittedStudent;
 use App\Models\Application;
 use App\Models\AppliedSubject;
-use App\Models\Subject;
+use App\Models\Fee;
 use App\Models\Student;
+use App\Models\Subject;
 use App\Models\TempAdmissionCollection;
 use App\Models\TempAdmissionReceipt;
 use App\Models\TempUid;
@@ -406,36 +407,106 @@ Route::get('/delete-applied-sub-other-than-major', function () {
 });
 
 Route::get('/third-sem-psy-no-practical', function () {
-    $applications = Application::whereHas('appliedSubjects',function($query){
-                        $query->whereIn('subject_id',[502,529,536,549,558]);
-                    })
-                    ->where('semester_id',5)
-                    ->get();
-    $subjects = Subject::where('semester_id',5)->get();
-    Subject::whereIn('id',[502,529,536,549,558])->update(['has_practical'=>0]);
+    $applications = Application::whereHas('appliedSubjects', function ($query) {
+        $query->whereIn('subject_id', [502, 529, 536, 549, 558]);
+    })
+        ->where('semester_id', 5)
+        ->get();
+    $subjects = Subject::where('semester_id', 5)->get();
+    Subject::whereIn('id', [502, 529, 536, 549, 558])->update(['has_practical' => 0]);
     DB::beginTransaction();
-    try{
-        foreach($applications as $application){
+    try {
+        foreach ($applications as $application) {
             $has_practical = 0;
-            foreach($application->appliedSubjects as $appliedSubject){
-                if(!in_array($appliedSubject->subject_id,[502,529,536,549,558])){
-                    $sub = $subjects->where('id',$appliedSubject->subject_id)->first();
-                    if($sub->has_practical){
+            foreach ($application->appliedSubjects as $appliedSubject) {
+                if (!in_array($appliedSubject->subject_id, [502, 529, 536, 549, 558])) {
+                    $sub = $subjects->where('id', $appliedSubject->subject_id)->first();
+                    if ($sub->has_practical) {
                         $has_practical = 1;
                     }
                 }
             }
-            if($has_practical){
+            if ($has_practical) {
                 Log::debug('3rd psy');
                 Log::debug($application->id);
                 $application->with_practical = $has_practical;
                 $application->save();
             }
         }
-    }catch(Exception $e){
+    } catch (Exception $e) {
         DB::rollback();
         dd($e);
     }
     DB::commit();
     dd('done');
+});
+
+Route::get('/get-stat-3rd-sem-major-applications', function () {
+    try {
+        $applications = Application::whereHas('appliedSubjects', function ($query) {
+            $query->where('subject_id', 469);
+        })
+            // ->doesntHave('receipts')
+            ->where('ith_practical', 0)->get();
+        foreach ($applications as $application) {
+            $application->with_practical = 1;
+            $application->payment_status = 2;
+            $application->save();
+            $temp_collection = TempAdmissionCollection::where('application_id', $application->id)->where('fee_head_id', 17)->first();
+            $fee          = Fee::where('course_id', $application->course_id)
+                            ->where('semester_id', $application->semester_id)
+                            ->where('stream_id', $application->appliedStream->stream_id)
+                            ->where('gender', $application->gender)
+                            ->where('practical', $application->with_practical)
+                            ->where('year', $application->year)
+                            ->first();
+            $fee_structures = collect();
+            if ($fee) {
+                $fee_structures = $fee->feeStructures;
+            }
+            $data           = getFeeStructure($application, $fee_structures);
+            $fee_structures = $data['fee_structures']->where('fee_head_id', 17);
+            $self_ids       = $data['self_ids'];
+            $datas          = [];
+            $total          = 0;
+            foreach ($fee_structures as $fee_structure) {
+                $data['free_amount'] = 0;
+                $data['amount']      = $fee_structure->amount;
+                $total += $data['amount'];
+            }
+            $admission_receipt_data = [
+                'uid'            => $application->tempUid->uid,
+                'student_id'     => $application->student_id,
+                'application_id' => $application->id,
+                'total'          => $total,
+                'year'           => date('Y'),
+                'is_online'      => 1,
+            ];
+
+            if (!$temp_collection) {
+                $temp_receipt = TempAdmissionReceipt::create($admission_receipt_data);
+                foreach ($fee_structures as $fee_structure) {
+                    $data = [
+                        'temp_receipt_id' => $temp_receipt->id,
+                        'student_id'      => $application->student_id,
+                        'application_id'  => $application->id,
+                        'fee_id'          => $fee_structure->fee_id,
+                        'fee_head_id'     => $fee_structure->fee_head_id,
+                        'created_at'      => date('Y-m-d H:i:s'),
+                        'updated_at'      => date('Y-m-d H:i:s'),
+                    ];
+
+                    $data['free_amount'] = 0;
+                    $data['amount']      = $fee_structure->amount;
+                    $data['is_free']     = 0;
+                    $total += $data['amount'];
+                    array_push($datas, $data);
+                }
+                $temp_collections = TempAdmissionCollection::insert($datas);
+            }
+        }
+    } catch (Exception $e) {
+        dd($e);
+    }
+    return response()->json($applications, 200);
 });

@@ -123,6 +123,8 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    'log_max_files' => 30,
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
