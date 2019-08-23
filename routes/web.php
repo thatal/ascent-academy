@@ -447,7 +447,7 @@ Route::get('/get-stat-3rd-sem-major-applications', function () {
             $query->where('subject_id', 469);
         })
             // ->doesntHave('receipts')
-            ->where('ith_practical', 0)->get();
+            ->where('with_practical', 0)->get();
         foreach ($applications as $application) {
             $application->with_practical = 1;
             $application->payment_status = 2;
