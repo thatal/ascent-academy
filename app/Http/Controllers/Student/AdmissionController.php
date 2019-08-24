@@ -104,8 +104,13 @@ class AdmissionController extends Controller
                 }
                 TempAdmissionCollection::insert($datas);
                 saveLogs(auth()->id(), auth()->user()->mobile_no, 'Student', "Temp fee structure created for application id {$application->id} with temp receipt id {$temp_receipt->id}");
+                $temp_receipts = TempAdmissionReceipt::where('application_id',$application->id)
+                                ->wheredoesntHave('onlinePayment',function($q){
+                                        $q->where('status',1);
+                                    })
+                                ->get();
             }
-            // $temp_receipts = TempAdmissionReceipt::where('application_id',$application->id)->get();
+            // dd('2nd',$temp_receipts);
         } catch (Exception $e) {
             // dd($e);
             DB::rollback();
