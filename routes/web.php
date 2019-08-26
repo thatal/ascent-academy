@@ -405,32 +405,39 @@ Route::get('/delete-applied-sub-other-than-major', function () {
     DB::commit();
     dd('done');
 });
-
-Route::get('/third-sem-psy-no-practical', function () {
+// , 529, 536, 549, 558
+// , 529, 536, 549, 558
+// , 529, 536, 549, 558
+Route::get('/third-sem-major-psy-no-practical', function () {
     $applications = Application::whereHas('appliedSubjects', function ($query) {
-        $query->whereIn('subject_id', [502, 529, 536, 549, 558]);
+        $query->whereIn('subject_id', [502]);
     })
         ->where('semester_id', 5)
         ->get();
+    Subject::whereIn('id', [502])->update(['has_practical' => 0]);
     $subjects = Subject::where('semester_id', 5)->get();
-    Subject::whereIn('id', [502, 529, 536, 549, 558])->update(['has_practical' => 0]);
     DB::beginTransaction();
     try {
         foreach ($applications as $application) {
             $has_practical = 0;
             foreach ($application->appliedSubjects as $appliedSubject) {
-                if (!in_array($appliedSubject->subject_id, [502, 529, 536, 549, 558])) {
+                if (!in_array($appliedSubject->subject_id, [502])) {
                     $sub = $subjects->where('id', $appliedSubject->subject_id)->first();
                     if ($sub->has_practical) {
                         $has_practical = 1;
                     }
                 }
             }
-            if ($has_practical) {
-                Log::debug('3rd psy');
-                Log::debug($application->id);
-                $application->with_practical = $has_practical;
-                $application->save();
+            $application->with_practical = $has_practical;
+            $application->save();
+            $temp_receipts = TempAdmissionReceipt::where('application_id',$application->id)
+                                ->wheredoesntHave('onlinePayment',function($q){
+                                        $q->where('status',1);
+                                    })
+                                ->get();
+            foreach($temp_receipts as $temp_receipt){
+                $temp_receipt->tempCollections()->delete();
+                $temp_receipt->delete();
             }
         }
     } catch (Exception $e) {
