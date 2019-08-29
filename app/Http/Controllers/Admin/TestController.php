@@ -182,7 +182,10 @@ class TestController extends Controller
         dd('Successfull');
 
     }
-    public function report_calculation() {
+    public function report_calculation(Request $request) {
+        if($request->get("concat")){
+            return $this->student_contact_subject();
+        }
         return $this->subject_wise_student();
         $stream_id = 2;
         $total_collection = AddmitedStudent::whereHas("application");
@@ -392,6 +395,110 @@ class TestController extends Controller
         }
 
     }
+    public function student_contact_subject() {
+        $stream_id = 2;// for science major
+        $stream_ids = [2];
+        $semester_ids = [2];
+        // $is_major = 1; // 1= yes , 0 = no
+        $selected_subuject_list = Subject::whereIn("stream_id", $stream_ids)->distinct("name")->orderBy("name", "ASC")->get()->groupBy("is_major")->values()->all();
+        $stream = Stream::withTrashed()->find($stream_id);
+        $header_string = $stream->name;
+        $admitted_students_major_subjects = AdmittedStudent::with("application.appliedMajorSubjects.subject", "application.appliedSubjects", "application.appliedStream.stream")
+                ->whereIn("stream_id", $stream_ids)
+                ->whereIn("semester_id", $semester_ids)
+                ->whereHas("application", function($query){
+                    return $query->has("appliedMajorSubjects", ">", 0);
+                })
+                ->get();
+        $subject_wise_admitted_student = $admitted_students_major_subjects->groupBy(function($item, $key){
+            return $item->application->appliedMajorSubjects->subject->name;
+        });
+        $student_list_subjects_wise = [];
+        $subject_wise_student   = [];
+        $subject_wise_admitted_student_major = [];
+        $subject_wise_admitted_student->each(function($item,$key) use (&$subject_wise_admitted_student_major, $header_string, &$subject_wise_student){
+            $subject_wise_admitted_student_major[$key] = $item->count();
+            foreach ($item as $index => $admitted_student) {
+/*                 $subject_wise_student[] = [
+                    "Type"              => "Major",
+                    "Subject"           => $key,
+                    "Subject ID"        => $admitted_student->application->appliedMajorSubjects->subject->id,
+                    "Application No"    => $admitted_student->application_id,
+                    "Applicant Name"    => $admitted_student->application->fullname,
+                    "UUID"              => $admitted_student->uid,
+                    "Stream"            => $admitted_student->application->appliedStream->stream->name,
+                    "Semester"          => $admitted_student->semester->name,
+                ]; */
+                $subject_wise_student[$admitted_student->uid]["Type"]           = "";
+                $subject_wise_student[$admitted_student->uid]["Application No"] = $admitted_student->application_id;
+                $subject_wise_student[$admitted_student->uid]["Applicant Name"] = $admitted_student->application->fullname;
+                $subject_wise_student[$admitted_student->uid]["UUID"]           = $admitted_student->uid;
+                $subject_wise_student[$admitted_student->uid]["Stream"]         = $admitted_student->application->appliedStream->stream->name;
+                $subject_wise_student[$admitted_student->uid]["Semester"]       = $admitted_student->semester->name;
+                if (isset($subject_wise_student[$admitted_student->uid]["Subject"])) {
+                    $subject_wise_student[$admitted_student->uid]["Subject"] .= "+" . $key . "(M)";
+                } else {
+                    $subject_wise_student[$admitted_student->uid]["Subject"] = $key . "(M)";
+                }
+            }
+        });
+        $subject_wise_admitted_student_non_major = [];
+        $admitted_students_non_major_subjects = AdmittedStudent::with("application.appliedMajorSubjects.subject", "application.appliedSubjects")
+                ->whereIn("stream_id", $stream_ids)
+                ->whereIn("semester_id", $semester_ids)
+                ->whereHas("application", function($query){
+                    return $query->has("appliedSubjects", ">", 0);
+                })
+                ->get();
+        $admitted_students = [];
+        foreach ($admitted_students_non_major_subjects as $key => $admitted_student) {
+            foreach ($admitted_student->application->appliedSubjects as $key => $subject) {
+                if($subject->is_major){
+                    continue;
+                }
+/*                 $subject_wise_student[] = [
+                    "Type"              => "Non Major",
+                    "Subject"           => $subject->subject->name,
+                    "Subject ID"        => $subject->subject->id,
+                    "Application No"    => $admitted_student->application_id,
+                    "Applicant Name"    => $admitted_student->application->fullname,
+                    "UUID"              => $admitted_student->uid,
+                    "Stream"            => $admitted_student->application->appliedStream->stream->name,
+                    "Semester"          => $admitted_student->semester->name,
+                ]; */
 
+                $subject_wise_student[$admitted_student->uid]["Type"]           = "";
+                $subject_wise_student[$admitted_student->uid]["Application No"] = $admitted_student->application_id;
+                $subject_wise_student[$admitted_student->uid]["Applicant Name"] = $admitted_student->application->fullname;
+                $subject_wise_student[$admitted_student->uid]["UUID"]           = $admitted_student->uid;
+                $subject_wise_student[$admitted_student->uid]["Stream"]         = $admitted_student->application->appliedStream->stream->name;
+                $subject_wise_student[$admitted_student->uid]["Semester"]       = $admitted_student->semester->name;
+                if (isset($subject_wise_student[$admitted_student->uid]["Subject"])) {
+                    $subject_wise_student[$admitted_student->uid]["Subject"] .= "+" . $subject->subject->name;
+                } else {
+                    $subject_wise_student[$admitted_student->uid]["Subject"] = $subject->subject->name;
+                }
+
+                if(isset($subject_wise_admitted_student_non_major[ucwords(trim($subject->subject->name))])){
+                    $subject_wise_admitted_student_non_major[ucwords(trim($subject->subject->name))] +=1;
+                }else{
+                    $subject_wise_admitted_student_non_major[ucwords(trim($subject->subject->name))] =1;
+                }
+            }
+        }
+
+        $admitted_student_stream = AdmittedStudent::where("stream_id", $stream_id)->count();
+        dumpp($admitted_students_major_subjects->count() + $admitted_students_non_major_subjects->count());
+        dumpp($header_string);
+        ksort($subject_wise_admitted_student_major);
+        ksort($subject_wise_admitted_student_non_major);
+        // dumpp(json_encode($subject_wise_admitted_student_major));
+        // dumpp(json_encode($subject_wise_admitted_student_non_major));
+        // dumpp($admitted_student_stream);
+        dumpp("All admited Student");
+        dumpp(json_encode($subject_wise_student));
+        // dumpp(json_encode($admitted_students));
+        // return Excel::download(new ApplicationExport($applications), 'applications.xlsx');
+    }
 }
 //
