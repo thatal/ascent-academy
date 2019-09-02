@@ -1,11 +1,11 @@
 <?php
 return [
 	'current_time' => time(),
-	'apply_up_time' => '2019-07-25 11:00:00',
-    'apply_down_time' => '2019-08-10 23:59:59',
-    'apply_course' => [3],
-    'apply_stream' => [11],
-    'apply_semester' => [11],
+	'apply_up_time' => '2019-09-02 11:00:00',
+    'apply_down_time' => '2019-09-11 23:59:59',
+    'apply_course' => [1],
+    'apply_stream' => [1,2,3],
+    'apply_semester' => [1],
 
 	'admission_up_time' => '2019-08-16 12:59:59',
     'admission_down_time' => '2019-08-29 23:59:59',
