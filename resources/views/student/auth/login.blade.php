@@ -46,8 +46,7 @@ Login
         </form>
     </div>
 </div>
-@if(config('constants.current_time') >= strtotime(config('constants.admission_up_time')) &&
-config('constants.current_time') <= strtotime(config('constants.admission_down_time'))) <div class="card">
+ <div class="card">
     <div class="card-body p-6">
         <div class="card-title">Renewal Form</div>
         @include('common/layouts/alert')
@@ -71,6 +70,6 @@ config('constants.current_time') <= strtotime(config('constants.admission_down_t
         </form>
     </div>
     </div>
-    @endif
+
 
     @endsection

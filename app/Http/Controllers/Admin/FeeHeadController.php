@@ -82,7 +82,7 @@ class FeeHeadController extends Controller
     {
         $data = [
             'name' => $request->name,
-            'applicable_on' => $request->applicable_on
+            'applicable_on' => $request->applicable_on,
         ];
         $fee_head->update($data);
         $fee_head->save();
