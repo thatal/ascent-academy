@@ -2,7 +2,7 @@
 return [
     'current_time'             => time(),
     'apply_up_time'            => '2019-09-17 11:00:00',
-    'apply_down_time'          => '2019-09-17 23:59:59',
+    'apply_down_time'          => '2019-09-26 23:59:59',
     'apply_course'             => [1],
     'apply_stream'             => [1, 2, 3],
     'apply_semester'           => [1],
