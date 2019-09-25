@@ -8,10 +8,10 @@ return [
     'apply_semester'           => [1],
 
     'admission_up_time'        => '2019-09-24 09:59:59',
-    'admission_down_time'      => '2019-09-25 23:59:59',
+    'admission_down_time'      => '2019-09-26 23:59:59',
     'admission_course'         => [1, 2],
-    'admission_stream'         => [1, 2, 3, 8, 9],
-    'admission_semester'       => [2, 3, 5],
+    'admission_stream'         => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+    'admission_semester'       => [1, 2, 3, 4, 5, 6, 7, 8, 9],
 
     'helpline_no'              => '9706533599',
     'helpline_mail'            => 'darrangcollegeadmission@gmail.com',
