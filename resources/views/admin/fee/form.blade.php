@@ -79,6 +79,16 @@
 				</select>
 			</div>
 		</div>
+		<div class="col-md-4 col-lg-4">
+			<div class="form-group">
+				<label class="form-label">Type</label>
+				<select name="type" class="form-control" required>
+					<option value="">Select</option>
+					<option value="admission" @isset($fee){{ $fee->type == "admission" ? 'selected' : ''}}@else {{__('selected')}} @endisset>Admission</option>
+					<option value="examination" @isset($fee){{ $fee->type == 'examination' ? 'selected' : '' }}@endisset>Examination</option>
+				</select>
+			</div>
+		</div>
 	</div>
 	<div class="table-responsive">
 		<table class="table table-bordered table-smaller-font" id="fee_head_table">

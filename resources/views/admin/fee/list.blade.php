@@ -7,6 +7,7 @@
       <th>Stream</th>
       <th>Gender</th>
       <th>Practical</th>
+      <th>Type</th>
       <th>Financial Year</th>
       <th>Year</th>
       <th>Actions</th>
@@ -21,6 +22,7 @@
       <td>{{ $fee->stream->name }}</td>
       <td>{{ $fee->gender }}</td>
       <td>{{ $fee->practical==1?'Yes':'No' }}</td>
+      <td>{{ $fee->type}}</td>
       <td>{{ $fee->financial_year}}</td>
       <td>{{ $fee->year}}</td>
       <td>

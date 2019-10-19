@@ -28,6 +28,7 @@ class FeeController extends Controller
         $gender                 = $request->get("gender");
         $practical              = $request->get("practical");
         $financial_year         = $request->get("financial_year");
+        $type                   = $request->get("type");
 
         $fees = new Fee();
         if($course){
@@ -44,6 +45,9 @@ class FeeController extends Controller
         // }
         if($gender){
             $fees = $fees->where('gender',$gender);
+        }
+        if($type){
+            $fees = $fees->where('type',$type);
         }
         if($practical){
             if($practical=='With')
@@ -93,6 +97,7 @@ class FeeController extends Controller
                     ->where('gender',$request->gender)
                     ->where('practical',$request->practical)
                     ->where('financial_year',$request->financial_year)
+                    ->where('type', $request->type)
                     ->count();
         if($if_exists){
             Session::flash('error','Fee Structure Already Exists.');
@@ -113,6 +118,7 @@ class FeeController extends Controller
                 'semester_id'   => $request->semester_id,
                 'gender'        => $request->gender,
                 'practical'     => $request->practical,
+                'type'          => $request->type,
                 'financial_year' => $request->financial_year,
                 'year'          => $request->year,
             ];
@@ -123,7 +129,7 @@ class FeeController extends Controller
                         'fee_id' => $fee->id,
                         'fee_head_id'   => $request->fee_heads[$key],
                         'amount'        => (isset($request->amounts[$key]) ? $request->amounts[$key] : 0),
-                        'is_free'       => array_key_exists($key, $request->is_free) ? $request->is_free[$key]: 0,
+                        'is_free'       => array_key_exists($key, $request->is_free ?? []) ? $request->is_free[$key]: 0,
                     ];
                     $fee_structure = FeeStructure::create($data);
                 }
@@ -191,6 +197,7 @@ class FeeController extends Controller
                 'gender'        => $request->gender,
                 'practical'     => $request->practical,
                 'financial_year' => $request->financial_year,
+                'type'          => $request->type,
                 'year'          => $request->year,
             ];
             $fee->update($fee_data);
@@ -202,7 +209,7 @@ class FeeController extends Controller
                         'fee_id' => $fee->id,
                         'fee_head_id'   => $request->fee_heads[$key],
                         'amount'        => (isset($request->amounts[$key]) ? $request->amounts[$key] : 0),
-                        'is_free'       => array_key_exists($key, $request->is_free) ? $request->is_free[$key]: 0,
+                        'is_free'       => array_key_exists($key, $request->is_free ?? []) ? $request->is_free[$key]: 0,
                     ];
                     $fee_structure = FeeStructure::create($data);
                 }

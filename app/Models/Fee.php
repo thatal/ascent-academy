@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Fee extends Model
 {
     use SoftDeletes;
-	
+
     protected $guarded = [
         'id'
     ];
@@ -21,6 +21,7 @@ class Fee extends Model
         "fee_heads.*"   => "required|exists:fee_heads,id",
         "amount.*"      => "required|numeric|min:0",
         'practical'     => "required|in:1,0",
+        'type'          => "required|in:admission,examination",
         'is_free.*'     => "required|in:1,0",
     ];
     public function getRouteKeyName()

@@ -88,7 +88,7 @@ Fee
                   </select>
                 </div>
               </div>
-              <div class="col-md-4 col-lg-4">
+              <div class="col-md-4 col-lg-3">
                 <div class="form-group">
                   <label class="form-label">Financial Year</label>
                   <select name="financial_year" class="form-control" required>
@@ -99,7 +99,16 @@ Fee
                   </select>
                 </div>
               </div>
-            </div>
+                <div class="col-md-3 col-lg-3">
+                    <div class="form-group">
+                        <label class="form-label">Type</label>
+                        <select name="type" class="form-control">
+                            <option value="">Select</option>
+                            <option value="admission" {{(Input::get('type')=='admission')?'selected':''}}>Admission</option>
+                            <option value="examination" {{(Input::get('type')=='examination')?'selected':''}}>Examination</option>
+                        </select>
+                    </div>
+                </div>
           </div>
 
           <div class="card-footer text-right">
