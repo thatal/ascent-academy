@@ -21,5 +21,6 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         'payment-response',
         'admission/payment-response',
+        'admission/examination/payment-response',
     ];
 }

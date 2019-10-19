@@ -10,7 +10,7 @@ function saveLogs($user_id, $username, $guard, $activity)
     $log['username'] = $username;
     $log['guard'] = $guard;
     $log['activity'] = $activity;
-    $log['url'] = \Request::fullUrl();
+    $log['url'] = substr(\Request::fullUrl(), 0, 250);
     $log['method'] = \Request::method();
     $log['ip'] = \Request::ip();
     $log['agent'] = \Request::header('user-agent');
@@ -431,18 +431,25 @@ function getDecimal($amount, $upto = 2)
     return number_format($amount, $upto);
 }
 
-function generateCheckSum($application, $temp_receipt_id, $amount)
+function generateCheckSum($application, $temp_receipt_id, $amount, $examination_fee = null)
     {
+        $exam_flag = "admission";
+        if($examination_fee){
+            $exam_flag = "examination";
+        }
         // $application = Application::where('uuid', $uuid)->first();
         $application_id = $application->id;
         // $amount = config('constants.application_fee');
         $redirect_url = config('constants.redirect_url_admission');
+        if($examination_fee){
+            $redirect_url = config('constants.redirect_url_examination');
+        }
         $merchant_id = config('constants.merchant_id');
         $checksum_key = config('constants.checksum_key');
 
         // $str = 'TESTME|UATTXN0001|NA|2|NA|NA|NA|INR|NA|R|NA|NA|NA|F|Andheri|Mumbai|02240920005|support@billdesk.com|NA|NA|NA|https://www.billdesk.com';
 
-        $str = $merchant_id . '|' . $application_id . '|NA|' . $amount . '|NA|NA|NA|INR|NA|R|NA|NA|NA|F|' . $application->student_id . '|' . $application->student->email . '|' . $application->student->mobile_no . '|'.$temp_receipt_id.'|NA|NA|NA|' . $redirect_url;
+        $str = $merchant_id . '|' . $application_id . '|NA|' . $amount . '|NA|NA|NA|INR|NA|R|NA|NA|NA|F|' . $application->student_id . '|' . $application->student->email . '|' . $application->student->mobile_no . '|'.$temp_receipt_id.'|'.$exam_flag.'|NA|NA|' . $redirect_url;
         // dd($str);
         $checksum = hash_hmac('sha256', $str, $checksum_key, false);
         $checksum = strtoupper($checksum);

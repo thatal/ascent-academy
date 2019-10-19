@@ -36,8 +36,14 @@ class ApplicationController extends Controller
      */
     public function index()
     {
+        $latest_application = Application::with(['admittedStudentLatest'])
+            ->orderBy("id", "DESC")
+            ->where("student_id", auth()->id())
+            ->has("admittedStudentLatest")->first();
+        // check here examination fees here.
+
         $applications = Application::with('student', 'course', 'semester', 'caste', 'appliedSubjects', 'appliedStream', 'attachments', 'receipts', 'admittedStudent', 'paymentReceipt')->where('student_id', auth()->id())->paginate();
-        return view('student.application.index', compact('applications'));
+        return view('student.application.index', compact('applications', "latest_application"));
     }
 
     /**

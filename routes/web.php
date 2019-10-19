@@ -130,6 +130,16 @@ Route::group(['prefix' => 'admission'], function () {
         'as'   => 'student.admission.payment-receipt',
         'uses' => 'Student\AdmissionController@paymentReceipt',
     ]);
+    Route::group(['prefix' => 'examination'], function () {
+        Route::get('/payment-receipt/{application}', [
+            'as'   => 'student.admission.examination-fee-payment-receipt',
+            'uses' => 'Student\AdmissionController@paymentReceiptExaminationFee',
+        ]);
+        Route::match(['get', 'post'], '/payment-response', [
+            'as'   => 'student.admission.payment-response',
+            'uses' => 'Student\AdmissionController@paymentResponseExamination',
+        ]);
+    });
 });
 
 Route::group(['prefix' => 'admin'], function () {

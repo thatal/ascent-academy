@@ -248,4 +248,133 @@ class AdmissionController extends Controller
         // })->get();
         return view('student.admission.payment.payment-receipt', compact('application','receipts'));
     }
+
+    public function paymentReceiptExaminationFee(Request $request, Application $application)
+    {
+        $with_practical = false;
+        $stream_id      = $application->appliedStream->stream_id;
+        $with_practical = $application->with_practical;
+
+        $fees = $application->feeStructure($with_practical, $stream_id);
+        $receipts = $application->examinationFeeReceipt;
+        return view('student.admission.payment.examination-fee-payment-receipt', compact('application','receipts', "fees"));
+    }
+
+    public function paymentResponseExamination(Request $request)
+    {
+        $msg = $request->msg;
+        // dump($msg);
+        Log::info($msg);
+        $checksum_key = config('constants.checksum_key');
+
+        $checksum_value = substr(strrchr($msg, "|"), 1); //Last check sum value
+        // Log::info($checksum_value);
+        $str = str_replace("|" . $checksum_value, "", $msg); //string replace : with empy space
+        // Log::info($str);
+        $checksum = hash_hmac('sha256', $str, $checksum_key, false);
+        Log::info($checksum);
+        DB::beginTransaction();
+        // dump(strtoupper($checksum));
+        // dd($checksum_value);
+        $code = "099";
+        try {
+            if ($checksum_value == strtoupper($checksum)) {
+                if ($msg != '') {
+
+                    $res_data         = explode('|', $str);
+                    $application_id   = $res_data[1];
+                    $transaction_id   = $res_data[2];
+                    $amount           = $res_data[4];
+                    $transaction_date = $res_data[13];
+                    $code             = $res_data[14];
+                    $student_id       = $res_data[16];
+                    $temp_receipt_id  = $res_data[19];
+                    $res_data         = explode('|', $str);
+                    $application      = Application::with("admittedStudentLatest")->where('id', $application_id)->first();
+
+                    $online_payment_data = [
+                        'student_id'       => $student_id,
+                        'application_id'   => $application_id,
+                        'temp_receipt_id'  => str_replace("EXAM","",$temp_receipt_id),
+                        'transaction_id'   => $transaction_id,
+                        'transaction_date' => $transaction_date,
+                        'biller_response'  => $str,
+                        'amount'           => $amount,
+                        'code'             => $code,
+                    ];
+
+                    if ($code == '0300') {
+                        $online_payment_data['status'] = 1;
+
+                        $receipt_data = [
+                            "pay_method"     => "Online",
+                            "uid"            => $application->admittedStudentLatest->uid,
+                            "student_id"     => $application->student_id,
+                            "application_id" => $application->id,
+                            "transaction_id" => $transaction_id,
+                            "total"          => $amount,
+                            "year"           => date("Y"),
+                            "is_online"      => true,
+                            "type"           => "examination",
+                        ];
+
+                        $receipt = AdmissionReceipt::create($receipt_data);
+
+                        $with_practical = false;
+                        $stream_id      = $application->appliedStream->stream_id;
+                        $with_practical = $application->with_practical;
+
+                        $fees = $application->feeStructure($with_practical, $stream_id);
+                        foreach($fees->feeStructures as $fee_key => $fee){
+                            $admission_collection_data = [
+                                'student_id'     => $application->student_id,
+                                'application_id' => $application->id,
+                                'fee_head_id'    => $fee->fee_head_id,
+                                'fee_id'         => $fee->fee_id,
+                                'amount'         => $fee->amount,
+                                'is_free'        => $fee->is_free,
+                            ];
+                            if ($fee->is_free) {
+                                $admission_collection_data['free_amount'] = $fee->amount;
+                            } else {
+                                $admission_collection_data['free_amount'] = 0;
+                            }
+
+                            $receipt->collections()->create($admission_collection_data);
+                        }
+
+                        // AdmissionCollection::create($admission_collection_data);
+
+                        $message = "Payment Successfull for application ID- {$application->id}. Now you can download the receipt.";
+                        $mobile = $application->mobile_no;
+                        sendSMS($mobile, $message);
+                    } else {
+                        $online_payment_data['status'] = 0;
+                    }
+                    OnlinePayment::create($online_payment_data);
+                    saveLogs(auth()->id(), auth()->user()->mobile_no, 'Student', "Payment response for application id {$application->id} with code {$code}");
+                    DB::commit();
+                    if ($code == '0300') {
+                        $receipt_count = AdmissionReceipt::withTrashed()->where('year',date('Y'))->count();
+                        $receipt_no  = str_pad($receipt_count, 4,"0000", STR_PAD_LEFT);
+                        $receipt_no = date('y').'-'.$receipt_no;
+                        $receipt->receipt_no = $receipt_no;
+                        $receipt->save();
+                        saveLogs(auth()->id(), auth()->user()->mobile_no, 'Student', "Receipt generated with receipt id  {$receipt->id} and receipt no {$receipt_no}");
+                        Session::flash('success', 'Payment successfully done. Now You can take a print out of payment receipt.');
+                        return redirect()->route('student.admission.examination-fee-payment-receipt', $application->uuid);
+                    } else {
+                        Session::flash('error', 'Payment unsuccessfull. Try again later');
+                        return redirect()->route('student.application.index', $application->uuid);
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            // dd($e);
+            DB::rollback();
+            Log::error($e);
+            Session::flash('error', 'Something went wrong');
+            return redirect()->route('student.application.index');
+        }
+    }
 }

@@ -56,9 +56,10 @@ class Application extends Model
     {
         return $this->hasMany('App\Models\Attachment', 'application_id', 'id');
     }
-    public function receipts()
+    public function receipts($type = "admission")
     {
-        return $this->hasMany('App\Models\AdmissionReceipt', 'application_id', 'id');
+        return $this->hasMany('App\Models\AdmissionReceipt', 'application_id', 'id')
+            ->where("type", $type);
     }
     public function collections()
     {
@@ -75,6 +76,16 @@ class Application extends Model
     public function admittedStudent()
     {
         return $this->hasOne('App\Models\AdmittedStudent', 'application_id', 'id');
+    }
+    public function admittedStudentLatest()
+    {
+        return $this->hasOne('App\Models\AdmittedStudent', 'application_id', 'id')->orderBy("id", "DESC");
+    }
+    public function examinationFeeReceipt($type = "examination")
+    {
+        $relationship = $this->hasMany('App\Models\AdmissionReceipt', 'application_id', 'id');
+        $relationship = $relationship->where("type", $type);
+        return $relationship;
     }
     public function paymentReceipt()
     {
@@ -153,7 +164,7 @@ class Application extends Model
         'blood_group'           => 'required',
         'total_marks_according_marksheet'           => 'required|numeric',
     ];
-     public static $file_rules = [
+    public static $file_rules = [
         // files
         // 'passport'              => "image|required|mimes:jpeg,jpg,png|max:100|dimensions:max_width=200,max_height=250",
         // 'sign'                  => "image|required|mimes:jpeg,jpg,png|max:100|dimensions:max_width=200,max_height=150",
@@ -166,4 +177,22 @@ class Application extends Model
         'differently_abled_certificate'=> "image|mimes:jpeg,jpg,png|max:1024",
         'image_of_tree_plantation'=> "image|mimes:jpeg,jpg,png|max:1024",
     ];
+    public function feeStructure($with_practical = true, $stream_id = null, $type = "examination",  $year = null)
+    {
+        if(!$year){
+            $year = date("Y");
+        }
+        $fees = Fee::query();
+        $fees = $fees->with(["feeStructures.feeHead"])
+            ->where("course_id", $this->course_id)
+            ->where("stream_id", $stream_id)
+            ->where("semester_id", $this->semester_id)
+            ->where("gender", $this->gender)
+            ->where("practical", $with_practical)
+            ->where("type", $type)
+            ->where("year", $year)
+            ->orderBy("id", "DESC")
+            ->first();
+        return $fees;
+    }
 }
