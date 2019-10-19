@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Student\Auth;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\AdmittedStudent;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Session;
 use App\Models\TempUid;
@@ -109,8 +110,11 @@ class LoginController extends Controller
     {
         $temp_uid = TempUid::where('uid',$request->uid)->first();
         if(!$temp_uid){
-            Session::flash('error_uid','UID not available');
-            return back();
+            $temp_uid = AdmittedStudent::whereUid($request->uid)->first();
+            if(!$temp_uid){
+                Session::flash('error_uid','UID not available');
+                return back();
+            }
         }
         $student = Student::find($temp_uid->student_id);
         auth()->login($student);
