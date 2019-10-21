@@ -332,13 +332,10 @@ class AdmissionController extends Controller
                                 'fee_head_id'    => $fee->fee_head_id,
                                 'fee_id'         => $fee->fee_id,
                                 'amount'         => $fee->amount,
-                                'is_free'        => $fee->is_free,
+                                'is_free'        => 0,
+                                'free_amount'    => 0
                             ];
-                            if ($fee->is_free) {
-                                $admission_collection_data['free_amount'] = $fee->amount;
-                            } else {
-                                $admission_collection_data['free_amount'] = 0;
-                            }
+                                // $admission_collection_data['free_amount'] = 0;
 
                             $receipt->collections()->create($admission_collection_data);
                         }
