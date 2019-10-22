@@ -38,6 +38,7 @@ Application
                         </div>
                     </div>
                     @include('student/application/list')
+                    @if(!$latest_application->appliedStream()->where("stream_id", "=", 10)->count())
                     <div class="card-footer text-right">
                         <div class="d-flex">
                             <a href="{{route('student.admission.examination-fee-payment-receipt', $latest_application->uuid)}}">
@@ -45,6 +46,7 @@ Application
                             </a>
                         </div>
                     </div>
+                    @endif
                 </div>
             </div>
         </div>
