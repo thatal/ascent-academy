@@ -253,7 +253,7 @@ class AdmissionController extends Controller
     {
         $with_practical = false;
         $stream_id      = $application->appliedStream->stream_id;
-        $with_practical = $application->with_practical;
+        $with_practical = $application->exam_practical;
 
         $fees = $application->feeStructure($with_practical, $stream_id);
         $receipts = $application->examinationFeeReceipt;
