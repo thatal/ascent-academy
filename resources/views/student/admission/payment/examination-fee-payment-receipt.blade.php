@@ -186,7 +186,7 @@ Payment
                                                 </tbody>
                                             </table>
                                             {{-- biotechnology Student not available --}}
-                                            @if(isset($checksum) && $fees && !$latest_application->appliedStream()->where("stream_id", "=", 10)->count())
+                                            @if(isset($checksum) && $fees && !$application->appliedStream()->where("stream_id", "=", 10)->count())
                                                 {{-- @if(config('constants.current_time') >= strtotime(config('constants.admission_up_time')) && config('constants.current_time') <= strtotime(config('constants.admission_down_time'))) --}}
                                                     <input type="hidden" name="msg" value="{{ $checksum }}">
                                                     <button type="submit" class="btn btn-primary">Proceed to Pay</button>
