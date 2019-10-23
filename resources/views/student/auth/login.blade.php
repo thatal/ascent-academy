@@ -48,7 +48,10 @@ Login
 </div>
  <div class="card">
     <div class="card-body p-6">
-        <div class="card-title">Renewal Form</div>
+        <div class="card-title">Renewal Form / Centre Fee</div>
+
+        <div class="card-title"><p><small class="text-danger">Students of 1st, 3rd and 5th Sem. can pay centre & practical fee using UID.</small></p>
+        </div>
         @include('common/layouts/alert')
         <form action="{{ route('student.renewal.login') }}" method="post">
             @csrf
