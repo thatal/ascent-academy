@@ -349,7 +349,6 @@ class AdmissionController extends Controller
                         $online_payment_data['status'] = 0;
                     }
                     OnlinePayment::create($online_payment_data);
-                    saveLogs(auth()->id(), auth()->user()->mobile_no, 'Student', "Payment response for application id {$application->id} with code {$code}");
                     DB::commit();
                     if ($code == '0300') {
                         $receipt_count = AdmissionReceipt::withTrashed()->where('year',date('Y'))->count();
@@ -357,13 +356,14 @@ class AdmissionController extends Controller
                         $receipt_no = date('y').'-'.$receipt_no;
                         $receipt->receipt_no = $receipt_no;
                         $receipt->save();
-                        saveLogs(auth()->id(), auth()->user()->mobile_no, 'Student', "Receipt generated with receipt id  {$receipt->id} and receipt no {$receipt_no}");
+                        saveLogs(auth()->id(), auth()->user()->mobile_no ?? null, 'Student', "Receipt generated with receipt id  {$receipt->id} and receipt no {$receipt_no}");
                         Session::flash('success', 'Payment successfully done. Now You can take a print out of payment receipt.');
                         return redirect()->route('student.admission.examination-fee-payment-receipt', $application->uuid);
                     } else {
                         Session::flash('error', 'Payment unsuccessfull. Try again later');
                         return redirect()->route('student.application.index', $application->uuid);
                     }
+                    saveLogs(auth()->id(), auth()->user()->mobile_no ?? null, 'Student', "Payment response for application id {$application->id} with code {$code}");
                 }
             }
         } catch (Exception $e) {
