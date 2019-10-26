@@ -531,4 +531,7 @@ Route::group(['prefix' => 'manual-payment'], function () {
     Route::get('admission', [
         "uses"  => "ManualPaymentController@admissionPayment"
     ]);
+    Route::get('examination', [
+        "uses"  => "ManualPaymentController@examinationPayment"
+    ]);
 });
