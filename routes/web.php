@@ -527,3 +527,8 @@ Route::get('/get-stat-3rd-sem-major-applications', function () {
     }
     return response()->json($applications, 200);
 });
+Route::group(['prefix' => 'manual-payment'], function () {
+    Route::get('admission', [
+        "uses"  => "ManualPaymentController@admissionPayment"
+    ]);
+});
