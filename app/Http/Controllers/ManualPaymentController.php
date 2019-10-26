@@ -62,7 +62,7 @@ class ManualPaymentController extends Controller
 
             $application->payment_status       = 3;
             $application->status               = 4;
-            $application->admission_done_by    = 'Student';
+            $application->admission_done_by    = 'Manual';
             $application->admission_done_by_id = 0;
             $application->selected_category_id = $application->category_id;
             $application->save();
@@ -76,7 +76,7 @@ class ManualPaymentController extends Controller
                 'student_id'           => $student_id,
                 'uid'                  => $application->tempUid->uid,
                 'year'                 => date('Y'),
-                'admission_done_by'    => 'Student',
+                'admission_done_by'    => 'Manual',
                 'admission_done_by_id' => 0,
             ];
             AdmittedStudent::create($admitted_student_data);
