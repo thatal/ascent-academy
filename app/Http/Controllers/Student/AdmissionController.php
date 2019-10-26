@@ -314,6 +314,7 @@ class AdmissionController extends Controller
                             "transaction_id" => $transaction_id,
                             "total"          => $amount,
                             "year"           => date("Y"),
+                            "colletion_done_by"=> "Student",
                             "is_online"      => true,
                             "type"           => "examination",
                         ];
