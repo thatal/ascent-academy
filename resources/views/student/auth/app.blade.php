@@ -1,115 +1,148 @@
 <!doctype html>
 <html lang="en" dir="ltr">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <meta http-equiv="Content-Language" content="en" />
-  <meta name="msapplication-TileColor" content="#2d89ef">
-  <meta name="theme-color" content="#4188c9">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <link rel="icon" href="./favicon.ico" type="image/x-icon"/>
-  <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" />
-  <!-- Generated: 2018-04-16 09:29:05 +0200 -->
-  <title>@yield('title')</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
-  <script src="{{asset('public/admin/assets/js/require.min.js') }}"></script>
-  <script>
-    requirejs.config({
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Content-Language" content="en" />
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="theme-color" content="#4188c9">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <link rel="icon" href="./favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" />
+    <!-- Generated: 2018-04-16 09:29:05 +0200 -->
+    <title>@yield('title')</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
+    <script src="{{asset('public/admin/assets/js/require.min.js') }}"></script>
+    <script>
+        requirejs.config({
       baseUrl: "{{config('app.url')}}"
     });
-  </script>
-  <!-- Dashboard Core -->
-  <link href="{{asset('public/admin/assets/css/dashboard.css')}}" rel="stylesheet" />
-  <script src="{{asset('public/admin/assets/js/dashboard.js')}}"></script>
-  <!-- c3.js Charts Plugin -->
-  <link href="{{asset('public/admin/assets/plugins/charts-c3/plugin.css')}}" rel="stylesheet" />
-  <script src="{{asset('public/admin/assets/plugins/charts-c3/plugin.js')}}"></script>
-  <!-- Google Maps Plugin -->
-  <link href="{{asset('public/admin/assets/plugins/maps-google/plugin.css')}}" rel="stylesheet" />
-  <script src="{{asset('public/admin/assets/plugins/maps-google/plugin.js')}}"></script>
-  <!-- Input Mask Plugin -->
-  <script src="{{asset('public/admin/assets/plugins/input-mask/plugin.js')}}"></script>
+    </script>
+    <!-- Dashboard Core -->
+    <link href="{{asset('public/admin/assets/css/dashboard.css')}}" rel="stylesheet" />
+    <script src="{{asset('public/admin/assets/js/dashboard.js')}}"></script>
+    <!-- c3.js Charts Plugin -->
+    <link href="{{asset('public/admin/assets/plugins/charts-c3/plugin.css')}}" rel="stylesheet" />
+    <script src="{{asset('public/admin/assets/plugins/charts-c3/plugin.js')}}"></script>
+    <!-- Google Maps Plugin -->
+    <link href="{{asset('public/admin/assets/plugins/maps-google/plugin.css')}}" rel="stylesheet" />
+    <script src="{{asset('public/admin/assets/plugins/maps-google/plugin.js')}}"></script>
+    <!-- Input Mask Plugin -->
+    <script src="{{asset('public/admin/assets/plugins/input-mask/plugin.js')}}"></script>
 
-  <style>
-    .scroll_vertical {
-    height: 600px;
-    overflow: auto;
-    padding: 8px;
-    margin-bottom:20px;
-    }
-    .box.box-default {
-    padding: 10px;
-    }
+    <style>
+        .scroll_vertical {
+            height: 600px;
+            overflow: auto;
+            padding: 8px;
+            margin-bottom: 20px;
+        }
 
-    .title {
-        text-transform: uppercase;
-        margin-top: 5px;
-    }
+        .box.box-default {
+            padding: 10px;
+        }
 
-    .bold {
-      font-weight: bold;
-    }
+        .title {
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
 
-  </style>
+        .bold {
+            font-weight: bold;
+        }
+        .vvip{
+            font-weight: bolder;
+            color: white;
+            font-size: 20px;
+            background: red;
+            padding: 12px;
+        }
+
+
+    </style>
 </head>
+
 <body class="">
-  <div class="page">
-    <div class="page-single">
-      <div class="container">
-        <div class="row">
-            <div class="col text-center mb-6">
-              <img src="{!!asset('public/images/logo.jpg') !!}" class="h-8" alt="">
-            <h3 class="title">{{env('APP_NAME')}}</h3>
-            </div>
-        </div>
-        <div class="row">
-          <div class="col-12 col-md-7 col-lg-7 col-xl-7  col-instruction">
-             <div class="scroll_vertical" style="background:#fff">
-             <div class="box box-default">
-            <!-- /.box-header -->
-            <div class="box-body">
+    <div class="page">
+        <div class="page-single">
+            <div class="container">
+                <div class="row">
+                    <div class="col text-center mb-6">
+                        <img src="{!!asset('public/images/logo.jpg') !!}" class="h-8" alt="">
+                        <h3 class="title">{{env('APP_NAME')}}</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-7 col-lg-7 col-xl-7  col-instruction">
+                        <div class="scroll_vertical" style="background:#fff">
+                            <div class="box box-default">
+                                <!-- /.box-header -->
+                                <div class="box-body">
+                                    <p class="vvip">
+                                            Please Note : The helpline number in this portal is exclusively for online payment related queries for students of Darrang College. No other queries will be entertained.
+                                    </p>
+                                    <a class="btn btn-link text-left" style="float: left;"
+                                        href="http://darrangcollege.in/pdf/prospectus-19_20-final.pdf">Download
+                                        Prospectus</a>
+                                    <h4 class="text-right"
+                                        style=" font-size: 15px; margin-bottom: 10px; line-height: 1.2rem;">
+                                        Helpline : <i class="fa fa-phone 2x"></i> {{ config('constants.helpline_no')}}
+                                        <br />
+                                        <i class="fa fa-envelope-o 2x"></i> {{ config('constants.helpline_mail')}}
+                                    </h4>
 
-              <a class="btn btn-link text-left" style="float: left;"  href="http://darrangcollege.in/pdf/prospectus-19_20-final.pdf">Download Prospectus</a>
-            <h4 class="text-right" style=" font-size: 15px; margin-bottom: 10px; line-height: 1.2rem;">
-             Helpline :  <i class="fa fa-phone 2x"></i>  {{ config('constants.helpline_no')}} <br/>
-            <i class="fa fa-envelope-o 2x"></i> {{ config('constants.helpline_mail')}}
-            </h4>
-
-            <h3 style="margin-bottom:8px;">Guidelines for filling up Online Application Form for Admission into HS, Degree & PG in Darrang College</h3>
+                                    <h3 style="margin-bottom:8px;">Guidelines for filling up Online Application Form for
+                                        Admission into HS, Degree & PG in Darrang College</h3>
 
 
-<h5 style="color: red;">Please read the guidelines before filling up your online application form at the website www.darrangcollege.in. </h5>
+                                    <h5 style="color: red;">Please read the guidelines before filling up your online
+                                        application form at the website www.darrangcollege.in. </h5>
 
-<p class="bold" style="color: red;">Online admission renewal is now open for Degree(Science, Arts & Commerce)(3rd & 5th sem). Take a print out of the receipt generated after successfull payment.</p>
-{{-- <p class="bold" style="color: red;">Online admission renewal for Degree(Science & Arts) 5th sem will be available from 7pm</p> --}}
-{{-- <p class="bold" style="color: red;">Online form fillup is now again open for Higher Secondary</p> --}}
-<p class="bold" style="color: red;">Take a print out of the information submitted. This printout needs to be carried at the time of Admission along with the original documents. </p>
+                                    <p class="bold" style="color: red;">Online admission renewal is now open for
+                                        Degree(Science, Arts & Commerce)(3rd & 5th sem). Take a print out of the receipt
+                                        generated after successfull payment.</p>
+                                    {{-- <p class="bold" style="color: red;">Online admission renewal for Degree(Science & Arts) 5th sem will be available from 7pm</p> --}}
+                                    {{-- <p class="bold" style="color: red;">Online form fillup is now again open for Higher Secondary</p> --}}
+                                    <p class="bold" style="color: red;">Take a print out of the information submitted.
+                                        This printout needs to be carried at the time of Admission along with the
+                                        original documents. </p>
 
-<p>Please read the prospectus carefully before starting the online application process.</p>
+                                    <p>Please read the prospectus carefully before starting the online application
+                                        process.</p>
 
-<h4 class="bold">Instructions To Applicant</h4>
-<ol>
-  <li>READ THE PROSPECTUS CAREFULLY BEFORE FILLING UP THE APPLICATION FORM.</li>
-  <li>APPLICATION FEE OF RS. 250/- (ALL CATEGORY) IS TO BE PAID FOR ONLINE APPLICATION.</li>
-  <li>UPLOAD PASSPORT SIZE PHOTO AND SIGNATURE OF THE APPLICANT WITHOUT WHICH THE APPLICATION WILL BE SUMMARILY REJECTED.</li>
-  <li>WRONG / FALSE ENTRY OF ANY CREDENTIALS OF THE APPLICANT WILL ATTRACT REJECTION OF THE APPLICATION.</li>
-  <li>STUDENTS APPLYING FOR PROFESSIONAL COURSE IN BIOTECHNOLOGY NEED TO FILL UP SEPARATE FORM FOR REGISTRATION.</li>
-  <li>ORIGINAL DOCUMENTS HAVE TO BE PRODUCED FOR VERIFICATION AT THE TIME OF ADMISSION.</li>
-  <li>SELF ATTESTED PHOTOCOPIES OF ALL DOCUMENTS AND PRINTOUT OF THE ONLINE FILL UP APPLICATION FORM HAVE TO BE SUBMITTED AT THE TIME OF ADMISSION.</li>
-  <li>DOWNLODED COPY OF THE ONLINE APPLICATION FORM.</li>
-  <li>SELF ATTESTED PHOTOSTAT COPIES OF MARK SHEETS &amp; CERTIFICATES.</li>
-  <li>SELF ATTESTED COPY OF CASTE CERTIFICATE.</li>
-  <li>SELF ATTESTED COPY OF INCOME CERTIFCATE.</li>
-  <li>SELF ATTESTED COPY OF EXTRA CO-CURRICULAR CERTIFCATES (FOR THOSE CANDIDATES CLAIMING SEATS IN THE EXTRA CURRICULAR  CATEGORY)</li>
-</ol>
+                                    <h4 class="bold">Instructions To Applicant</h4>
+                                    <ol>
+                                        <li>READ THE PROSPECTUS CAREFULLY BEFORE FILLING UP THE APPLICATION FORM.</li>
+                                        <li>APPLICATION FEE OF RS. 250/- (ALL CATEGORY) IS TO BE PAID FOR ONLINE
+                                            APPLICATION.</li>
+                                        <li>UPLOAD PASSPORT SIZE PHOTO AND SIGNATURE OF THE APPLICANT WITHOUT WHICH THE
+                                            APPLICATION WILL BE SUMMARILY REJECTED.</li>
+                                        <li>WRONG / FALSE ENTRY OF ANY CREDENTIALS OF THE APPLICANT WILL ATTRACT
+                                            REJECTION OF THE APPLICATION.</li>
+                                        <li>STUDENTS APPLYING FOR PROFESSIONAL COURSE IN BIOTECHNOLOGY NEED TO FILL UP
+                                            SEPARATE FORM FOR REGISTRATION.</li>
+                                        <li>ORIGINAL DOCUMENTS HAVE TO BE PRODUCED FOR VERIFICATION AT THE TIME OF
+                                            ADMISSION.</li>
+                                        <li>SELF ATTESTED PHOTOCOPIES OF ALL DOCUMENTS AND PRINTOUT OF THE ONLINE FILL
+                                            UP APPLICATION FORM HAVE TO BE SUBMITTED AT THE TIME OF ADMISSION.</li>
+                                        <li>DOWNLODED COPY OF THE ONLINE APPLICATION FORM.</li>
+                                        <li>SELF ATTESTED PHOTOSTAT COPIES OF MARK SHEETS &amp; CERTIFICATES.</li>
+                                        <li>SELF ATTESTED COPY OF CASTE CERTIFICATE.</li>
+                                        <li>SELF ATTESTED COPY OF INCOME CERTIFCATE.</li>
+                                        <li>SELF ATTESTED COPY OF EXTRA CO-CURRICULAR CERTIFCATES (FOR THOSE CANDIDATES
+                                            CLAIMING SEATS IN THE EXTRA CURRICULAR CATEGORY)</li>
+                                    </ol>
 
-<pre>
+                                    <pre>
 
 The applicant has to follow the following steps to complete the online application form
 
@@ -162,7 +195,7 @@ The online application will be treated as incomplete on the following points.
 2. Payment process not completed
 </pre>
 
-{{--
+                                    {{--
             <ol class="instruction">
             <li> CLICK ON NEW REGISTRATION TO REGISTER YOURSELF</li>
 
@@ -184,19 +217,20 @@ The online application will be treated as incomplete on the following points.
             <li>ONCE SUBMITTED, THE PROFILE INFORMATION OF THE APPLICANT CANNOT BE EDITED</li>
             </ol> --}}
 
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                            <!-- /.box -->
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-5 col-lg-5 col-xl-5 col-login mx-auto">
+                        @yield('content')
+                    </div>
+                </div>
             </div>
-            <!-- /.box-body -->
-          </div>
-          <!-- /.box -->
         </div>
-          </div>
-          <div class="col-12 col-md-5 col-lg-5 col-xl-5 col-login mx-auto">
-            @yield('content')
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
 </body>
 @yield('js')
+
 </html>
