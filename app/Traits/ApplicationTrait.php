@@ -45,7 +45,7 @@ trait ApplicationTrait
         $board                  = $request->get("board");
         $limit                  = $request->get("limit");
 
-        $boards = Application::where('is_confirmed',1)->get()->pluck('last_board_or_university')->unique()->toArray();
+        $boards = Application::select("last_board_or_university")->where('is_confirmed',1)->get()->pluck('last_board_or_university')->unique()->toArray();
         $castes = Caste::get();
         $courses = Course::get();
         $semesters = collect();
