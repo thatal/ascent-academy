@@ -118,7 +118,7 @@
                   </select>
                 </div>
               </div>
-              <div class="col-md-3 col-lg-3">
+              {{-- <div class="col-md-3 col-lg-3">
                 <div class="form-group">
                   <label class="form-label">Category</label>
                   <select class="form-control" name="category">
@@ -127,7 +127,7 @@
                     <option value="differently-abled" {{(Input::get('category')=='differently-abled')?'selected':''}}>Differently Abled</option>
                   </select>
                 </div>
-              </div>
+              </div> --}}
               <div class="col-md-3 col-lg-3">
                 <div class="form-group">
                   <label class="form-label">Order By Marks</label>
@@ -144,13 +144,13 @@
                   <select class="form-control" name="status">
                     <option value="">All</option>
                     <option value="pending" {{(Input::get('status')=='pending')?'selected':''}}>Pending</option>
-                    <option value="verified" {{(Input::get('status')=='verified')?'selected':''}}>Verified</option>
+                    {{-- <option value="verified" {{(Input::get('status')=='verified')?'selected':''}}>Verified</option>
                     <option value="on-hold" {{(Input::get('status')=='on-hold')?'selected':''}}>On Hold</option>
                     <option value="subject-allocated" {{(Input::get('status')=='subject-allocated')?'selected':''}}>Subject Allocated</option>
                     <option value="admission-done" {{(Input::get('status')=='admission-done')?'selected':''}}>Admission Done</option>
                     <option value="rejected" {{(Input::get('status')=='rejected')?'selected':''}}>Rejected</option>
                     <option value="already-admitted" {{(Input::get('status')=='already-admitted')?'selected':''}}>Already Admitted</option>
-                    <option value="rejected-as-no-seat" {{(Input::get('status')=='rejected-as-no-seat')?'selected':''}}>Rejected As No Seat</option>
+                    <option value="rejected-as-no-seat" {{(Input::get('status')=='rejected-as-no-seat')?'selected':''}}>Rejected As No Seat</option> --}}
                     {{-- <option value="selected" {{(Input::get('status')=='selected')?'selected':''}}>Selected</option> --}}
                   </select>
                 </div>
@@ -167,12 +167,12 @@
                   <input type="number" class="form-control required" name="registration_no" placeholder="Registration No" value="{{Input::get('registration_no')}}">
                 </div>
               </div>
-              <div class="col-md-3 col-lg-3">
+              {{-- <div class="col-md-3 col-lg-3">
                 <div class="form-group">
                   <label class="form-label">UID</label>
                   <input type="text" class="form-control required" name="uid" placeholder="UID" value="{{Input::get('uid')}}">
                 </div>
-              </div>
+              </div> --}}
               <div class="col-md-3 col-lg-3">
                 <div class="form-group">
                   <label class="form-label">Limit</label>

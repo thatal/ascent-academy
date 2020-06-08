@@ -54,7 +54,7 @@ class RegisterController extends Controller
         event(new Registered($student = $this->create($request->all())));
 
         $message = $student->otp." is your OTP.";
-     
+
         $mobile = $student->mobile_no;
 
         sendSMS($mobile,$message);
@@ -85,7 +85,7 @@ class RegisterController extends Controller
     public function otpResend(Request $request)
     {
         $message = session()->get('student')->otp." is your OTP.";
-     
+
         $mobile = session()->get('student')->mobile_no;
 
         sendSMS($mobile,$message);
@@ -116,6 +116,11 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        if(Student::count() == 0){
+            \DB::statement('ALTER TABLE students AUTO_INCREMENT = 1000;');
+        }
+
+
         return Student::create([
             'uuid' => (String) Str::uuid(),
             'name' => $data['name'],

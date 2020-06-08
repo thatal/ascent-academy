@@ -74,7 +74,7 @@
                                     @elseif($application->payment_status==1)
                                     <a href="{{ route('student.application.download-application',$application->uuid) }}"
                                         class="btn btn-success">Download</a>
-                                    <a href="{{ route('student.admission.payment-receipt',$application->uuid) }}"
+                                    <a href="{{ route('student.application.payment-receipt',$application->uuid) }}"
                                         class="btn btn-success">Receipt</a>
                                     @endif
                                     @else
@@ -98,7 +98,7 @@
                                     @elseif($application->payment_status==3)
                                     <a href="{{ route('student.application.download-application',$application->uuid) }}"
                                         class="btn btn-primary mr-2">Download</a>
-                                    <a href="{{ route('student.admission.payment-receipt',$application->uuid) }}"
+                                    <a href="{{ route('student.application.payment-receipt',$application->uuid) }}"
                                         class="btn btn-success">Receipt</a>
                                     @endif
                                     @endif

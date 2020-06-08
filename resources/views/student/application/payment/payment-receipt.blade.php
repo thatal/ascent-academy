@@ -26,6 +26,7 @@ Payment
           @include('common.application.online-payment-receipt')
           <div class="card-footer text-right">
             <div class="d-flex">
+                <button type="button" class="btn btn-default" onclick="printDiv()"><i class="fa fa-print"></i> Print</button>
             </div>
           </div>
         </div>
@@ -39,7 +40,29 @@ Payment
 
 
 @section('js')
+<script>
+    function printDiv(elem)
+    {
+    var mywindow = window.open('', 'PRINT');
 
+    mywindow.document.body.innerHTML= document.getElementById("printTable").outerHTML;
+    mywindow.document.head.innerHTML= ' <link rel="stylesheet" href="{{asset("public/admin/assets/css/dashboard.css")}}">';
+    // mywindow.document.write('<html> <head>');
+
+        // mywindow.document.write(' <link rel="stylesheet" href="{{asset("assets/css/bootstrap2.min.css")}}"> </head> <body>');
+        // mywindow.document.write(document.getElementById(elem).outerHTML);
+        // mywindow.document.write('</body> </html>');
+
+    mywindow.document.close(); // necessary for IE >= 10
+    mywindow.focus(); // necessary for IE >= 10*/
+
+    mywindow.print();
+    // mywindow.close();
+
+    return true;
+
+    }
+</script>
 @stop
 
 

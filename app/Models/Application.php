@@ -23,6 +23,10 @@ class Application extends Model
     {
         return date('d-m-Y',strtotime($date));
     }
+    public function getFullnameAttribute($fullnname)
+    {
+        return strtoupper($fullnname);
+    }
 
     public function student()
     {
@@ -56,7 +60,7 @@ class Application extends Model
     {
         return $this->hasMany('App\Models\Attachment', 'application_id', 'id');
     }
-    public function receipts($type = "admission")
+    public function receipts($type = "application")
     {
         return $this->hasMany('App\Models\AdmissionReceipt', 'application_id', 'id')
             ->where("type", $type);
@@ -91,6 +95,13 @@ class Application extends Model
     {
         return $this->hasOne('App\Models\OnlinePayment', 'application_id', 'id')->where('status',1);
     }
+    // tried payment but not updated yet
+    public function online_payment_tried()
+    {
+        return $this->hasMany('App\Models\OnlinePayment', 'application_id', 'id')
+        ->where('status', 0)
+        ->where("is_cron_checked", 0);
+    }
     public function tempUid()
     {
         return $this->hasOne('App\Models\TempUid', 'application_id', 'id');
@@ -104,34 +115,44 @@ class Application extends Model
         'email'             => 'required|max:100|min:5',
         'mobile_no'         => 'required|digits:10',
         'other_board_university' => 'max:255',
-        'free_admission'    => 'nullable|in:yes,no',
+        // 'free_admission'    => 'nullable|in:yes,no',
         'last_board_or_university_state'    => 'required|max:255|min:1',
 
         'gender'            => "required|in:Male,Female,Transgender",
         'dob'               => "required|date_format:Y-m-d",
         'fathers_name'      => 'required|max:100|min:5',
         'mothers_name'      => 'required|max:100|min:5',
-        'annual_income'     => 'required|numeric',
-        'religion'          => 'required|max:100',
+        // 'annual_income'     => 'required|numeric',
+        // 'religion'          => 'required|max:100',
         'caste_id'          => 'required|exists:castes,id',
+        'age'               => 'required|numeric|min:10',
+        'father_occupation' => 'required|max:255',
+        'guardian_relationship'=> 'required|max:255',
 
         'present_vill_or_town'  => 'required|max:255|min:1',
         'present_city'          => 'required|max:255|min:1',
         'present_state'         => 'required|max:255|min:1',
         'present_district'      => 'required|max:255|min:1',
         'present_pin'           => 'required|digits:6|numeric',
-        'present_nationality'   => 'required|max:255|min:1',
+        // 'present_nationality'   => 'required|max:255|min:1',
+        'present_tel'           => 'required|numeric',
 
         'permanent_vill_or_town'    => 'required|max:255|min:1',
         'permanent_city'            => 'required|max:255|min:1',
         'permanent_state'           => 'required|max:255|min:1',
         'permanent_district'        => 'required|max:255|min:1',
         'permanent_pin'             => 'required|digits:6|numeric',
+        'permanent_tel'             => 'nullable|numeric',
         // 'permanent_nationality'     => 'required|max:255|min:1',
 
         'last_board_or_university'  => 'required|max:100|min:1',
         'last_exam_roll'            => 'required|max:100|min:1',
         'last_exam_no'          => 'required|max:100|min:1',
+        'last_exam_year'          => 'required|min:1',
+        'last_exam_result'          => 'required|min:1',
+        'last_attended_school'  => 'required|max:200|min:1',
+        'qualifying_examination'  => 'required|max:200|min:1',
+
         'sub_1_name'            => 'required|max:100|min:1',
         'sub_1_total'           => 'required|between:0,100|numeric',
         'sub_1_score'           => 'required|between:0,100|numeric',
@@ -161,7 +182,7 @@ class Application extends Model
         'all_total_marks'       => 'required|numeric',
 
         'percentage'            => 'required|numeric',
-        'blood_group'           => 'required',
+        // 'blood_group'           => 'required',
         'total_marks_according_marksheet'           => 'required|numeric',
     ];
     public static $file_rules = [
@@ -169,6 +190,8 @@ class Application extends Model
         // 'passport'              => "image|required|mimes:jpeg,jpg,png|max:100|dimensions:max_width=200,max_height=250",
         // 'sign'                  => "image|required|mimes:jpeg,jpg,png|max:100|dimensions:max_width=200,max_height=150",
         'marksheet'             => "image|required|mimes:jpeg,jpg,png|max:1024",
+        'admit_card'            => "image|required|mimes:jpeg,jpg,png|max:1024",
+        'migration_certificate' => "image|mimes:jpeg,jpg,png|max:1024",
         'pass_certificate'      => "image|mimes:jpeg,jpg,png|max:1024",
         'caste_certificate'     => "image|mimes:jpeg,jpg,png|max:1024",
         'gap_certificate'       => "image|mimes:jpeg,jpg,png|max:1024",

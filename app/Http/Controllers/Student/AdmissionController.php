@@ -240,7 +240,7 @@ class AdmissionController extends Controller
 
     public function paymentReceipt(Request $request, Application $application)
     {
-        $receipts = $application->receipts;
+        $receipts = $application->paymentReciept;
         // $temp_receipts = $application->tempReceipts()->where(function($query){
         //     $query->doesntHave('onlinePayment',function($query){
         //         $query->where('status',1);

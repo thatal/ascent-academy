@@ -19,8 +19,10 @@ use Exception;
 use Illuminate\Http\Request;
 use Image;
 use Log;
+use Payabbhi\Client;
 use Session;
 use Str;
+use Crypt;
 use Validator;
 
 class ApplicationController extends Controller
@@ -78,19 +80,37 @@ class ApplicationController extends Controller
         if (auth()->user()->application()->exists()) {
             $fullname = auth()->user()->application->first()->fullname;
         }
-        return view('student.application.create', compact('castes', 'courses', 'applied_course', 'applied_subs', 'stream_wise_subjects', 'fullname'));
+        $relations_array = [
+            "father"      => "father",
+            "mother"      => "mother",
+            "brother"     => "brother",
+            "sister"      => "sister",
+            "grandfather" => "grandfather",
+            "grandmother" => "grandmother",
+            "uncle"       => "uncle",
+            "aunt"        => "uncle",
+            "cousin"      => "cousin",
+        ];
+
+        return view('student.application.create', compact('castes', 'courses', 'applied_course', 'applied_subs', 'stream_wise_subjects', 'fullname', 'relations_array'));
     }
 
     public function store(Request $request)
     {
-        // dd($request->all());
+        if (Application::count() == 0) {
+            \DB::statement('ALTER TABLE applications AUTO_INCREMENT = 1000;');
+        }
+
+        // dump(request()->all());
         Log::info($request->all());
         $path = 'public/uploads/' . auth()->id() . '/';
         $file_validation_rule = Application::$file_rules;
         $validator = Validator::make($request->all(), $file_validation_rule);
         if ($validator->fails()) {
+            dd($validator->errors());
             return redirect()->back()->with('error', "Whoops! looks like you have missed something. Please verify and submit again.")->withInput()->withErrors($validator);
         }
+        // dd(request()->all());
         $docs = $this->storeDocs($request);
         DB::beginTransaction();
         try {
@@ -99,25 +119,27 @@ class ApplicationController extends Controller
                 'student_id' => auth()->id(),
                 'course_id' => $request->course_id,
                 'semester_id' => $request->semester_id,
+                'caste_id' => $request->caste_id,
                 'fullname' => ucwords($request->fullname),
+                'gender' => $request->gender,
                 'mobile_no' => $request->mobile_no,
                 'email' => $request->email,
-                'free_admission' => $request->free_admission,
+                // 'free_admission' => $request->free_admission,
+                'age' => $request->age,
                 'last_board_or_university_state' => $request->last_board_or_university_state,
-                'gender' => $request->gender,
                 'dob' => $request->dob,
                 'fathers_name' => $request->fathers_name,
+                'father_occupation' => $request->father_occupation,
+                'guardian_relationship' => $request->guardian_relationship,
                 'mothers_name' => $request->mothers_name,
-                'annual_income' => $request->annual_income,
-                'religion' => $request->religion,
-                'caste_id' => $request->caste_id,
 
                 'present_vill_or_town' => $request->present_vill_or_town,
                 'present_city' => $request->present_city,
                 'present_state' => $request->present_state,
                 'present_district' => $request->present_district,
                 'present_pin' => $request->present_pin,
-                'present_nationality' => $request->present_nationality,
+                // 'present_nationality' => $request->present_nationality,
+                'present_tel' => $request->present_tel,
 
                 'permanent_vill_or_town' => $request->permanent_vill_or_town,
                 'permanent_city' => $request->permanent_city,
@@ -125,10 +147,17 @@ class ApplicationController extends Controller
                 'permanent_district' => $request->permanent_district,
                 'permanent_pin' => $request->permanent_pin,
                 'permanent_nationality' => $request->permanent_nationality,
+                'permanent_tel' => $request->permanent_tel,
 
                 'last_board_or_university' => ($request->other_board_university ? $request->other_board_university : $request->last_board_or_university),
                 'last_exam_roll' => $request->last_exam_roll,
                 'last_exam_no' => $request->last_exam_no,
+                'last_exam_result' => $request->last_exam_result,
+                'last_exam_year' => $request->last_exam_year,
+                'last_attended_school' => $request->last_attended_school,
+                'qualifying_examination' => $request->qualifying_examination,
+
+
                 'sub_1_name' => $request->sub_1_name,
                 'sub_1_total' => $request->sub_1_total,
                 'sub_1_score' => $request->sub_1_score,
@@ -157,8 +186,10 @@ class ApplicationController extends Controller
                 'all_total_marks' => $request->all_total_marks,
 
                 'percentage' => $request->percentage,
+                'admission_is_sought_as' => $request->admission_is_sought_as,
+                'declaration' => $request->declaration,
                 'year' => date('Y'),
-                'blood_group' => $request->blood_group,
+                // 'blood_group' => $request->blood_group,
                 'passport' => $path . $docs['passport_name'],
                 'sign' => $path . $docs['sign_name'],
 
@@ -166,13 +197,13 @@ class ApplicationController extends Controller
             $attachment_data = [
 
                 'marksheet' => ($docs['marksheet_name']) ? $path . $docs['marksheet_name'] : '',
-                'pass_certificate' => ($docs['pass_certificate_name']) ? $path . $docs['pass_certificate_name'] : '',
-                'caste_certificate' => ($docs['caste_certificate_name']) ? $path . $docs['caste_certificate_name'] : '',
-                'gap_certificate' => ($docs['gap_certificate']) ? $path . $docs['gap_certificate'] : '',
-                'co_curricular_certificate' => ($docs['co_curricular_certificate']) ? $path . $docs['co_curricular_certificate'] : '',
-                'differently_abled_certificate' => ($docs['differently_abled_certificate']) ? $path . $docs['differently_abled_certificate'] : '',
-                'income_certificate' => ($docs['income_certificate']) ? $path . $docs['income_certificate'] : '',
-                'image_of_tree_plantation' => ($docs['image_of_tree_plantation']) ? $path . $docs['image_of_tree_plantation'] : '',
+                'admit_card' => ($docs['admit_card_name']) ? $path . $docs['admit_card_name'] : '',
+                'migration_certificate' => ($docs['migration_certificate_name']) ? $path . $docs['migration_certificate_name'] : '',
+                // 'gap_certificate' => ($docs['gap_certificate']) ? $path . $docs['gap_certificate'] : '',
+                // 'co_curricular_certificate' => ($docs['co_curricular_certificate']) ? $path . $docs['co_curricular_certificate'] : '',
+                // 'differently_abled_certificate' => ($docs['differently_abled_certificate']) ? $path . $docs['differently_abled_certificate'] : '',
+                // 'income_certificate' => ($docs['income_certificate']) ? $path . $docs['income_certificate'] : '',
+                // 'image_of_tree_plantation' => ($docs['image_of_tree_plantation']) ? $path . $docs['image_of_tree_plantation'] : '',
             ];
 
             /* 'pass_certificate_name' => $pass_certificate_name,
@@ -185,21 +216,21 @@ class ApplicationController extends Controller
             'income_certificate_certificate'        => $income_certificate_name,
             'image_of_tree_plantation_certificate'  => $image_of_tree_plantation_name,*/
 
-            if ($request->co_curricular) {
-                $application_data['co_curricular'] = 1;
-            } else {
-                $application_data['co_curricular'] = 0;
-            }
-            if ($request->differently_abled) {
-                $application_data['differently_abled'] = 1;
-            } else {
-                $application_data['differently_abled'] = 0;
-            }
-            if (strtolower($request->gap) == "yes") {
-                $application_data['is_gap'] = 1;
-            } else {
-                $application_data['is_gap'] = 0;
-            }
+            // if ($request->co_curricular) {
+            //     $application_data['co_curricular'] = 1;
+            // } else {
+            //     $application_data['co_curricular'] = 0;
+            // }
+            // if ($request->differently_abled) {
+            //     $application_data['differently_abled'] = 1;
+            // } else {
+            //     $application_data['differently_abled'] = 0;
+            // }
+            // if (strtolower($request->gap) == "yes") {
+            //     $application_data['is_gap'] = 1;
+            // } else {
+            //     $application_data['is_gap'] = 0;
+            // }
             // dd($request->all());
             // validation here
             $application_rules = Application::$rules;
@@ -210,15 +241,10 @@ class ApplicationController extends Controller
             Log::critical($application_rules);
             $validator = Validator::make($application_data, $application_rules);
             if ($validator->fails()) {
+                dd($validator->errors());
                 Log::error($validator->errors());
                 return redirect()->back()->with('error', "Whoops! looks like you have missed something. Please verify and submit again.")->withInput()->withErrors($validator);
             }
-            $validator->sometimes('free_admission', 'required|in:yes,no|nullable', function ($input) {
-                return $input->annual_income < 100000;
-            });
-            $validator->sometimes('other_board_university', 'required|nullable', function ($input) {
-                return $input->last_board_or_university = "OTHER";
-            });
 
             // dd("File Validate");
             $application = Application::create($application_data);
@@ -247,7 +273,7 @@ class ApplicationController extends Controller
 
             // dd($application_data, $applied_stream_data, $applied_subjects_data);
         } catch (Exception $e) {
-            // dd($e);
+            dd($e);
             DB::rollback();
             Log::error($e);
             Session::flash('error', 'Something Went Wrong');
@@ -322,7 +348,19 @@ class ApplicationController extends Controller
                 "cm" => $subject->is_compulsory,
             ];
         });
-        return view('student.application.edit', compact('application', 'castes', 'courses', 'semesters', 'streams', 'applied_stream', 'applied_course', 'applied_subs', 'stream_wise_subjects'));
+        $relations_array = [
+            "father"      => "father",
+            "mother"      => "mother",
+            "brother"     => "brother",
+            "sister"      => "sister",
+            "grandfather" => "grandfather",
+            "grandmother" => "grandmother",
+            "uncle"       => "uncle",
+            "aunt"        => "uncle",
+            "cousin"      => "cousin",
+        ];
+
+        return view('student.application.edit', compact('application', 'castes', 'courses', 'semesters', 'streams', 'applied_stream', 'applied_course', 'applied_subs', 'stream_wise_subjects', 'relations_array'));
     }
 
     /**
@@ -347,107 +385,97 @@ class ApplicationController extends Controller
         DB::beginTransaction();
         try {
             $application_data = [
-                // 'uuid'              => (String) Str::uuid(),
-                'student_id' => auth()->id(),
-                'course_id' => $request->course_id,
-                'semester_id' => $request->semester_id,
-                'fullname' => ucwords($request->fullname),
-                'mobile_no' => $request->mobile_no,
-                'email' => $request->email,
-                'free_admission' => $request->free_admission,
-                'last_board_or_university_state' => $request->last_board_or_university_state,
-                'gender' => $request->gender,
-                'dob' => $request->dob,
-                'fathers_name' => $request->fathers_name,
-                'mothers_name' => $request->mothers_name,
-                'annual_income' => $request->annual_income,
-                'religion' => $request->religion,
-                'caste_id' => $request->caste_id,
+                'student_id'                      => auth()->id(),
+                'course_id'                       => $request->course_id,
+                'semester_id'                     => $request->semester_id,
+                'caste_id'                        => $request->caste_id,
+                'fullname'                        => ucwords($request->fullname),
+                'gender'                          => $request->gender,
+                'mobile_no'                       => $request->mobile_no,
+                'email'                           => $request->email,
+                // 'free_admission' => $request->free_admission,
+                'age'                             => $request->age,
+                'last_board_or_university_state'  => $request->last_board_or_university_state,
+                'dob'                             => $request->dob,
+                'fathers_name'                    => $request->fathers_name,
+                'father_occupation'               => $request->father_occupation,
+                'guardian_relationship'           => $request->guardian_relationship,
+                'mothers_name'                    => $request->mothers_name,
 
-                'present_vill_or_town' => $request->present_vill_or_town,
-                'present_city' => $request->present_city,
-                'present_state' => $request->present_state,
-                'present_district' => $request->present_district,
-                'present_pin' => $request->present_pin,
-                'present_nationality' => $request->present_nationality,
+                'present_vill_or_town'            => $request->present_vill_or_town,
+                'present_city'                    => $request->present_city,
+                'present_state'                   => $request->present_state,
+                'present_district'                => $request->present_district,
+                'present_pin'                     => $request->present_pin,
+                // 'present_nationality' => $request->present_nationality,
+                'present_tel'                     => $request->present_tel,
 
-                'permanent_vill_or_town' => $request->permanent_vill_or_town,
-                'permanent_city' => $request->permanent_city,
-                'permanent_state' => $request->permanent_state,
-                'permanent_district' => $request->permanent_district,
-                'permanent_pin' => $request->permanent_pin,
-                'permanent_nationality' => $request->permanent_nationality,
+                'permanent_vill_or_town'          => $request->permanent_vill_or_town,
+                'permanent_city'                  => $request->permanent_city,
+                'permanent_state'                 => $request->permanent_state,
+                'permanent_district'              => $request->permanent_district,
+                'permanent_pin'                   => $request->permanent_pin,
+                'permanent_nationality'           => $request->permanent_nationality,
+                'permanent_tel'                   => $request->permanent_tel,
 
-                'last_board_or_university' => ($request->other_board_university ? $request->other_board_university : $request->last_board_or_university),
-                'last_exam_roll' => $request->last_exam_roll,
-                'last_exam_no' => $request->last_exam_no,
-                'sub_1_name' => $request->sub_1_name,
-                'sub_1_total' => $request->sub_1_total,
-                'sub_1_score' => $request->sub_1_score,
+                'last_board_or_university'        => ($request->other_board_university ? $request->other_board_university : $request->last_board_or_university),
+                'last_exam_roll'                  => $request->last_exam_roll,
+                'last_exam_no'                    => $request->last_exam_no,
+                'last_exam_result'                => $request->last_exam_result,
+                'last_exam_year'                  => $request->last_exam_year,
+                'last_attended_school'            => $request->last_attended_school,
+                'qualifying_examination'          => $request->qualifying_examination,
 
-                'sub_2_name' => $request->sub_2_name,
-                'sub_2_total' => $request->sub_2_total,
-                'sub_2_score' => $request->sub_2_score,
+                'sub_1_name'                      => $request->sub_1_name,
+                'sub_1_total'                     => $request->sub_1_total,
+                'sub_1_score'                     => $request->sub_1_score,
 
-                'sub_3_name' => $request->sub_3_name,
-                'sub_3_total' => $request->sub_3_total,
-                'sub_3_score' => $request->sub_3_score,
+                'sub_2_name'                      => $request->sub_2_name,
+                'sub_2_total'                     => $request->sub_2_total,
+                'sub_2_score'                     => $request->sub_2_score,
 
-                'sub_4_name' => $request->sub_4_name,
-                'sub_4_total' => $request->sub_4_total,
-                'sub_4_score' => $request->sub_4_score,
+                'sub_3_name'                      => $request->sub_3_name,
+                'sub_3_total'                     => $request->sub_3_total,
+                'sub_3_score'                     => $request->sub_3_score,
 
-                'sub_5_name' => $request->sub_5_name,
-                'sub_5_total' => $request->sub_5_total,
-                'sub_5_score' => $request->sub_5_score,
+                'sub_4_name'                      => $request->sub_4_name,
+                'sub_4_total'                     => $request->sub_4_total,
+                'sub_4_score'                     => $request->sub_4_score,
 
-                'sub_6_name' => $request->sub_6_name,
-                'sub_6_total' => $request->sub_6_total,
-                'sub_6_score' => $request->sub_6_score,
+                'sub_5_name'                      => $request->sub_5_name,
+                'sub_5_total'                     => $request->sub_5_total,
+                'sub_5_score'                     => $request->sub_5_score,
+
+                'sub_6_name'                      => $request->sub_6_name,
+                'sub_6_total'                     => $request->sub_6_total,
+                'sub_6_score'                     => $request->sub_6_score,
 
                 'total_marks_according_marksheet' => $request->total_marks_according_marksheet,
-                'all_total_marks' => $request->all_total_marks,
+                'all_total_marks'                 => $request->all_total_marks,
 
-                'percentage' => $request->percentage,
-                'year' => date('Y'),
-                'blood_group' => $request->blood_group,
-                'passport' => $path . $docs['passport_name'],
-                'sign' => $path . $docs['sign_name'],
+                'percentage'                      => $request->percentage,
+                'admission_is_sought_as'          => $request->admission_is_sought_as,
+                'declaration'                     => $request->declaration,
+                'year'                            => date('Y'),
+                // 'blood_group' => $request->blood_group,
+                'passport'                        => $path . $docs['passport_name'],
+                'sign'                            => $path . $docs['sign_name'],
 
             ];
+
+
             if ($application_data['passport'] != "") {
                 unset($application_data["passport"]);
             }
             if ($application_data['sign'] != "") {
                 unset($application_data["sign"]);
             }
+
             $attachment_data = [
-
                 'marksheet' => ($docs['marksheet_name']) ? $path . $docs['marksheet_name'] : '',
-                'pass_certificate' => ($docs['pass_certificate_name']) ? $path . $docs['pass_certificate_name'] : '',
-                'caste_certificate' => ($docs['caste_certificate_name']) ? $path . $docs['caste_certificate_name'] : '',
-                'gap_certificate' => ($docs['gap_certificate']) ? $path . $docs['gap_certificate'] : '',
-                'co_curricular_certificate' => ($docs['co_curricular_certificate']) ? $path . $docs['co_curricular_certificate'] : '',
-                'differently_abled_certificate' => ($docs['differently_abled_certificate']) ? $path . $docs['differently_abled_certificate'] : '',
-                'income_certificate' => ($docs['income_certificate']) ? $path . $docs['income_certificate'] : '',
-                'image_of_tree_plantation' => ($docs['image_of_tree_plantation']) ? $path . $docs['image_of_tree_plantation'] : '',
+                'admit_card' => ($docs['admit_card_name']) ? $path . $docs['admit_card_name'] : '',
+                'migration_certificate' => ($docs['migration_certificate_name']) ? $path . $docs['migration_certificate_name'] : '',
             ];
-
-            if ($request->co_curricular) {
-                $application_data['co_curricular'] = 1;
-            } else {
-                $application_data['co_curricular'] = 0;
-            }
-            if ($request->differently_abled) {
-                $application_data['differently_abled'] = 1;
-            } else {
-                $application_data['differently_abled'] = 0;
-            }
-            if (strtolower($request->gap) == "yes") {
-                $application_data['is_gap'] = 1;
-            } else {
-                $application_data['is_gap'] = 0;
-            }
 
             $application_rules = Application::$rules;
             $validator = Validator::make($application_data, $application_rules);
@@ -621,6 +649,8 @@ AppliedSubject::create($applied_subjects_data);
         $marksheet_name = '';
         $pass_certificate_name = '';
         $caste_certificate_name = '';
+        $admit_card_name = '';
+        $migration_certificate_name = '';
         if (request()->hasFile('passport')) {
             $passport = request()->file('passport');
             $passport_name = date('dmYHis') . "-passport." . $passport->getClientOriginalExtension();
@@ -641,6 +671,28 @@ AppliedSubject::create($applied_subjects_data);
             // save file as jpg with medium quality
             $marksheet_image->save($destinationPath . "/" . $marksheet_name, 60);
             $marksheet_image->destroy();
+        }
+        if (request()->hasFile('admit_card')) {
+            $admit_card = request()->file('admit_card');
+            $admit_card_name = date('dmYHis') . "-admit_card." . $admit_card->getClientOriginalExtension();
+            // $admit_card->move($destinationPath, $admit_card_name);
+
+            // update code with Image compression
+            $admit_card_image = Image::make($admit_card);
+            // save file as jpg with medium quality
+            $admit_card_image->save($destinationPath . "/" . $admit_card_name, 60);
+            $admit_card_image->destroy();
+        }
+        if (request()->hasFile('migration_certificate')) {
+            $migration_certificate = request()->file('migration_certificate');
+            $migration_certificate_name = date('dmYHis') . "-migration_certificate." . $migration_certificate->getClientOriginalExtension();
+            // $migration_certificate->move($destinationPath, $migration_certificate_name);
+
+            // update code with Image compression
+            $migration_certificate_image = Image::make($migration_certificate);
+            // save file as jpg with medium quality
+            $migration_certificate_image->save($destinationPath . "/" . $migration_certificate_name, 60);
+            $migration_certificate_image->destroy();
         }
         if (request()->hasFile('pass_certificate')) {
             $pass_certificate = request()->file('pass_certificate');
@@ -728,6 +780,8 @@ AppliedSubject::create($applied_subjects_data);
             'passport_name' => $passport_name,
             'sign_name' => $sign_name,
             'marksheet_name' => $marksheet_name,
+            'admit_card_name' => $admit_card_name,
+            'migration_certificate_name' => $migration_certificate_name,
             'pass_certificate_name' => $pass_certificate_name,
             'caste_certificate_name' => $caste_certificate_name,
             'caste_certificate_name' => $caste_certificate_name,
@@ -741,22 +795,135 @@ AppliedSubject::create($applied_subjects_data);
 
     public function makePayment(Request $request)
     {
-        $application = Application::where('uuid', $request->application_uuid)->first();
-        $application_id = $application->id;
-        $amount = config('constants.application_fee');
-        $redirect_url = config('constants.redirect_url_application');
-        $merchant_id = config('constants.merchant_id');
-        $checksum_key = config('constants.checksum_key');
+        \DB::listen(function($query){
+            \Log::info($query->sql);
+        });
+        $application = Application::whereUuid($request->application_uuid)->first();
+        if(!$application){
+            return redirect()
+                ->back()
+                ->with("error", "Whoops! something went wrong try again later.");
+        }
+        if ($application->payment_status == 1) {
+            Session::flash('error', 'Payment has been already done.');
+            return redirect()->route('student.application.show', $application->uuid);
+        }
 
-        // $str = 'TESTME|UATTXN0001|NA|2|NA|NA|NA|INR|NA|R|NA|NA|NA|F|Andheri|Mumbai|02240920005|support@billdesk.com|NA|NA|NA|https://www.billdesk.com';
+        if($application->paymentReceipt){
+            return redirect()->back()->with("error", "Payment has been already done.");
+        }
+        DB::beginTransaction();
+        try {
+            $accessId        = env("PAYMENT_ACCESS_ID");
+            $secretKey       = env("PAYMENT_SECRET_KEY");
 
-        $str = $merchant_id . '|' . $application_id . '|NA|' . $amount . '|NA|NA|NA|INR|NA|R|NA|NA|NA|F|' . $application->student_id . '|' . $application->student->email . '|' . $application->student->mobile_no . '|support@billdesk.com|NA|NA|NA|' . $redirect_url;
-        // dd($str);
-        $checksum = hash_hmac('sha256', $str, $checksum_key, false);
-        $checksum = strtoupper($checksum);
-        $checksum = $str . "|" . $checksum;
+            $merchantOrderID = env("MERCHANT_ORDER_ID", uniqid());
+            $currency        = "INR";
+            $amount          = config('constants.application_fee');
+            // amount converting for payabbhi
+            $amount_payabbhi = round($amount * 100, 2);
+
+            $application_id = $application->id;
+            // $amount = config('constants.application_fee');
+            // $redirect_url = config('constants.redirect_url_application');
+            // $merchant_id = config('constants.merchant_id');
+            // $checksum_key = config('constants.checksum_key');
+            $tried_records = $application->online_payment_tried;
+            $client = new Client($accessId, $secretKey);
+            if($tried_records->count()){
+                foreach($tried_records as $tried_order){
+                    $previous_order = $client->order->retrieve($tried_order->order_id);
+                    // $tried_records->succed_payments()->delete();
+                    $order_status = (isset($previous_order["status"]) ? $previous_order["status"] : $previous_order->status);
+
+                    $tried_order->is_cron_checked = 1;
+                    if (strtolower($order_status) == "paid") {
+                        $payments_data = $previous_order->payments();
+                        foreach ($payments_data->data as $index => $payment) {
+                            // dd($payment);
+                            // only if payment is done captured status
+                            if ($payment->status == "captured") {
+                                $update_data = [
+                                    "transaction_id"   => $payment->id,
+                                    "transaction_date" => date("Y-m-d H:i:s", $payment->created_at),
+                                    "response_amount"  => $payment->amount,
+                                    "code"             => $payment->status,
+                                    "biller_response"  => json_encode($payment),
+                                ];
+                                $tried_order->transaction_id = $payment->id;
+                                $tried_order->transaction_date = date("Y-m-d H:i:s", $payment->created_at);
+                                $tried_order->code = $payment->status;
+                                $tried_order->response_amount = $payment->amount;
+                                $tried_order->biller_response = json_encode($payment);
+                                $tried_order->status = 1;
+
+                                $application->payment_status = 1;
+                                $application->save();
+                                $this->sendApplicationNoSMS($application);
+                            }
+                        }
+                        $tried_order->save();
+                        DB::commit();
+                        return redirect()
+                            ->back()
+                            ->with("success", "Your Payment is already done.");
+                    }
+                    $tried_order->save();
+                }
+            }
+            $order = $client->order->create([
+                'amount'            => $amount_payabbhi,
+                'currency'          => 'INR',
+                'merchant_order_id' => $merchantOrderID,
+                "notes"             => [
+                    "merchant_order_id"  => (string) $merchantOrderID,
+                    "student_id"         => $application->student_id,
+                    "application_id"     => $application->id
+                ],
+            ]);
+
+            $online_payment_data = [
+                "student_id"        => $application->student_id,
+                "application_id"    => $application->id,
+                "order_id"          => $order->id,
+                "merchant_order_id" => $merchantOrderID,
+                "amount"            => $amount,
+                "status"            => 0,
+            ];
+
+            $data = [
+                'access_id'   => $accessId,
+                'order_id'    => $order->id,
+                'amount'      => $amount_payabbhi,
+                'image'       => asset("public/logo.png"),
+                'description' => env("APP_NAME") . ': Order #' . $merchantOrderID,
+                'prefill'     => [
+                    'name'    => $application->fullname,
+                    'email'   => $application->student->email,
+                    'contact' => $application->student->mobile_no,
+                ],
+                'notes'       => [
+                    'merchant_order_id' => (string) $merchantOrderID,
+                ],
+                'theme'       => [
+                    'color' => '#FF9900',
+                ],
+            ];
+        }catch(\Exception $e){
+            dd($e);
+            Log::error($e);
+            DB::rollback();
+            return redirect()
+                ->back()
+                ->with("error", "Whoops! something went wrong. try again later.");
+        }
+
+        $online_payment = OnlinePayment::create($online_payment_data);
+        $data["notes"]["payment_id"] = $online_payment->id;
+
+        DB::commit();
         // echo $checksum;
-        return view('student.application.payment.make-payment', compact('application_id', 'application', 'amount', 'checksum'));
+        return view('student.application.payment.make-payment', compact('application_id', 'application', 'amount', "data", "merchantOrderID"));
     }
 
     public function paymentResponse(Request $request)
@@ -841,7 +1008,8 @@ AppliedSubject::create($applied_subjects_data);
         if ($application->payment_status = 1 && $application->is_confirmed = 1) {
             $common_application = new CommonApplicationController();
             $pdf = $common_application->downloadApplication($request, $application);
-            return $pdf->download("Darrang-college-{$application->id}.pdf");
+            // return $pdf;
+            return $pdf->download("ascent-academy-{$application->id}.pdf");
         } else {
             return back();
         }
@@ -873,6 +1041,85 @@ AppliedSubject::create($applied_subjects_data);
             Redirect::back()->withInput()->withErrors($validator)->send();
         }
     }
+    public function sendApplicationNoSMS($application)
+    {
+        return true;
+        $message = "Payment Successfull, for your application id ".$application->id.".";
+        $mobile = $application->student->isd_code.$application->student->mobile_no;
+        try {
+            sendSMS($mobile, $message);
+        } catch (\Throwable $th) {
+            return false;
+        }
+        return true;
+    }
+    public function paymentResponsePayAbbhi(Request $request, $encrypted_id) {
+        $accessId = env("PAYMENT_ACCESS_ID");
+        $secretKey = env("PAYMENT_SECRET_KEY");
+        $merchantOrderID = env("MERCHANT_ORDER_ID", uniqid());
+        Log::notice(json_encode($request->all()));
+        try {
+            $decrypted_id = Crypt::decrypt($encrypted_id);
+        } catch (Exception $e) {
+            // dd($e);
+            Log::emergency($e);
+            return redirect()->route('student.application.index')->with("error", "Whoops! Something went wrong.");
+        }
+        try {
+            $api = new Client($accessId, $secretKey);
 
+            $api->utility->verifyPaymentSignature([
+                'payment_id'    => $request->get("payment_id"),
+                'order_id'      => $request->get("order_id"),
+                'payment_signature' => $request->get("payment_signature"),
+            ]);
+            $payment = $api->payment->retrieve($request->get("payment_id"));
+        } catch (Exception $e) {
+            Log::emergency($e);
+            return redirect()->route("student.application.index")->with("error", "Payment Details fetching error. Wait sometimes or contact to helpline no.");
+        }
+        // dd($payment);
+        DB::beginTransaction();
+        try {
+            $application = Application::findOrFail($decrypted_id);
+            if($application->payment_status){
+                return redirect()->route("student.application.index")->with("error", "Fee already paid.");
+            }
+            // Application id from application_id , student_id is just passed so not taken.
+            // we can also check with online payment_id which provided in notes during payment
+            $online_payment = OnlinePayment::where("order_id", $request->get("order_id"))->first();
+            $online_payment = OnlinePayment::find($payment->notes["payment_id"]);
+            $update_data = [
+                "response_amount"   => $payment->amount,
+                "transaction_id"    => $request->get("payment_id"),
+                "payment_signature" => $request->get("payment_signature"),
+                "transaction_date"  => date("Y-m-d H:i:s", $payment->created_at),
+                "is_error"          => $request->get("is_error"),
+                "error_message"     => $request->get("error_message"),
+                "code"              => $payment->status,
+                "biller_response"   => $request->get("response"),
+                "is_cron_checked"   => 1,
+            ];
+            if($payment->status == "captured"){
+                $update_data["status"] = 1;
+                $application->payment_status = 1;
+                $application->save();
+                $this->sendApplicationNoSMS($application);
+            }
+            $online_payment->update($update_data);
 
+        } catch (Exception $e) {
+            dd($e);
+            DB::rollback();
+            Log::emergency($e);
+            Session::flash('error', 'Payment unsuccessfull. Try again later');
+            return redirect()->route('student.application.show', $application->uuid);
+
+            return redirect()->route("student.application.index")->with("error", "Something went wrong. Please try again later.");
+        }
+        DB::commit();
+
+        Session::flash('success', 'Payment successfully done. Now You can download your application');
+        return redirect()->route('student.application.show', $application->uuid);
+    }
 }

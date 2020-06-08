@@ -18,6 +18,7 @@ class ApplicationController extends Controller
         }else{
             $appliedSubjects = $application->appliedSubjects;
         }
+        // return view('common.application.pdf' ,compact('application','appliedSubjects','preferences'));
     	$pdf = PDF::loadView('common.application.pdf' ,compact('application','appliedSubjects','preferences'));
         return $pdf;
     }

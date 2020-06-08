@@ -103,9 +103,9 @@ Route::post('/make-payment', [
     'as'   => 'student.application.make-payment',
     'uses' => 'Student\ApplicationController@makePayment',
 ])->middleware('apply-time');
-Route::post('/payment-response', [
-    'as'   => 'student.application.payment-response',
-    'uses' => 'Student\ApplicationController@paymentResponse',
+Route::post('/payment-response-payabb/{application_id}', [
+    'as'   => 'student.application.process-payment-post',
+    'uses' => 'Student\ApplicationController@paymentResponsePayAbbhi',
 ])->middleware('apply-time');
 Route::get('/payment-receipt/{application}', [
     'as'   => 'student.application.payment-receipt',
@@ -159,22 +159,22 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('/password/reset/{token}', 'Admin\Auth\ResetPasswordController@showResetForm');
 });
 
-Route::group(['prefix' => 'staff'], function () {
-    Route::get('/', function () {
-        return redirect()->route('staff.login');
-    });
-    Route::get('/login', 'Staff\Auth\LoginController@showLoginForm')->name('staff.login');
-    Route::post('/login', 'Staff\Auth\LoginController@login');
-    Route::get('/logout', 'Staff\Auth\LoginController@logout')->name('staff.logout');
+// Route::group(['prefix' => 'staff'], function () {
+//     Route::get('/', function () {
+//         return redirect()->route('staff.login');
+//     });
+//     Route::get('/login', 'Staff\Auth\LoginController@showLoginForm')->name('staff.login');
+//     Route::post('/login', 'Staff\Auth\LoginController@login');
+//     Route::get('/logout', 'Staff\Auth\LoginController@logout')->name('staff.logout');
 
-    Route::get('/register', 'Staff\Auth\RegisterController@showRegistrationForm')->name('staff.register');
-    Route::post('/register', 'Staff\Auth\RegisterController@register');
+//     Route::get('/register', 'Staff\Auth\RegisterController@showRegistrationForm')->name('staff.register');
+//     Route::post('/register', 'Staff\Auth\RegisterController@register');
 
-    Route::post('/password/email', 'Staff\Auth\ForgotPasswordController@sendResetLinkEmail')->name('staff.password.request');
-    Route::post('/password/reset', 'Staff\Auth\ResetPasswordController@reset')->name('staff.password.email');
-    Route::get('/password/reset', 'Staff\Auth\ForgotPasswordController@showLinkRequestForm')->name('staff.password.reset');
-    Route::get('/password/reset/{token}', 'Staff\Auth\ResetPasswordController@showResetForm');
-});
+//     Route::post('/password/email', 'Staff\Auth\ForgotPasswordController@sendResetLinkEmail')->name('staff.password.request');
+//     Route::post('/password/reset', 'Staff\Auth\ResetPasswordController@reset')->name('staff.password.email');
+//     Route::get('/password/reset', 'Staff\Auth\ForgotPasswordController@showLinkRequestForm')->name('staff.password.reset');
+//     Route::get('/password/reset/{token}', 'Staff\Auth\ResetPasswordController@showResetForm');
+// });
 
 // debugging url
 Route::group(['prefix' => 'api'], function () {

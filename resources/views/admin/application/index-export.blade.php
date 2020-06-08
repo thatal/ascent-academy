@@ -10,8 +10,8 @@
       <th>Semester</th>
       <th>Stream</th>
       <th>Caste</th>
-      <th>Co Curricular</th>
-      <th>Differently Abled</th>
+      {{-- <th>Co Curricular</th> --}}
+      {{-- <th>Differently Abled</th> --}}
       <th>Board</th>
       <th>Total Marks</th>
       <th>Percentage</th>
@@ -29,12 +29,12 @@
       <td>{{ $application->semester->name ?? '' }}</td>
       <td>{{ $application->appliedStream->stream->name }}</td>
       <td>{{ $application->caste->name }}</td>
-      <td>
+      {{-- <td>
         @if($application->co_curricular==1)Yes @else No @endif
-      </td>
-      <td>
+      </td> --}}
+      {{-- <td>
         @if($application->differently_abled==1)Yes @else No @endif
-      </td>
+      </td> --}}
       <td>{{ $application->last_board_or_university }} ({{$application->last_board_or_university_state}})</td>
       <td>{{ $application->all_total_marks }}</td>
       <td>{{ $application->percentage }}%</td>

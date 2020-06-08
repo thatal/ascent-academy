@@ -2,13 +2,33 @@
 <script type="text/javascript" src="{{ asset('public/js/jquery.validate.js')}}"></script>
 <script type="text/javascript" src="{{ asset('public/js/additional-methods.js')}}"></script>
 <script type="text/javascript">
+check_date = '2020-03-01';
     $('#dob').Zebra_DatePicker({
         format: 'Y-m-d',
-        direction:-1
+        direction:-1,
+        onSelect: function(format, date, dateObj){
+            const date1 = dateObj;
+            const date2 = new Date(check_date);
+            const diffTime = Math.abs(date2 - date1);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            $("#age").val(parseInt(diffDays/365.25));
+        }
     });
     $(document).on("contextmenu",function(e){
        e.preventDefault();
     });
+    dateDiffYear = function(date_from, date_to){
+        var date_from_array = date_from.split("-");
+        var date_to_array = date_to.split("-");
+        dt1 = new Date(date_to_array[0],(date_to_array[1]-1),date_to_array[2]);
+        dt2 = new Date(date_from_array[2],(date_from_array[1]-1),date_from_array[0]);
+        console.log(dt1);
+        console.log(dt2);
+        // console.log(date_from+" - "+date_to);
+        var diff =(dt2.getTime() - dt1.getTime()) / 1000;
+        diff /= (60 * 60 * 24);
+        return Math.abs(parseInt(diff/365.25));
+        }
 </script>
 <noscript><meta http-equiv="refresh" content="0; URL={{Url("/no_script")}}" /></noscript>
 <script type="text/javascript">

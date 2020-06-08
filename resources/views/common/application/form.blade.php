@@ -1,31 +1,5 @@
-<div class="row">
-  <div class="col-md-6 col-lg-6">
-    <div class="form-group">
-      <label class="form-label mr-3">Caste<span class="form-required">*</span></label>
-      <div class="custom-controls-stacked">
-          @foreach($castes as $key => $caste)
-          <label class="custom-control custom-radio custom-control-inline">
-            <input type="radio" name="caste_id" value="{{$caste->id}}" @if(isset($application)) {{($application->caste_id==$caste->id)?'checked':''}} @else {{$key==0?'selected':''}} @endif required class="custom-control-input"> <span class="custom-control-label">{{$caste->name}}</span>
-          </label>
-          @endforeach
-      </div>
-    </div>
-  </div>
-
-  <div class="col-md-6 col-lg-6">
-    <div class="form-group">
-      <label class="form-label mr-3">Category</label>
-        <label class="custom-control custom-checkbox custom-control-inline">
-            <input type="checkbox" class="custom-control-input" name="co_curricular" value="1" @isset($application) {{($application->co_curricular==1)?'checked':''}} @endisset>
-            <span class="custom-control-label">Co-Curricular</span>
-        </label>
-        <label class="custom-control custom-checkbox custom-control-inline">
-            <input type="checkbox" class="custom-control-input" name="differently_abled" value="1" @isset($application) {{($application->differently_abled==1)?'checked':''}} @endisset>
-            <span class="custom-control-label">Differently Abled</span>
-        </label>
-    </div>
-  </div>
-</div>
+<h3>Course Information</h3>
+<hr>
 <div class="row">
   <div class="col-md-6 col-lg-6">
     <div class="form-group">
@@ -85,7 +59,30 @@
   {{-- new subject selection --}}
   {{-- @include('common/application/subject_selection_all') --}}
 </div>
+<h3>Personal Information</h3>
+<hr>
+<div class="row">
+    <div class="col-md-6 col-lg-6">
+        <div class="form-group">
+            <label class="form-label mr-3">Caste<span class="form-required">*</span></label>
+            <div class="custom-controls-stacked">
+                @foreach($castes as $key => $caste)
+                <label class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" name="caste_id" value="{{$caste->id}}" @if(isset($application))
+                        {{($application->caste_id==$caste->id)?'checked':''}} @else {{$key==0?'selected':''}} @endif
+                        required class="custom-control-input"> <span
+                        class="custom-control-label">{{$caste->name}}</span>
+                </label>
+                @endforeach
+            </div>
+        </div>
+    </div>
 
+    <div class="col-md-6 col-lg-6">
+        <div class="form-group">
+        </div>
+    </div>
+</div>
 <div class="row">
   <div class="col-md-6 col-lg-6">
     <div class="form-group">
@@ -93,6 +90,24 @@
       <input type="text" class="form-control" name="fullname" placeholder="Full Name" autocomplete="off" @if(isset($application)) value="{{$application->fullname}}" @elseif(isset($fullname) && empty(!$fullname)) value="{{$fullname}}" readonly="" @endif  required>
     </div>
   </div>
+    <div class="col-md-6 col-lg-6">
+        <div class="form-group">
+            <label class="form-label">Gender<span class="form-required">*</span></label>
+            <div class="custom-controls-stacked">
+                <label class="custom-control custom-radio custom-control-inline"><input type="radio" name="gender" id="male"
+                        value="Male" @if(isset($application)) {{$application->gender=='Male'? 'checked':''}} @else checked
+                        @endif required class="custom-control-input"><span class="custom-control-label"> Male</span></label>
+                <label class="custom-control custom-radio custom-control-inline"><input type="radio" name="gender"
+                        id="Female" value="Female" @if(isset($application)) {{$application->gender=='Female'? 'checked':''}}
+                        @else @endif required class="custom-control-input"><span class="custom-control-label">
+                        Female</span></label>
+                <label class="custom-control custom-radio custom-control-inline"><input type="radio" name="gender"
+                        id="Transgender" value="Transgender" @if(isset($application))
+                        {{$application->gender=='Transgender'? 'checked':''}} @else @endif required
+                        class="custom-control-input"><span class="custom-control-label"> Transgender</span></label>
+            </div>
+        </div>
+    </div>
   <div class="col-md-6 col-lg-6">
     <div class="form-group">
       <label class="form-label">Mobile Number<span class="form-required">*</span></label>
@@ -122,64 +137,56 @@
       required>
     </div>
   </div>
+
   <div class="col-md-6 col-lg-6">
     <div class="form-group">
       <label class="form-label">Date of Birth<span class="form-required">*</span></label>
       <input type="text" name="dob" id="dob" class="form-control" placeholder="Date of Birth" @isset($application) value="{{date("Y-m-d",strtotime($application->dob))}}" @endisset required>
     </div>
   </div>
-  <div class="col-md-6 col-lg-6">
-    <div class="form-group">
-      <label class="form-label">Gender<span class="form-required">*</span></label>
-      <div class="custom-controls-stacked">
-          <label class="custom-control custom-radio custom-control-inline"><input type="radio" name="gender" id="male" value="Male" @if(isset($application)) {{$application->gender=='Male'? 'checked':''}} @else checked @endif required class="custom-control-input"><span class="custom-control-label"> Male</span></label>
-          <label class="custom-control custom-radio custom-control-inline"><input type="radio" name="gender" id="Female" value="Female" @if(isset($application)) {{$application->gender=='Female'? 'checked':''}} @else  @endif  required class="custom-control-input"><span class="custom-control-label"> Female</span></label>
-          <label class="custom-control custom-radio custom-control-inline"><input type="radio" name="gender" id="Transgender" value="Transgender" @if(isset($application)) {{$application->gender=='Transgender'? 'checked':''}} @else  @endif  required class="custom-control-input"><span class="custom-control-label"> Transgender</span></label>
-      </div>
-    </div>
-  </div>
 
   <div class="col-md-6 col-lg-6">
     <div class="form-group">
-      <label class="form-label">Religion<span class="form-required">*</span></label>
-      <div class="custom-controls-stacked">
-          <label class="custom-control custom-radio custom-control-inline">
-            <input type="radio" name="religion" value="Hindu" @if(isset($application)) {{$application->religion=='Hindu'? 'checked':''}} @else checked @endif required class="custom-control-input"><span class="custom-control-label"> Hindu</span>
-          </label>
-          <label class="custom-control custom-radio custom-control-inline">
-            <input type="radio" name="religion" value="Muslim" @if(isset($application)) {{$application->religion=='Muslim'? 'checked':''}} @endif required class="custom-control-input"><span class="custom-control-label"> Muslim</span>
-          </label>
-          <label class="custom-control custom-radio custom-control-inline">
-            <input type="radio" name="religion" value="Christianity" @if(isset($application)) {{$application->religion=='Christianity'? 'checked':''}} @endif  required class="custom-control-input"><span class="custom-control-label"> Christianity</span>
-          </label>
-          <label class="custom-control custom-radio custom-control-inline">
-            <input type="radio" name="religion" value="Buddhism" @if(isset($application)) {{$application->religion=='Buddhism'? 'checked':''}} @endif required class="custom-control-input"><span class="custom-control-label"> Buddhism</span>
-          </label>
-          <label class="custom-control custom-radio custom-control-inline">
-            <input type="radio" name="religion" value="Buddhism" @if(isset($application)) {{$application->religion=='Buddhism'? 'checked':''}} @endif required class="custom-control-input"><span class="custom-control-label"> Buddhism</span>
-          </label>
-          <label class="custom-control custom-radio custom-control-inline">
-            <input type="radio" name="religion" value="Jainism" @if(isset($application)) {{$application->religion=='Jainism'? 'checked':''}} @endif required class="custom-control-input"><span class="custom-control-label"> Jainism</span>
-          </label>
-          <label class="custom-control custom-radio custom-control-inline">
-            <input type="radio" name="religion" value="Sikhism" @if(isset($application)) {{$application->religion=='Sikhism'? 'checked':''}} @endif required class="custom-control-input"><span class="custom-control-label"> Sikhism</span>
-          </label>
-      </div>
+      <label class="form-label">Age as on 1<sup>st</sup> March 2020<span class="form-required">*</span></label>
+    <input type="text" name="age" id="age" class="form-control" placeholder="Age" @isset($application)
+        value="{{$application->age}}" @endisset required readonly>
     </div>
   </div>
   <div class="col-md-6 col-lg-6">
     <div class="form-group">
-      <label class="form-label">Father's Name<span class="form-required">*</span></label>
+      <label class="form-label">Father's / Guardian's Name<span class="form-required">*</span></label>
       <input type="text" name="fathers_name" class="form-control" placeholder="Father's Name" @isset($application) value="{{$application->fathers_name}}" @endisset required>
     </div>
   </div>
   <div class="col-md-6 col-lg-6">
     <div class="form-group">
-      <label class="form-label">Mother's Name<span class="form-required">*</span></label>
-      <input type="text" name="mothers_name" class="form-control" placeholder="Mother's Name" @isset($application) value="{{$application->mothers_name}}" @endisset required>
+      <label class="form-label">Father's / Guardian's Occupation<span class="form-required">*</span></label>
+      <input type="text" name="father_occupation" class="form-control" placeholder="Father's / Guardian's Occupation" @isset($application) value="{{$application->mothers_name}}" @endisset required>
     </div>
   </div>
-
+  <div class="col-md-6 col-lg-6">
+    <div class="form-group">
+      <label class="form-label">Relationship with Guardian<span class="form-required">*</span></label>
+      <select name="guardian_relationship" class="form-control" required id="course_id">
+        <option value="">Select Relationship</option>
+        @foreach($relations_array as $key => $relation)
+        <option value="{{$relation}}" @isset($application) {{($application->guardian_relationship==$relation)? 'selected':''}}
+            @endisset>{{ucwords($relation)}}</option>
+        @endforeach
+    </select>
+    </div>
+  </div>
+    <div class="col-md-6 col-lg-6">
+        <div class="form-group">
+            <label class="form-label">Mother's Name<span class="form-required">*</span></label>
+            <input type="text" name="mothers_name" class="form-control" placeholder="Mother's Name" @isset($application)
+                value="{{$application->mothers_name}}" @endisset required>
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <h3>Communication Information</h3>
+        <hr>
+    </div>
   <div class="col-md-6 col-lg-6">
     <label><h4>Present Address</h4></label>
     <div class="form-group">
@@ -200,12 +207,17 @@
     </div>
     <div class="form-group">
       <label class="form-label">Pin<span class="form-required">*</span></label>
-      <input type="text" name="present_pin" class="form-control present_address" placeholder="Pin" @isset($application) value="{{$application->present_pin}}" @endisset required>
+      <input type="number" minlength="6" maxlength="6" name="present_pin" class="form-control present_address" placeholder="Pin" @isset($application) value="{{$application->present_pin}}" @endisset required>
     </div>
     <div class="form-group">
+        <label class="form-label">Tel No<span class="form-required">*</span></label>
+        <input type="number" minlength="10" maxlength="12" name="present_tel" class="form-control present_address" placeholder="Tel No"
+            @isset($application) value="{{$application->present_tel}}" @endisset required>
+    </div>
+    {{-- <div class="form-group">
       <label class="form-label">Nationality<span class="form-required">*</span></label>
       <input type="text" name="present_nationality" class="form-control present_address" placeholder="Nationality" @isset($application) value="{{$application->present_nationality}}" @endisset required>
-    </div>
+    </div> --}}
   </div>
   <div class="col-md-6 col-lg-6">
     <label><h4>Permanent Address</h4></label>
@@ -228,7 +240,11 @@
     </div>
     <div class="form-group">
       <label class="form-label">Pin<span class="form-required">*</span></label>
-      <input type="text" name="permanent_pin" class="form-control permanent_address" placeholder="Pin" @isset($application) value="{{$application->permanent_pin}}" @endisset required>
+      <input type="number" minlength="6" maxlength="6" name="permanent_pin" class="form-control permanent_address" placeholder="Pin" @isset($application) value="{{$application->permanent_pin}}" @endisset required>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Tel No<span class="form-required">*</span></label>
+      <input type="number" minlength="10" maxlength="12" name="permanent_tel" class="form-control permanent_address" placeholder="Tel No" @isset($application) value="{{$application->permanent_tel}}" @endisset required>
     </div>
   </div>
 {{--   <div class="col-md-6 col-lg-6">
@@ -237,7 +253,7 @@
       <input type="text" name="permanent_nationality" class="form-control permanent_address" placeholder="Nationality" @isset($application) value="{{$application->permanent_nationality}}" @endisset required>
     </div>
   </div> --}}
-
+{{--
   <div class="col-md-6 col-lg-6">
     <div class="form-group">
       <label class="form-label">Annual Income<span class="form-required">*</span></label>
@@ -285,13 +301,37 @@
         <option value="AB-" @isset($application) {{($application->blood_group=='AB-')?'selected':''}} @endisset>AB-</option>
       </select>
     </div>
-  </div>
+  </div> --}}
+    <div class="col-sm-12">
+        <h3>Last Qualifying Examination Information</h3>
+        <hr>
+    </div>
+    <div class="col-md-6 col-lg-6">
+        <div class="form-group">
+            <label class="form-label">Name of the school last attended<span class="form-required">*</span></label>
+            <input type="text" name="last_attended_school" class="form-control" placeholder="Name of the school last attended" @isset($application)
+                value="{{$application->last_attended_school}}" @endisset required>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-6">
+        @php
+        $qualifying_examination = (isset($application) ? $application->qualifying_examination : "")
+        @endphp
+        <div class="form-group">
+            <label class="form-label">Name of the qualifying examination<span class="form-required">*</span></label>
+            <select name="qualifying_examination" required class="form-control" id="qualifying_examination">
+                <option value="" selected disabled>--SELECT--</option>
+                <option value="HSLC" {{($qualifying_examination == "HSLC" ? "selected" : "")}}>HSLC</option>
+                <option value="HS" {{($qualifying_examination == "HS" ? "selected" : "")}}>HS</option>
+            </select>
+        </div>
+    </div>
   @php
     $last_board_or_university = (isset($application) ? $application->last_board_or_university : "")
   @endphp
   <div class="col-md-6 col-lg-6">
     <div class="form-group">
-      <label class="form-label">Last Board/University<span class="form-required">*</span></label>
+      <label class="form-label">Last Passed Board<span class="form-required">*</span></label>
       <select name="last_board_or_university" required class="form-control" id="last_board_or_university">
           <option value="" selected disabled>--SELECT--</option>
           <option value="SEBA" {{($last_board_or_university == "SEBA" ? "selected" : "")}}>SEBA</option>
@@ -322,7 +362,7 @@
   </div>
   <div class="col-md-6 col-lg-6">
     <div class="form-group">
-      <label class="form-label">State of Last Passed Board/University<span class="form-required">*</span></label>
+      <label class="form-label">State of Last Passed Board<span class="form-required">*</span></label>
       <select name="last_board_or_university_state" required class="form-control">
           <option value="" selected disabled>--SELECT--</option>
           {!!returnStateListHtml()!!}
@@ -331,14 +371,34 @@
   </div>
   <div class="col-md-6 col-lg-6">
     <div class="form-group">
-      <label class="form-label">Last Exam Roll<span class="form-required">*</span></label>
-      <input type="text" name="last_exam_roll" class="form-control" placeholder="Last Exam Roll" @isset($application) value="{{$application->last_exam_roll}}" @endisset required>
+      <label class="form-label">Last Exammination Roll<span class="form-required">*</span></label>
+      <input type="text" name="last_exam_roll" class="form-control" placeholder="Last Exammination Roll" @isset($application) value="{{$application->last_exam_roll}}" @endisset required>
     </div>
   </div>
   <div class="col-md-6 col-lg-6">
     <div class="form-group">
-      <label class="form-label">Last Exam No<span class="form-required">*</span></label>
-      <input type="text" name="last_exam_no" class="form-control" placeholder="Last Exam No" @isset($application) value="{{$application->last_exam_no}}" @endisset required>
+      <label class="form-label">Last Exammination No<span class="form-required">*</span></label>
+      <input type="text" name="last_exam_no" class="form-control" placeholder="Last Exammination No" @isset($application) value="{{$application->last_exam_no}}" @endisset required>
+    </div>
+  </div>
+  <div class="col-md-6 col-lg-6">
+    <div class="form-group">
+      <label class="form-label">Last Exammination Year<span class="form-required">*</span></label>
+      <input type="number" min="2000" name="last_exam_year" class="form-control" placeholder="Last Exammination year" @isset($application) value="{{$application->last_exam_year}}" @endisset required>
+    </div>
+  </div>
+  <div class="col-md-6 col-lg-6">
+    <div class="form-group">
+        @php
+            $last_result = isset($application) ? $application->last_exam_result : "";
+        @endphp
+      <label class="form-label">Last Exammination Result<span class="form-required">*</span></label>
+        <select name="last_exam_result" required class="form-control" id="last_exam_result">
+            <option value="" selected disabled>--SELECT--</option>
+            <option value="PASSED" {{($last_result == "PASSED" ? "selected" : "")}}>PASSED</option>
+            <option value="APPEARED" {{($last_result == "APPEARED" ? "selected" : "")}}>APPEARED</option>
+            <option value="FAILED" {{($last_result == "FAILED" ? "selected" : "")}}>FAILED</option>
+        </select>
     </div>
   </div>
   <div class="col-md-12 col-lg-12">
@@ -403,7 +463,7 @@
       <input type="text" class="form-control" name="percentage" id="percentage" placeholder="Total Marks" @isset($application) value="{{$application->percentage}}" @endisset  {{$readonly}}>
     </div>
   </div>
-    <div class="col-md-4 col-lg-4">
+    {{-- <div class="col-md-4 col-lg-4">
         <div class="form-group">
             <label class="form-label">Any gap in studies</label>
             <div class="custom-controls-stacked">
@@ -418,6 +478,35 @@
     </div>
     <div class="col-md-4 col-lg-4 col-lg-offset-4 col-md-offset-4">
         <p>If yes, copy of gap certificate by Gazetted Officer/Affidavit is to be attached. Gap Certificate issued by any coaching institute will not be considered.</p>
+    </div> --}}
+    <div class="col-md-4 col-lg-4">
+        <div class="form-group">
+            <label class="form-label">State whether admission is sought as: <span class="form-required">*</span></label>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="admission_is_sought_as" value="Day Scholar" required
+                    @if(isset($application) && $application->admission_is_sought_as == "Day Scholar")
+                    checked
+                    @endif
+                    > Day Scholar
+                </label>
+            </div>
+            <div>
+                <label>
+                    <input type="radio" name="admission_is_sought_as" value="Borderer"
+                    @if(isset($application) && $application->admission_is_sought_as == "Borderer")
+                    checked
+                    @endif
+                    > Borderer
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-lg-4">
+    </div>
+    <div class="col-sm-12">
+        <h3>Attachments</h3>
+        <hr>
     </div>
     @if(auth()->guard("student")->check())
         <div class="col-md-12 col-lg-12">
@@ -456,124 +545,47 @@
       </div>
       <div class="col-md-6 col-lg-6">
         <div class="form-group">
-          <label class="form-label">Pass Certificate</label>
-          <input type="file" name="pass_certificate" value="">
+          <label class="form-label">Admit Card<span class="form-required">*</span></label>
+          <input type="file" name="admit_card" value="" required>
           @isset($application)
-            @if(get_attachment('pass_certificate', $application))
-            <a href="{{url((String)get_attachment('pass_certificate', $application))}}" target="_blank">Pass Certificate</a>
+            @if(get_attachment('admit_card', $application))
+            <a href="{{url((String)get_attachment('admit_card', $application))}}" target="_blank">Pass Certificate</a>
             @endif
           @endisset
         </div>
       </div>
       <div class="col-md-6 col-lg-6">
         <div class="form-group">
-          <label class="form-label">Caste Certificate (<span class="form-required">if caste is other than General.</span>)</label>
-          <input type="file" name="caste_certificate" value=""
-          @if(isset($application))
-            {{($application->caste_id == 1 ? "disabled" : "")}}
-          @else
-          disabled
-          @endif
+          <label class="form-label">Migration Certificate (<span class="form-required">(if HSLC from Non-SEBA Board).</span>)</label>
+          <input type="file" name="migration_certificate" value=""
 
-           id="caste_certificate">
+           id="migration_certificate">
           @isset($application)
-            @if(get_attachment('caste_certificate', $application))
-            <a href="{{url((String)get_attachment('caste_certificate', $application))}}" target="_blank">Caste Certificate</a>
+            @if(get_attachment('migration_certificate', $application))
+            <a href="{{url((String)get_attachment('migration_certificate', $application))}}" target="_blank">Migration Certificate</a>
             @endif
           @endisset
         </div>
       </div>
-      {{-- gap certificate --}}
-      <div class="col-md-6 col-lg-6">
-        <div class="form-group">
-          <label class="form-label">Gap Certificate (<span class="form-required">if gap in studies</span>)</label>
-          <input type="file" name="gap_certificate" value="" id="gap_certificate"
-          @if(isset($application))
-            {{($application->is_gap ? "" : "disabled")}}
-          @else
-            disabled
-          @endif
-          >
-              @isset($application)
-                @if(get_attachment('gap_certificate', $application))
-                    <a href="{{url((String)get_attachment('gap_certificate', $application))}}" target="_blank">Gap Certificate</a>
-                @endif
-              @endisset
-        </div>
-      </div>
-      {{-- Income certificate --}}
-      <div class="col-md-6 col-lg-6">
-        <div class="form-group">
-          <label class="form-label">Income Certificate (<span class="form-required">if free admission</span>)</label>
-          <input type="file" name="income_certificate" value="" id="income_certificate"
-            @if(isset($application))
-                {{($application->annual_income < 100000 ? "" : "disabled")}}
-            @else
-                disabled
-            @endif
-          >
-              @isset($application)
-                @if(get_attachment('income_certificate', $application))
-                    <a href="{{url((String)get_attachment('income_certificate', $application))}}" target="_blank">Income Certificate</a>
-                @endif
-              @endisset
-        </div>
-      </div>
-      {{-- Co-Curricular certificate --}}
-      <div class="col-md-6 col-lg-6">
-        <div class="form-group">
-          <label class="form-label">Co-Curricular Certificate (<span class="form-required">if Co-Curricular</span>)</label>
-          <input type="file" name="co_curricular_certificate" value="" id="co_curricular_certificate"
-            @if(isset($application))
-                {{($application->co_curricular == 1 ? "" : "disabled")}}
-            @else
-                disabled
-            @endif
-          >
-              @isset($application)
-                @if(get_attachment('co_curricular_certificate', $application))
-                    <a href="{{url((String)get_attachment('co_curricular_certificate', $application))}}" target="_blank">Co-Curricular Certificate</a>
-                @endif
-              @endisset
-        </div>
-      </div>
-      {{-- Differently Abled certificate --}}
-      <div class="col-md-6 col-lg-6">
-        <div class="form-group">
-          <label class="form-label">Differently Abled (<span class="form-required">if Differently Abled</span>)</label>
-          <input type="file" name="differently_abled_certificate" value="" id="differently_abled"
 
-            @if(isset($application))
-                {{($application->differently_abled == 1 ? "" : "disabled")}}
-            @else
-                disabled
-            @endif
-          >
-              @isset($application)
-                @if(get_attachment('differently_abled_certificate', $application))
-                    <a href="{{url((String)get_attachment('differently_abled_certificate', $application))}}" target="_blank">Differently Abled</a>
-                @endif
-              @endisset
-        </div>
-      </div>
-      {{-- Tree Plantation --}}
-      <div class="col-md-6 col-lg-6">
-        <div class="form-group">
-          <label class="form-label">Image of Tree Plantation (<span class="form-required">if free admission</span>)</label>
-          <input type="file" name="image_of_tree_plantation" value="" id="image_of_tree_plantation"
-
-            @if(isset($application))
-                {{($application->free_admission == "yes" ? "" : "disabled")}}
-            @else
-                disabled
-            @endif
-          >
-              @isset($application)
-                @if(get_attachment('image_of_tree_plantation', $application))
-                    <a href="{{url((String)get_attachment('image_of_tree_plantation', $application))}}" target="_blank">Image of Tree Plantation</a>
-                @endif
-              @endisset
-        </div>
       </div>
     @endif
+</div>
+<div class="container-fluid">
+    <h3>Declaration</h3>
+    <hr>
+    <p>
+        The facts stated above are true to my knowledge. If found otherwise my seat in the Academy will be liable to be cancelled. I promise to abide by the rules and regulations of the Academy.
+    </p>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="checkbox">
+                <label><input type="checkbox" name="declaration" value="1" required
+                    @if(isset($application))
+                        checked
+                    @endif
+                    > Accept</label>
+            </div>
+        </div>
+    </div>
 </div>

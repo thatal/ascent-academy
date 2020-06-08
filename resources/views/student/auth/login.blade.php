@@ -46,7 +46,7 @@ Login
         </form>
     </div>
 </div>
- <div class="card">
+{{--  <div class="card">
     <div class="card-body p-6">
         <div class="card-title">Renewal Form / Centre Fee</div>
 
@@ -72,7 +72,7 @@ Login
             </div>
         </form>
     </div>
-    </div>
+    </div> --}}
 
 
     @endsection

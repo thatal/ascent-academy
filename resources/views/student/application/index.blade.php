@@ -38,15 +38,6 @@ Application
                         </div>
                     </div>
                     @include('student/application/list')
-                    @if($latest_application)
-                    <div class="card-footer text-right">
-                        <div class="d-flex">
-                            <a href="{{route('student.admission.examination-fee-payment-receipt', $latest_application->uuid)}}">
-                                <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-money"></i> Pay Examination Fees</button>
-                            </a>
-                        </div>
-                    </div>
-                    @endif
                 </div>
             </div>
         </div>

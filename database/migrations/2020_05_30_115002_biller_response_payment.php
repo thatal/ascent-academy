@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterAdmissionReceiptForOnlinePayments extends Migration
+class BillerResponsePayment extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class AlterAdmissionReceiptForOnlinePayments extends Migration
      */
     public function up()
     {
-        Schema::table('admission_receipts', function (Blueprint $table) {
-            $table->integer('is_online')->after('year')->default(0)->comment('0:No; 1:Yes');
+        Schema::table('online_payments', function (Blueprint $table) {
+            $table->text('biller_response')->nullable()->change();
+
         });
     }
 
@@ -25,8 +26,8 @@ class AlterAdmissionReceiptForOnlinePayments extends Migration
      */
     public function down()
     {
-        Schema::table('admission_receipts', function (Blueprint $table) {
-            $table->dropColumn('temp_receipt_id');
+        Schema::table('online_payments', function (Blueprint $table) {
+            //
         });
     }
 }

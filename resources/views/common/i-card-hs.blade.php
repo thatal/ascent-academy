@@ -125,7 +125,7 @@
                                               <font color="#FF0000" size="2">
                                                 <strong>{{$admitted_student->application->year}}-{{intval($admitted_student->application->year)+intval(3)}}</strong></font>
                                                 @endif
-                                                &nbsp;&nbsp;&nbsp;  
+                                                &nbsp;&nbsp;&nbsp;
 
                                               </td>
 

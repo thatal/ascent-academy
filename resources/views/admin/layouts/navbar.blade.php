@@ -15,7 +15,7 @@
           <i class="fe fe-home"></i> Home </a>
         </li>
 
-        <li class="nav-item dropdown">
+        {{-- <li class="nav-item dropdown">
           <a href="javascript:void(0)" class="nav-link " data-toggle="dropdown"><i class="fe fe-bar-chart"></i> Master</a>
 
           <div class="dropdown-menu dropdown-menu-arrow">
@@ -24,7 +24,7 @@
             <a href="{{route('admin.fee.index')}}" class="dropdown-item">Fee</a>
             <a href="{{route('admin.staff.index')}}" class="dropdown-item">Staff</a>
           </div>
-        </li>
+        </li> --}}
 
         <li class="nav-item">
           <a
@@ -37,11 +37,11 @@
           <a href="javascript:void(0)" class="nav-link " data-toggle="dropdown"><i class="fe fe-bar-chart"></i> Report</a>
 
           <div class="dropdown-menu dropdown-menu-arrow">
-            <a href="{{route('admin.report.application-fees-collection.index')}}" class="dropdown-item">Application Fee Collection</a>
-            <a href="{{route('admin.report.receipt.index')}}" class="dropdown-item">Receipt</a>
+            <a href="{{route('admin.report.application-fees-collection.index', ["status" => 1])}}" class="dropdown-item">Application Fee Collection</a>
+            {{-- <a href="{{route('admin.report.receipt.index')}}" class="dropdown-item">Receipt</a> --}}
           </div>
         </li>
-        <li class="nav-item dropdown">
+        {{-- <li class="nav-item dropdown">
           <a href="javascript:void(0)" class="nav-link " data-toggle="dropdown"><i class="fe fe-bar-chart"></i> Miscellaneous</a>
 
           <div class="dropdown-menu dropdown-menu-arrow">
@@ -49,10 +49,10 @@
             <a href="{{route('admin.miscellaneous.online-admission-fee.create')}}" class="dropdown-item">Admission Fee Update</a>
             <a href="{{route('admin.miscellaneous.edit-allocated-subject.edit')}}" class="dropdown-item">Subject Allocation Update</a>
           </div>
-        </li>
-        <li class="nav-item">
+        </li> --}}
+        {{-- <li class="nav-item">
         <a href="{{route('admin.application.i-card')}}" class="nav-link "><i class="fe fe-bar-chart"></i> I-Card</a>
-         </li>
+         </li> --}}
 
       </ul>
     </div>

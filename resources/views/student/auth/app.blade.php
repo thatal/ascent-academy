@@ -78,7 +78,7 @@
                 <div class="row">
                     <div class="col text-center mb-6">
                         <img src="{!!asset('public/images/logo.jpg') !!}" class="h-8" alt="">
-                        <h3 class="title">{{env('APP_NAME')}}</h3>
+                        <h3 class="title">{{env('SCHOOL_NAME_NAME')}}</h3>
                     </div>
                 </div>
                 <div class="row">
@@ -88,10 +88,10 @@
                                 <!-- /.box-header -->
                                 <div class="box-body">
                                     <p class="vvip">
-                                            Please Note : The helpline number in this portal is exclusively for online payment related queries for students of Darrang College. No other queries will be entertained.
+                                            Please Note : The helpline number in this portal is exclusively for online payment related queries for students of Ascent Academy Junior College. No other queries will be entertained.
                                     </p>
                                     <a class="btn btn-link text-left" style="float: left;"
-                                        href="http://darrangcollege.in/pdf/prospectus-19_20-final.pdf">Download
+                                        href="#">Download
                                         Prospectus</a>
                                     <h4 class="text-right"
                                         style=" font-size: 15px; margin-bottom: 10px; line-height: 1.2rem;">
@@ -101,15 +101,12 @@
                                     </h4>
 
                                     <h3 style="margin-bottom:8px;">Guidelines for filling up Online Application Form for
-                                        Admission into HS, Degree & PG in Darrang College</h3>
+                                        Admission into HS in Ascent Academy Junior College</h3>
 
 
                                     <h5 style="color: red;">Please read the guidelines before filling up your online
-                                        application form at the website www.darrangcollege.in. </h5>
+                                        application form at the website http://ascentacademyguwahati.com. </h5>
 
-                                    <p class="bold" style="color: red;">Online admission renewal is now open for
-                                        Degree(Science, Arts & Commerce)(3rd & 5th sem). Take a print out of the receipt
-                                        generated after successfull payment.</p>
                                     {{-- <p class="bold" style="color: red;">Online admission renewal for Degree(Science & Arts) 5th sem will be available from 7pm</p> --}}
                                     {{-- <p class="bold" style="color: red;">Online form fillup is now again open for Higher Secondary</p> --}}
                                     <p class="bold" style="color: red;">Take a print out of the information submitted.
@@ -175,12 +172,12 @@ Optional documents
 
 Registration and Form Filled Up Process
 
-The students who apply for admission into Higher Secondary & Degree should first register in www.darrangcollege.in
+The students who apply for admission into Higher Secondary & Degree should first register in www.ascentacademyguwahati.com
 IMPORTANT! The email ID and mobile number used for registration must belong to the applicant.
 The email address and mobile number must be valid and functional. Communications shall be sent
 only to the registered email address or mobile number.
 
-Go to the website www.darrangcollege.in. Click on Sign Up (New Registration) or Sign In (Already Registered).
+Go to the website www.ascentacademyguwahati.com. Click on Sign Up (New Registration) or Sign In (Already Registered).
 Follow the form and enter the information as required. The applicant should provide their own mobile number for OTP verification. The applicant should also use the valid email address as future communications.
 Once the registration is successful the user would be redirected to the dashboard page where
 the applicant have to fill up the necessary information in the form. The items marked in (*) are compulsory and needs to be submitted online.

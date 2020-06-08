@@ -105,10 +105,9 @@ Payment
                                                         <td width="40%">
                                                             <div class="card-body text-center">
                                                                 <h3 class="receipt-head">Receipt</h3>
-                                                                <h3 class="college-title">DARRANG&nbsp;COLLEGE</h3>
+                                                                <h3 class="college-title">ASCENT ACADEMY JUNIOR COLEGE</h3>
                                                                 <p class="">
-                                                                    Tezpur, Assam, Sonitpur,
-                                                                    <br />Pin-784001
+                                                                    Beltola Road, Survey, Assam, Kamrup, <br />Pin-781028
                                                                 </p>
                                                             </div>
                                                         </td>

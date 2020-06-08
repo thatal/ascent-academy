@@ -22,9 +22,6 @@ Application
             </div>
           </div>
           <div class="card-body">
-            <form method="post" action="{{config('constants.url')}}">
-              @csrf
-              <input type="hidden" name="msg" value="{{ $checksum }}">
               <div class="row">
                 <table class="table table-bordered">
                   <tbody>
@@ -55,10 +52,26 @@ Application
                   </tbody>
                 </table>
                 @if(config('constants.current_time') >= strtotime(config('constants.apply_up_time')) && config('constants.current_time') <= strtotime(config('constants.apply_down_time')))
-                    <button type="submit" class="btn btn-primary">Proceed to Pay</button>
+                    <button type="submit" class="btn btn-primary" id="paymentButton">Proceed to Pay</button>
                 @endif
               </div>
-            </form>
+                <form name='payabbhiform'
+                    action="{{route("student.application.process-payment-post", Crypt::encrypt($application->id))}}" method="POST"
+                    style="display:none">
+                    {{-- form data will be posted and recieved --}}
+                    {{ csrf_field() }}
+                    <input type="hidden" name="merchant_order_id" value="{{$merchantOrderID}}">
+                    <input type="hidden" name="order_id" id="order_id">
+                    <input type="hidden" name="payment_id" id="payment_id">
+                    {{-- <input type="hidden" name="name" id="name" value="{{$application->fullname}}"> --}}
+                    <input type="hidden" name="amount" id="amount" value="{{$amount}}">
+                    {{-- <input type="hidden" name="student_id" id="student_id" value="{{$application->student_id}}"> --}}
+                    <input type="hidden" name="application_id" id="application_id" value="{{$application->id}}">
+                    <input type="hidden" name="payment_signature" id="payment_signature">
+                    <input type="hidden" name="is_error" id="is_error">
+                    <input type="hidden" name="error_message" id="error_message">
+                    <input type="hidden" name="response" id="response">
+                </form>
           </div>
         </div>
       </div>
@@ -71,7 +84,26 @@ Application
 
 
 @section('js')
+<script src="https://checkout.payabbhi.com/v1/checkout.js"></script>
+<script>
+    var options = {!!json_encode($data)!!};
+    options.handler = function (response){
+        document.getElementById('order_id').value = response.order_id;
+        document.getElementById('payment_id').value = response.payment_id;
+        document.getElementById('payment_signature').value = response.payment_signature;
+        document.getElementById('response').value = JSON.stringify(response);
+        document.getElementById('is_error').value = response.is_error;
+        document.getElementById('error_message').value = response.error_message;
+        document.payabbhiform.submit();
+    };
 
+    var payabbhi = new Payabbhi(options);
+
+    document.getElementById('paymentButton').onclick = function(e){
+        payabbhi.open();
+        e.preventDefault();
+    }
+</script>
 @stop
 
 
