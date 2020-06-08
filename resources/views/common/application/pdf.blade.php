@@ -109,29 +109,87 @@
                 <h4 class="bold">Allocate Subjects Details</h4>
                 @include('common.application.subject-allocated-list')
                 @endif
-                <h4 class="bold">Instructions To Applicant</h4>
+                @if($application->status === 0)
+                <h4 class="bold">IMPORTANT INSTRUCTIONS</h4>
                 <ol>
-                    <li>READ THE PROSPECTUS CAREFULLY BEFORE FILLING UP THE APPLICATION FORM.</li>
-                    <li>APPLICATION FEE OF RS. 250/- (ALL CATEGORY) IS TO BE PAID FOR ONLINE APPLICATION.</li>
-                    <li>UPLOAD PASSPORT SIZE PHOTO AND SIGNATURE OF THE APPLICANT WITHOUT WHICH THE APPLICATION WILL BE
-                        SUMMARILY REJECTED.</li>
-                    <li>WRONG / FALSE ENTRY OF ANY CREDENTIALS OF THE APPLICANT WILL ATTRACT REJECTION OF THE
-                        APPLICATION.</li>
-                    <li>STUDENTS APPLYING FOR PROFESSIONAL COURSE IN BIOTECHNOLOGY NEED TO FILL UP SEPARATE FORM FOR
-                        REGISTRATION.</li>
-                    <li>ORIGINAL DOCUMENTS HAVE TO BE PRODUCED FOR VERIFICATION AT THE TIME OF ADMISSION.</li>
-                    <li>SELF ATTESTED PHOTOCOPIES OF ALL DOCUMENTS AND PRINTOUT OF THE ONLINE FILL UP APPLICATION FORM
-                        HAVE TO BE SUBMITTED AT THE TIME OF ADMISSION.</li>
-                    <li>DOWNLODED COPY OF THE ONLINE APPLICATION FORM.</li>
-                    <li>SELF ATTESTED PHOTOSTAT COPIES OF MARK SHEETS &amp; CERTIFICATES.</li>
-                    <li>SELF ATTESTED COPY OF CASTE CERTIFICATE.</li>
-                    <li>SELF ATTESTED COPY OF INCOME CERTIFCATE.</li>
-                    <li>SELF ATTESTED COPY OF EXTRA CO-CURRICULAR CERTIFCATES (FOR THOSE CANDIDATES CLAIMING SEATS IN
-                        THE EXTRA CURRICULAR CATEGORY)</li>
+                    <li>STATUS AND OFFER FOR PROVISIONAL ADMISSION WILL BE UPDATED AND MAY BE ACCESSED BY THE STUDENT/PARENTS ON THE ADMISSIONS
+                    PORTAL.</li>
+                    <li>IF ADMISSION IS GRANTED, YOU ARE REQUIRED TO CARRY THE APPLICATION FORM, OFFER FOR PROVISIONAL ADMISSION (E-ADMISSION
+                    CARD) AND THE FOLLOWING DOCUMENTS FOR VERIFICATION AT THE TIME OF FINAL ADMISSION:</li>
+                    <ul>
+                        <li>
+                            COPY OF THE APPLICATION PROCESSING FEE RECEIPT
+                        </li>
+                        <li>
+                            PRINT OUT OF THE APPLICATION FORM, OFFER FOR PROVISIONAL ADMISSION FORM AND THE DECLARATION FORM DULY SIGNED BY THE
+                            PARENT/GUARDIAN AND THE CANDIDATE
+                        </li>
+                        <li>
+                            ORIGINAL DOCUMENTS ALONG WITH ONE SET OF PHOTOCOPIES OF ALL UPLOADED DOCUMENTS (MARKSHEETS ETC.) ON THE ADMISSION PORTAL
+                        </li>
+                        <li>
+                            TWO RECENT PASSPORT-SIZED PHOTOGRAPHS IN FORMAL DRESS WITH WHITE BACKGROUND
+                        </li>
+                    </ul>
+                    <li>ADMISSION REGISTRATION FEE IS NON-REFUNDABLE IN THE EVENT OF CANCELLATION OF ADMISSION. THIS FEE WILL BE APART FROM
+                    CANCELLATION CHARGES (IF ANY APPLICABLE).</li>
                 </ol>
+                @else
+                <p>
+                    <strong>Congratulations!</strong><br />
+                    <br />
+
+                    You have been provisionally admitted for the selected course at Ascent Academy Junior College (Ascent Academy Group
+                    of
+                    Institutions), Guwahati Campus for the Academic Year 2020-2021.
+
+                    In order to confirm your Admission, kindly pay the Fees and download the ‘Offer for Provisional Admission’ Form
+                    (E-Admission Card) and the College Prospectus 2020.
+
+                    Payment of Fees has to be made in the Accounts Department of the Main Campus Office.
+                </p>
+                    <h4 class="bold">NOTE</h4>
+                    <ol>
+                        <li>"OFFER FOR PROVISIONAL ADMISSION" DOES NOT GUARANTEE A SEAT OR FINAL ADMISSION, IT IS SUBJECT TO PAYMENT OF ADMISSION
+                        FEES AND AVAILABILITY OF SEATS.</li>
+                        <li>KINDLY REFER TO THE APPLICATION FORM FOR ‘IMPORTANT INSTRUCTIONS’ TO BE FOLLOWED AT THE TIME OF FINAL ADMISSION.</li>
+
+                        <li>IF A STUDENT HAS APPLIED FOR BOARDER/HOSTEL FACILITY, HE/SHE CAN COLLECT THE DHANSIRI HOUSE (HOSTEL) APPLICATION FORM
+                        FROM THE MAIN CAMPUS OFFICE AND DO THE FORMALITIES ACCORDINGLY.</li>
+                        <li>
+                            BOARDERS WILL HAVE NO OPTION TO CHANGE OVER TO THE DAY-SCHOLARS’ CATEGORY DURING THE 24 MONTHS ACADEMIC SESSION.
+                            NON-CONTINUANCE OF HOSTEL STAY WILL AUTOMATICALLY INVITE LOSS OF SEAT IN THE ACADEMY. FURTHER, BOARDERS WILL BE
+                            REGULATED BY THE ASCENT BOARDERS’ RULES AND REGULATIONS.
+                        </li>
+                        <li>
+                            ADMISSION REGISTRATION FEE IS NON-REFUNDABLE IN THE EVENT OF CANCELLATION OF ADMISSION. THIS FEE WILL BE APART FROM
+                            CANCELLATION CHARGES (IF ANY APPLICABLE).
+                        </li>
+                    </ol>
+                @endif
                 <div class="qr_wrapper">
                     <img style="max-width: 120px;" height="120px" width="120px"
                         src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(300)->generate($application->id))!!}" />
+                </div>
+                <div class="page-break-after"></div>
+                <div class="card-body">
+                    <table width="100%" style="margin-bottom:20px;">
+                        <tbody>
+                            <tr>
+                                <td align="left">Application ID: <b>{{$application->id}}</b></td>
+                                <td align="center">Guardian Declaration: <b></b></td>
+                                <td align="right">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="certificate-wrapper">
+                                <img width="100%" src="{{asset("public/images/declaration.jpg")}}">
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 @foreach($application->attachments as $attachments)
                 <div class="page-break-after"></div>

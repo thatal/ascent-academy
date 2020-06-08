@@ -167,7 +167,7 @@
   <div class="col-md-6 col-lg-6">
     <div class="form-group">
       <label class="form-label">Relationship with Guardian<span class="form-required">*</span></label>
-      <select name="guardian_relationship" class="form-control" required id="course_id">
+      <select name="guardian_relationship" class="form-control" required id="guardian_relationship">
         <option value="">Select Relationship</option>
         @foreach($relations_array as $key => $relation)
         <option value="{{$relation}}" @isset($application) {{($application->guardian_relationship==$relation)? 'selected':''}}
@@ -210,8 +210,8 @@
       <input type="number" minlength="6" maxlength="6" name="present_pin" class="form-control present_address" placeholder="Pin" @isset($application) value="{{$application->present_pin}}" @endisset required>
     </div>
     <div class="form-group">
-        <label class="form-label">Tel No<span class="form-required">*</span></label>
-        <input type="number" minlength="10" maxlength="12" name="present_tel" class="form-control present_address" placeholder="Tel No"
+        <label class="form-label">Mobile Number<span class="form-required">*</span></label>
+        <input type="number" minlength="10" maxlength="12" name="present_tel" class="form-control present_address" placeholder="Mobile Number"
             @isset($application) value="{{$application->present_tel}}" @endisset required>
     </div>
     {{-- <div class="form-group">
@@ -243,16 +243,16 @@
       <input type="number" minlength="6" maxlength="6" name="permanent_pin" class="form-control permanent_address" placeholder="Pin" @isset($application) value="{{$application->permanent_pin}}" @endisset required>
     </div>
     <div class="form-group">
-      <label class="form-label">Tel No<span class="form-required">*</span></label>
-      <input type="number" minlength="10" maxlength="12" name="permanent_tel" class="form-control permanent_address" placeholder="Tel No" @isset($application) value="{{$application->permanent_tel}}" @endisset required>
+      <label class="form-label">Mobile Number<span class="form-required">*</span></label>
+      <input type="number" minlength="10" maxlength="12" name="permanent_tel" class="form-control permanent_address" placeholder="Mobile Number" @isset($application) value="{{$application->permanent_tel}}" @endisset required>
     </div>
   </div>
-{{--   <div class="col-md-6 col-lg-6">
+  <div class="col-md-6 col-lg-6">
     <div class="form-group">
-      <label class="form-label">Nationality<span class="form-required">*</span></label>
-      <input type="text" name="permanent_nationality" class="form-control permanent_address" placeholder="Nationality" @isset($application) value="{{$application->permanent_nationality}}" @endisset required>
+      <label class="form-label">Tel No.</label>
+      <input type="text" name="tel_no" class="form-control" placeholder="Tel. No" @isset($application) value="{{$application->tel_no}}" @endisset>
     </div>
-  </div> --}}
+  </div>
 {{--
   <div class="col-md-6 col-lg-6">
     <div class="form-group">
@@ -371,20 +371,14 @@
   </div>
   <div class="col-md-6 col-lg-6">
     <div class="form-group">
-      <label class="form-label">Last Exammination Roll<span class="form-required">*</span></label>
-      <input type="text" name="last_exam_roll" class="form-control" placeholder="Last Exammination Roll" @isset($application) value="{{$application->last_exam_roll}}" @endisset required>
+      <label class="form-label">Last Examination Admit Card No.<span class="form-required">*</span></label>
+      <input type="text" name="last_exam_no" class="form-control" placeholder="Last Examination Admit Card No" @isset($application) value="{{$application->last_exam_no}}" @endisset required>
     </div>
   </div>
   <div class="col-md-6 col-lg-6">
     <div class="form-group">
-      <label class="form-label">Last Exammination No<span class="form-required">*</span></label>
-      <input type="text" name="last_exam_no" class="form-control" placeholder="Last Exammination No" @isset($application) value="{{$application->last_exam_no}}" @endisset required>
-    </div>
-  </div>
-  <div class="col-md-6 col-lg-6">
-    <div class="form-group">
-      <label class="form-label">Last Exammination Year<span class="form-required">*</span></label>
-      <input type="number" min="2000" name="last_exam_year" class="form-control" placeholder="Last Exammination year" @isset($application) value="{{$application->last_exam_year}}" @endisset required>
+      <label class="form-label">Last Examination Year<span class="form-required">*</span></label>
+      <input type="number" min="2000" name="last_exam_year" class="form-control" placeholder="Last Examination year" @isset($application) value="{{$application->last_exam_year}}" @endisset required>
     </div>
   </div>
   <div class="col-md-6 col-lg-6">
@@ -392,7 +386,7 @@
         @php
             $last_result = isset($application) ? $application->last_exam_result : "";
         @endphp
-      <label class="form-label">Last Exammination Result<span class="form-required">*</span></label>
+      <label class="form-label">Last Examination Result<span class="form-required">*</span></label>
         <select name="last_exam_result" required class="form-control" id="last_exam_result">
             <option value="" selected disabled>--SELECT--</option>
             <option value="PASSED" {{($last_result == "PASSED" ? "selected" : "")}}>PASSED</option>
@@ -422,10 +416,16 @@
           </tr>
         </thead>
         <tbody>
-          @foreach(range(1, 6) as $number)
+          @foreach(range(1, 7) as $number)
+          @php
+            $sub_name = "";
+            if($number > 5){
+                $sub_name = "NA";
+            }
+          @endphp
           <tr>
             <td>
-              <input type="text" class="form-control last_subjects" name="sub_{{$number}}_name" @isset($application) value="{{$application->{'sub_'.$number.'_name'} }}" @endisset required="true" placeholder="{{(($number == 1 || $number ==2 ) ? "CORE" :"ELEC-".($number-2))}}">
+              <input type="text" class="form-control last_subjects" name="sub_{{$number}}_name" @if(isset($application)) value="{{$application->{'sub_'.$number.'_name'} }}" @else value="{{$sub_name}}" @endif required="true" placeholder="{{(($number == 1 || $number ==2 ) ? "CORE" :"ELEC-".($number-2))}}">
             </td>
             <td>
               <input type="text" class="form-control total_marks" name="sub_{{$number}}_total" @if(isset($application)) value="{{$application->{'sub_'.$number.'_total'} }}" @else value="100" @endif readonly required="true">
@@ -460,7 +460,7 @@
   <div class="col-md-4 col-lg-4">
     <div class="form-group">
       <label class="form-label">Percentage<span class="form-required">*</span></label>
-      <input type="text" class="form-control" name="percentage" id="percentage" placeholder="Total Marks" @isset($application) value="{{$application->percentage}}" @endisset  {{$readonly}}>
+      <input type="text" class="form-control" name="percentage" id="percentage" placeholder="Percentage" @isset($application) value="{{$application->percentage}}" @endisset required>
     </div>
   </div>
     {{-- <div class="col-md-4 col-lg-4">
@@ -481,23 +481,21 @@
     </div> --}}
     <div class="col-md-4 col-lg-4">
         <div class="form-group">
-            <label class="form-label">State whether admission is sought as: <span class="form-required">*</span></label>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="admission_is_sought_as" value="Day Scholar" required
-                    @if(isset($application) && $application->admission_is_sought_as == "Day Scholar")
+            <div class="form-label">State whether admission is sought as: <span class="form-required">*</span></div>
+            <div class="custom-controls-stacked">
+                <label class="custom-control custom-radio custom-control-inline">
+                    <input class="custom-control-input" type="radio" name="admission_is_sought_as" value="Hosteller" required
+                    @if(isset($application) && $application->admission_is_sought_as == "Hosteller")
                     checked
                     @endif
-                    > Day Scholar
+                    > <span class="custom-control-label">Hosteller</span>
                 </label>
-            </div>
-            <div>
-                <label>
-                    <input type="radio" name="admission_is_sought_as" value="Borderer"
-                    @if(isset($application) && $application->admission_is_sought_as == "Borderer")
+                <label class="custom-control custom-radio custom-control-inline">
+                    <input class="custom-control-input" type="radio" name="admission_is_sought_as" value="Boarder"
+                    @if(isset($application) && $application->admission_is_sought_as == "Boarder")
                     checked
                     @endif
-                    > Borderer
+                    > <span class="custom-control-label">Boarder</span>
                 </label>
             </div>
         </div>
@@ -546,10 +544,10 @@
       <div class="col-md-6 col-lg-6">
         <div class="form-group">
           <label class="form-label">Admit Card<span class="form-required">*</span></label>
-          <input type="file" name="admit_card" value="" required>
+          <input type="file" name="admit_card" value="" @isset($application) {{get_attachment('admit_card', $application) ?'':'required'}} @endisset>
           @isset($application)
             @if(get_attachment('admit_card', $application))
-            <a href="{{url((String)get_attachment('admit_card', $application))}}" target="_blank">Pass Certificate</a>
+            <a href="{{url((String)get_attachment('admit_card', $application))}}" target="_blank">Admit Card</a>
             @endif
           @endisset
         </div>
@@ -572,8 +570,28 @@
     @endif
 </div>
 <div class="container-fluid">
-    <h3>Declaration</h3>
     <hr>
+    <h5>Select Subject</h5>
+    <div class="subject_parent">
+        <div class="custom-controls-stacked">
+            @foreach ($distinct_subjects as $d_subject)
+            <label class="custom-control custom-checkbox custom-control-inline subject_stream_{{$d_subject->stream_id}}">
+                <input type="checkbox" name="student_subject[]" value="{{$d_subject->name}}" @if(isset($application))
+                    {{$application->students_subjects->where("subject_name", $d_subject->name)->count() ? 'checked':''}} @else
+                    {{-- @if(strtolower($d_subject->name) == "assamese" || strtolower($d_subject->name) == "english")
+                    checked readonly disabled
+                    @endif --}}
+                @endif
+                class="custom-control-input subject_list subject_no_{{$d_subject->stream_id}}_{{$d_subject->subject_no}} subject_input" data-classname="subject_no_{{$d_subject->stream_id}}_{{$d_subject->subject_no}}"><span class="custom-control-label">
+                    {{$d_subject->name}}</span>
+            </label>
+            @endforeach
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <hr>
+    <h3>Declaration</h3>
     <p>
         The facts stated above are true to my knowledge. If found otherwise my seat in the Academy will be liable to be cancelled. I promise to abide by the rules and regulations of the Academy.
     </p>

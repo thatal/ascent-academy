@@ -91,8 +91,15 @@ class ApplicationController extends Controller
             "aunt"        => "uncle",
             "cousin"      => "cousin",
         ];
+        $distinct_subjects = Subject::select("name", "stream_id", "subject_no")
+            ->whereIn("stream_id", [2, 3])
+            ->whereIn("semester_id", [1])
+            ->orderBy("stream_id", "ASC")
+            ->orderBy("subject_no", "ASC")
+            ->orderBy("name", "ASC")
+            ->get();
 
-        return view('student.application.create', compact('castes', 'courses', 'applied_course', 'applied_subs', 'stream_wise_subjects', 'fullname', 'relations_array'));
+        return view('student.application.create', compact('castes', 'courses', 'applied_course', 'applied_subs', 'stream_wise_subjects', 'fullname', 'relations_array' ,'distinct_subjects'));
     }
 
     public function store(Request $request)
@@ -102,6 +109,7 @@ class ApplicationController extends Controller
         }
 
         // dump(request()->all());
+        // dd($application_rules = Application::$rules);
         Log::info($request->all());
         $path = 'public/uploads/' . auth()->id() . '/';
         $file_validation_rule = Application::$file_rules;
@@ -140,6 +148,7 @@ class ApplicationController extends Controller
                 'present_pin' => $request->present_pin,
                 // 'present_nationality' => $request->present_nationality,
                 'present_tel' => $request->present_tel,
+                'tel_no'      => $request->tel_no,
 
                 'permanent_vill_or_town' => $request->permanent_vill_or_town,
                 'permanent_city' => $request->permanent_city,
@@ -150,7 +159,7 @@ class ApplicationController extends Controller
                 'permanent_tel' => $request->permanent_tel,
 
                 'last_board_or_university' => ($request->other_board_university ? $request->other_board_university : $request->last_board_or_university),
-                'last_exam_roll' => $request->last_exam_roll,
+                // 'last_exam_roll' => $request->last_exam_roll,
                 'last_exam_no' => $request->last_exam_no,
                 'last_exam_result' => $request->last_exam_result,
                 'last_exam_year' => $request->last_exam_year,
@@ -181,6 +190,11 @@ class ApplicationController extends Controller
                 'sub_6_name' => $request->sub_6_name,
                 'sub_6_total' => $request->sub_6_total,
                 'sub_6_score' => $request->sub_6_score,
+
+
+                'sub_7_name' => $request->sub_7_name,
+                'sub_7_total' => $request->sub_7_total,
+                'sub_7_score' => $request->sub_7_score,
 
                 'total_marks_according_marksheet' => $request->total_marks_according_marksheet,
                 'all_total_marks' => $request->all_total_marks,
@@ -270,7 +284,13 @@ class ApplicationController extends Controller
 
             $this->createOnlyStream($request, $application);
             // $this->createStreamAndSubject($request, $application);
-
+            $student_subjects = $request->student_subject;
+            if($student_subjects){
+                foreach($student_subjects as $subject_name)
+                $application->students_subjects()->create([
+                    "subject_name" => $subject_name
+                ]);
+            }
             // dd($application_data, $applied_stream_data, $applied_subjects_data);
         } catch (Exception $e) {
             dd($e);
@@ -360,7 +380,18 @@ class ApplicationController extends Controller
             "cousin"      => "cousin",
         ];
 
-        return view('student.application.edit', compact('application', 'castes', 'courses', 'semesters', 'streams', 'applied_stream', 'applied_course', 'applied_subs', 'stream_wise_subjects', 'relations_array'));
+        $distinct_subjects = Subject::select("name", "stream_id", "subject_no")
+            ->whereIn("stream_id", [2, 3])
+            ->whereIn("semester_id", [1])
+            ->orderBy("stream_id", "ASC")
+            ->orderBy("subject_no", "ASC")
+            ->orderBy("name", "ASC")
+            ->get();
+
+
+
+
+        return view('student.application.edit', compact('application', 'castes', 'courses', 'semesters', 'streams', 'applied_stream', 'applied_course', 'applied_subs', 'stream_wise_subjects', 'relations_array', 'distinct_subjects'));
     }
 
     /**
@@ -377,6 +408,7 @@ class ApplicationController extends Controller
         $path = 'public/uploads/' . auth()->id() . '/';
         $file_validation_rule = Application::$file_rules;
         $file_validation_rule["marksheet"] = str_replace("required|", "", $file_validation_rule["marksheet"]);
+        $file_validation_rule["admit_card"] = str_replace("required|", "", $file_validation_rule["marksheet"]);
         $validator = Validator::make($request->all(), $file_validation_rule);
         if ($validator->fails()) {
             return redirect()->back()->with('error', "Whoops! looks like you have missed something. Please verify and submit again.")->withInput()->withErrors($validator);
@@ -417,9 +449,12 @@ class ApplicationController extends Controller
                 'permanent_pin'                   => $request->permanent_pin,
                 'permanent_nationality'           => $request->permanent_nationality,
                 'permanent_tel'                   => $request->permanent_tel,
+                'permanent_tel'                   => $request->permanent_tel,
+
+                'tel_no'                          => $request->tel_no,
 
                 'last_board_or_university'        => ($request->other_board_university ? $request->other_board_university : $request->last_board_or_university),
-                'last_exam_roll'                  => $request->last_exam_roll,
+                // 'last_exam_roll'                  => $request->last_exam_roll,
                 'last_exam_no'                    => $request->last_exam_no,
                 'last_exam_result'                => $request->last_exam_result,
                 'last_exam_year'                  => $request->last_exam_year,
@@ -449,6 +484,10 @@ class ApplicationController extends Controller
                 'sub_6_name'                      => $request->sub_6_name,
                 'sub_6_total'                     => $request->sub_6_total,
                 'sub_6_score'                     => $request->sub_6_score,
+
+                'sub_7_name'                      => $request->sub_7_name,
+                'sub_7_total'                     => $request->sub_7_total,
+                'sub_7_score'                     => $request->sub_7_score,
 
                 'total_marks_according_marksheet' => $request->total_marks_according_marksheet,
                 'all_total_marks'                 => $request->all_total_marks,
@@ -516,7 +555,15 @@ class ApplicationController extends Controller
 
             $this->createOnlyStream($request, $application);
             // $this->createStreamAndSubject($request, $application);
-
+            $student_subjects = $request->student_subject;
+            if ($student_subjects) {
+                $application->students_subjects()->delete();
+                foreach ($student_subjects as $subject_name) {
+                    $application->students_subjects()->create([
+                        "subject_name" => $subject_name,
+                    ]);
+                }
+            }
         } catch (Exception $e) {
             Log::error($e);
             // dd($e);
@@ -1043,7 +1090,6 @@ AppliedSubject::create($applied_subjects_data);
     }
     public function sendApplicationNoSMS($application)
     {
-        return true;
         $message = "Payment Successfull, for your application id ".$application->id.".";
         $mobile = $application->student->isd_code.$application->student->mobile_no;
         try {

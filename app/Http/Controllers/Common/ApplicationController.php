@@ -20,6 +20,6 @@ class ApplicationController extends Controller
         }
         // return view('common.application.pdf' ,compact('application','appliedSubjects','preferences'));
     	$pdf = PDF::loadView('common.application.pdf' ,compact('application','appliedSubjects','preferences'));
-        return $pdf;
+        return $pdf->setPaper("a4");
     }
 }

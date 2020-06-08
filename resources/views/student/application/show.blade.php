@@ -35,7 +35,14 @@ Application
                     </form>
                     </div>
                     @elseif($application->payment_status==1)
-                    <a href="{{ route('student.application.download-application',$application->uuid) }}" class="btn btn-primary">Download</a>
+                    <a href="{{ route('student.application.download-application',$application->uuid) }}" class="btn btn-primary">
+
+                        @if($application->status == 0)
+                        Download
+                        @else
+                        Offer of admission
+                        @endif
+                    </a>
                     @endif
                 @else
                     @if($application->payment_status==2)

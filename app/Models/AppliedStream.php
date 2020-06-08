@@ -14,7 +14,7 @@ class AppliedStream extends Model
     ];
     public function stream()
     {
-        return $this->belongsTo('App\Models\Stream', 'stream_id');
+        return $this->belongsTo('App\Models\Stream', 'stream_id')->withTrashed();
     }
 
     public static $rules = [

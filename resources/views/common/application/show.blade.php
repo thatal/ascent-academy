@@ -9,7 +9,13 @@
             <div class="card-body text-center">
               <h3 class="mb-3">ASCENT ACADEMY JUNIOR COLEGE</h3>
               <p class="mb-4 bold">
-                Beltola Road, Survey, Assam, Kamrup, Pin-781028<br>HS ADMISSION
+                Beltola Road, Survey, Assam, Kamrup, Pin-781028
+                <br />
+                @if($application->status === 0)
+                    APPLICATION FORM
+                @else
+                    PROVISIONAL ADMISSION
+                @endif
               </p>
             </div>
           </td class="padding-xs">
@@ -41,13 +47,13 @@
                 <td class="padding-xs">Permanent&nbsp;Add.</td>
                 <td class="padding-xs bold" style="max-width: 200px;">
                     {{$application->permanent_vill_or_town.', '.$application->permanent_city.', '.$application->permanent_state.', '.$application->permanent_district.', '.$application->present_nationality.', '.$application->permanent_pin
-                    .', Tel: '.$application->permanent_tel
+                    .', Mob.: '.$application->permanent_tel
                 }}
                 </td>
                 <td class="padding-xs">Present&nbsp;Add.</td>
                 <td class="padding-xs bold" style="max-width: 200px;">
                     {{$application->present_vill_or_town.', '.$application->present_city.', '.$application->present_state.', '.$application->present_district.', '.$application->present_nationality.', '.$application->present_pin
-                    .', Tel: '.$application->present_tel
+                    .', Mob.: '.$application->present_tel
                     }}
                 </td>
           </tr>
@@ -60,8 +66,8 @@
           <tr>
             <td class="padding-xs">Caste</td>
             <td class="padding-xs bold">{{$application->caste->name ?? 'N/A'}}</td>
-            <td></td>
-            <td></td>
+            <td class="padding-xs">Tel. No.</td>
+            <td class="padding-xs bold">{{$application->tel_no ?? 'N/A'}}</td>
         </tr>
         <tr>
             <td class="padding-xs">Contact Number</td>
@@ -90,14 +96,14 @@
           <tr>
             <td class="padding-xs">last Board/University</td>
             <td class="padding-xs bold">{{$application->last_board_or_university}} {{$application->last_board_or_university_state ? '('.$application->last_board_or_university_state.')':''}}</td>
-            <td class="padding-xs">Last Exammination Year</td>
+            <td class="padding-xs">Last Examination Year</td>
             <td class="padding-xs bold">{{$application->last_exam_year}}</td>
           </tr>
           <tr>
-            <td class="padding-xs">Last Exammination Roll</td>
-            <td class="padding-xs bold">{{$application->last_exam_roll ?? 'N/A'}}</td>
-            <td class="padding-xs">Last Exammination No</td>
-            <td class="padding-xs bold">{{$application->last_exam_no ?? 'N/A'}}</td>
+              <td class="padding-xs">Last Examination Admit Card No</td>
+              <td class="padding-xs bold">{{$application->last_exam_no ?? 'N/A'}}</td>
+              <td class="padding-xs"></td>
+              <td class="padding-xs bold"></td>
           </tr>
           <tr>
             <td class="padding-xs">Total Marks Secured</td>
@@ -123,7 +129,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  @foreach(range(1, 6) as $number)
+                  @foreach(range(1, 7) as $number)
                   <tr>
                     <td class="padding-xs bold">{{$application->{"sub_" . $number . "_name"} }}</td>
                     <td class="padding-xs bold">{{$application->{"sub_" . $number . "_total"} }}</td>
@@ -142,7 +148,7 @@
             <td class="padding-xs">Application Number</td>
             <td class="padding-xs">Course</td>
             <td class="padding-xs">Stream</td>
-            <td class="padding-xs">Semester</td>
+            <td class="padding-xs">Year</td>
           </tr>
           <tr>
             <td class="padding-xs bold">{{$application->id}}</td>
@@ -233,30 +239,66 @@
     </table>
   </div>
   <div style="clear:both;"></div>
-  <div class="row">
-    <div class="col">
-    <p>For Office use only</p>
-    <table class="table full-width table-bordered">
-      <tbody>
-        <tr>
-          <td class="padding-xs bold">Subjects </td>
-          <td class="padding-xs bold"></td>
-        </tr>
-        <tr>
-            <td class="bold">English</td>
-            <td class="bold">MIL/ALT.ENG.</td>
-        </tr>
-        <tr>
-            <td>1. </td>
-            <td>2. </td>
-        </tr>
-        <tr>
-            <td>3. </td>
-            <td>4. </td>
-        </tr>
-      </tbody>
-    </table>
-    </div>
+  <br />
+    <div class="row">
+        <div class="col-md-12">
+            <table width="100%" class="table table-bordered">
+                <tr>
+                    <td>For Office use only</td>
+                    <td>Subjects selected by student</td>
+                </tr>
+                <tr>
+                    <td>
+                        <table class="table full-width table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td class="padding-xs bold">Subjects </td>
+                                    <td class="padding-xs bold"></td>
+                                </tr>
+                                <tr>
+                                    <td class="bold">English</td>
+                                    <td class="bold">MIL/ALT.ENG.</td>
+                                </tr>
+                                <tr>
+                                    <td>1. </td>
+                                    <td>2. </td>
+                                </tr>
+                                <tr>
+                                    <td>3. </td>
+                                    <td>4. </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table full-width table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td class="padding-xs bold">Subjects </td>
+                                    <td class="padding-xs bold"></td>
+                                </tr>
+                                @php
+                                    $counter = 1;
+                                @endphp
+                                @foreach ($application->students_subjects->chunk(2) as $key => $subjects)
+                                    <tr>
+                                        @foreach ($subjects as $index => $subject)
+                                            <td> {{$counter}}. {{$subject->subject_name}}</td>
+                                            @php
+                                                $counter++;
+                                            @endphp
+                                        @endforeach
+                                        @if($subjects->count() != 2)
+                                            <td></td>
+                                        @endif
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
     <div style="clear:both;"></div>
     <div class="row">
@@ -268,15 +310,10 @@
 <img style="max-width: 200;" height="120" width="120" src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(300)->generate($application->id))!!}" />
           </div>
         </td>
-        <td width="40%" class="text-center">
+        <td width="60%" class="text-center">
           <div class="signature_space" style="height:30px;"></div>
           <p>Signature</p>
-          <p>Rector, Ascent Academy</p>
-        </td>
-        <td width="40%" class="text-center">
-          <div class="signature_space" style="height:30px;"></div>
-          <p>Signature</p>
-          <p>Managin Director, Ascent Academy</p>
+          <p>Administrative Officer, Admissions Office</p>
         </td>
         </tr>
     </table>

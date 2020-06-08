@@ -12,9 +12,9 @@
                 @endif
             @endisset
             <div class="form-group ">
-                <label class="form-label">Semester<span class="form-required">*</span></label>
+                <label class="form-label">Year<span class="form-required">*</span></label>
                 <select name="semester_id" class="form-control" id="semester_id" required {{$disabled}}>
-                    <option value="">Select Semester</option>
+                    <option value="">Select Year</option>
                     @if(auth('student')->check())
                         @php
                             $semesters = $course->semesters->whereIn('id',config('constants.apply_semester'));

@@ -73,7 +73,13 @@
                                     @endif
                                     @elseif($application->payment_status==1)
                                     <a href="{{ route('student.application.download-application',$application->uuid) }}"
-                                        class="btn btn-success">Download</a>
+                                        class="btn btn-success">
+                                        @if($application->status == 0)
+                                            Download
+                                        @else
+                                        Offer of admission
+                                        @endif
+                                    </a>
                                     <a href="{{ route('student.application.payment-receipt',$application->uuid) }}"
                                         class="btn btn-success">Receipt</a>
                                     @endif

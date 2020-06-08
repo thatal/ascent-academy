@@ -2,7 +2,7 @@
 <script type="text/javascript" src="{{ asset('public/js/jquery.validate.js')}}"></script>
 <script type="text/javascript" src="{{ asset('public/js/additional-methods.js')}}"></script>
 <script type="text/javascript">
-check_date = '2020-03-01';
+    check_date = '2020-03-01';
     $('#dob').Zebra_DatePicker({
         format: 'Y-m-d',
         direction:-1,
@@ -28,7 +28,36 @@ check_date = '2020-03-01';
         var diff =(dt2.getTime() - dt1.getTime()) / 1000;
         diff /= (60 * 60 * 24);
         return Math.abs(parseInt(diff/365.25));
+    }
+    autoSubjectShow = function (){
+        var class_id = $("#stream_id").val();
+        var class_name = '.subject_stream_'+class_id;
+        var current_stream_subjects = $(class_name);
+        $('.subject_parent').find("label").filter(function () {
+            return this.className.match(/\bsubject_stream_+/);
+        }).not(current_stream_subjects).hide().find("input").prop({
+            disabled: true
+        });
+        current_stream_subjects.show().find("input").prop({
+            disabled:false
+        });
+    }
+    SubjectRemove   = function(obj){
+        if($(".subject_child").length === 1 ){
+            alert("At-least one subject must be selected.");
+            return false;
         }
+        $(obj).parents(".subject_child").hide(function(){
+            $(this).remove();
+        });
+    }
+    SubjectAddMore  = function(obj){
+        var cloneData = $(".subject_child:last").clone();
+        $(cloneData).find("select,input,textarea").val("");
+        $(cloneData).hide();
+        $(".subject_parent").find(".subject_child:last").after(cloneData);
+        $(".subject_child:last").show("medium");
+    }
 </script>
 <noscript><meta http-equiv="refresh" content="0; URL={{Url("/no_script")}}" /></noscript>
 <script type="text/javascript">
@@ -66,6 +95,22 @@ $.validator.addMethod("altsubject", function(value, element, param) {
  });*/
  // new code added.
 $(document).ready(function(){
+    autoSubjectShow();
+    $("select[name='stream_id']").on("change",function(){
+        autoSubjectShow();
+    });
+    $(".subject_list").change(function(){
+        var data = $(this).data();
+        if($(this).is(":checked")){
+            $("."+data.classname).not(this).prop({
+                disabled: true
+            });
+        }else{
+            $("."+data.classname).not(this).prop({
+                disabled: false
+            });
+        }
+    });
     /*console.log = function(){
 
     }*/
@@ -388,7 +433,12 @@ $(document).ready(function(){
                 });
             }
         }
-
+        if($(".subject_list:checked").not(":disabled").length !== 6){
+            alert("Please select 6 subject to continue.");
+            event.preventDefault();
+            $(".se-pre-con").fadeOut("slow");
+            return false;
+        }
         // test if form is valid
         if($('form#application').validate(bootstrapOptionsValidator).form()) {
             $(this).unbind('submit').submit();

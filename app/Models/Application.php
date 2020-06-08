@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\StudentSubject;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -128,6 +129,8 @@ class Application extends Model
         'age'               => 'required|numeric|min:10',
         'father_occupation' => 'required|max:255',
         'guardian_relationship'=> 'required|max:255',
+        // new telephone
+        'present_tel'           => 'numeric',
 
         'present_vill_or_town'  => 'required|max:255|min:1',
         'present_city'          => 'required|max:255|min:1',
@@ -146,7 +149,7 @@ class Application extends Model
         // 'permanent_nationality'     => 'required|max:255|min:1',
 
         'last_board_or_university'  => 'required|max:100|min:1',
-        'last_exam_roll'            => 'required|max:100|min:1',
+        // 'last_exam_roll'            => 'required|max:100|min:1',
         'last_exam_no'          => 'required|max:100|min:1',
         'last_exam_year'          => 'required|min:1',
         'last_exam_result'          => 'required|min:1',
@@ -178,6 +181,10 @@ class Application extends Model
         'sub_6_name'            => 'required|max:100|min:1',
         'sub_6_total'           => 'required|between:0,100|numeric',
         'sub_6_score'           => 'required|between:0,100|numeric',
+
+        'sub_7_name'            => 'required|max:100|min:1',
+        'sub_7_total'           => 'required|between:0,100|numeric',
+        'sub_7_score'           => 'required|between:0,100|numeric',
 
         'all_total_marks'       => 'required|numeric',
 
@@ -217,5 +224,9 @@ class Application extends Model
             ->orderBy("id", "DESC")
             ->first();
         return $fees;
+    }
+    public function students_subjects()
+    {
+        return $this->hasMany(StudentSubject::class, "application_id", "id");
     }
 }
