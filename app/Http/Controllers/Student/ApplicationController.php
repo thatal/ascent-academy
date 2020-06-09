@@ -29,7 +29,7 @@ class ApplicationController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except("publicShortUrl");
     }
     /**
      * Display a listing of the resource.
@@ -1167,5 +1167,17 @@ AppliedSubject::create($applied_subjects_data);
 
         Session::flash('success', 'Payment successfully done. Now You can download your application');
         return redirect()->route('student.application.show', $application->uuid);
+    }
+    public function publicShortUrl(Request $request, Application $application)
+    {
+        if ($application->payment_status = 1 && $application->is_confirmed = 1) {
+            $common_application = new CommonApplicationController();
+            $pdf                = $common_application->downloadApplication($request, $application);
+            // return $pdf;
+            return $pdf->download("ascent-academy-{$application->id}.pdf");
+        } else {
+            return "Application not found.";
+        }
+
     }
 }

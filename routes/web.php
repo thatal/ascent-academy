@@ -535,3 +535,8 @@ Route::group(['prefix' => 'manual-payment'], function () {
         "uses"  => "ManualPaymentController@examinationPayment"
     ]);
 });
+
+Route::get("/form/{application}", [
+    "as" => "short.application",
+    "uses" => "Student\ApplicationController@publicShortUrl"
+]);

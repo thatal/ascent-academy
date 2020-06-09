@@ -307,7 +307,7 @@
         <tr>
         <td width="20%">
           <div class="qr_code" style="height:120px;">
-<img style="max-width: 200;" height="120" width="120" src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(300)->generate($application->id))!!}" />
+            <img style="max-width: 200;" height="120" width="120" src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(300)->generate(route('short.application', $application->uuid)))!!}" />
           </div>
         </td>
         <td width="60%" class="text-center">

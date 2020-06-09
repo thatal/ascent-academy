@@ -169,7 +169,7 @@
                 @endif
                 <div class="qr_wrapper">
                     <img style="max-width: 120px;" height="120px" width="120px"
-                        src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(300)->generate($application->id))!!}" />
+                        src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(300)->generate(route('short.application', $application->uuid)))!!}" />
                 </div>
                 <div class="page-break-after"></div>
                 <div class="card-body">
@@ -200,7 +200,7 @@
                                 <td align="left">Application ID: <b>{{$application->id}}</b></td>
                                 <td align="center">Certificate Name: <b>{{$attachments->doc_name}}</b></td>
                                 <td align="right"><img style="max-width: 120px;" height="120px" width="120px"
-                                        src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(300)->generate($application->id))!!}" />
+                                        src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(300)->generate(route('short.application', $application->uuid)))!!}" />
                                 </td>
                             </tr>
                         </tbody>
