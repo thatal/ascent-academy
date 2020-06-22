@@ -488,14 +488,14 @@
                     @if(isset($application) && $application->admission_is_sought_as == "Hosteller")
                     checked
                     @endif
-                    > <span class="custom-control-label">Hosteller</span>
+                    > <span class="custom-control-label">Hosteller (Boarder)</span>
                 </label>
                 <label class="custom-control custom-radio custom-control-inline">
-                    <input class="custom-control-input" type="radio" name="admission_is_sought_as" value="Boarder"
-                    @if(isset($application) && $application->admission_is_sought_as == "Boarder")
+                    <input class="custom-control-input" type="radio" name="admission_is_sought_as" value="Day Scholar"
+                    @if(isset($application) && $application->admission_is_sought_as == "Day Scholar")
                     checked
                     @endif
-                    > <span class="custom-control-label">Boarder</span>
+                    > <span class="custom-control-label">Day Scholar</span>
                 </label>
             </div>
         </div>
@@ -571,7 +571,7 @@
 </div>
 <div class="container-fluid">
     <hr>
-    <h5>Select Subject</h5>
+    <h5>Select Subject (<span class="form-required"> Please select 6 subjects from below.</span>)</h5>
     <div class="subject_parent">
         <div class="custom-controls-stacked">
             @foreach ($distinct_subjects as $d_subject)

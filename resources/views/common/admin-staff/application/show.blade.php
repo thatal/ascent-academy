@@ -17,8 +17,10 @@
                 @endif
                 @if($application->status==1)
                   & Verified
-                @elseif($application->status==2)
+                @elseif($application->status == 2)
                   <span class="tag tag-red"> & On Hold because of {{$application->on_hold_reason}}</span>
+                @elseif($application->status == 5)
+                  <span class="tag tag-red"> & Rejected because of {{$application->rejection_reason}}</span>
                 @endif
                 <a href="{{ auth()->guard('admin')->check()? route('admin.application.index') : route('staff.application.index') }}" class="btn btn-success">Application List</a>
                 <a href="{{ auth()->guard('admin')->check()? route('admin.application.download-application',$application->uuid) : route('staff.application.download-application',$application->uuid) }}" class="btn btn-primary">Download</a>

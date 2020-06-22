@@ -689,7 +689,7 @@ trait ApplicationTrait
         if($application->payment_status=1 && $application->is_confirmed=1){
             $common_application = new CommonApplicationController();
             $pdf = $common_application->downloadApplication($request,$application);
-            return $pdf->stream('Darrang-Application.pdf');
+            return $pdf->stream('Ascent-Academy-Application.pdf');
         }else{
             return back();
         }

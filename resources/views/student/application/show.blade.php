@@ -59,11 +59,14 @@ Application
                     @endif
                 @endif
               @endif
-              @if($application->status==1)
-              {{-- <button type="button" class="btn btn-primary btn-sm ml-2"><i class="fa fa-print" aria-hidden="true"></i> Print</button> --}}
-              @elseif($application->status==2)
-              <span class="tag tag-red"> On Hold Because of {{$application->on_hold_reason}}</span>
-              @endif
+                @if($application->status==1)
+                    {{-- <button type="button" class="btn btn-primary btn-sm ml-2"><i class="fa fa-print" aria-hidden="true"></i> Print</button> --}}
+
+                @elseif($application->status == 2)
+                    <span class="tag tag-red"> On Hold because of {{$application->on_hold_reason}}</span>
+                @elseif($application->status == 5)
+                    <span class="tag tag-red"> Rejected because of {{$application->rejection_reason}}</span>
+                @endif
             </div>
           </div>
           @include('common/application/show')

@@ -55,8 +55,11 @@ class ApplicationController extends Controller
      */
     public function create()
     {
+        if(auth()->user()->application()->count() >= 2){
+            return redirect()->route('student.application.index')->with("error", "You have crossed the limit of 2 application.");
+        }
         $castes = Caste::get();
-        $courses = Course::with("streams", "semesters");
+        $courses = Course::with(["streams","semesters"]);
         if(config('constants.apply_course')){
             $courses = $courses->whereIn('id',config('constants.apply_course'));
         }
@@ -104,6 +107,14 @@ class ApplicationController extends Controller
 
     public function store(Request $request)
     {
+        if(AppliedStream::where("stream_id", $request->stream_id)->count()){
+            return redirect()->back()->with("error", "You have already applied for the same stream.");
+
+        }
+        if (auth()->user()->application()->count() >= 2) {
+            return redirect()->route('student.application.index')->with("error", "You have crossed the limit of 2 application.");
+        }
+
         if (Application::count() == 0) {
             \DB::statement('ALTER TABLE applications AUTO_INCREMENT = 1000;');
         }
@@ -115,7 +126,6 @@ class ApplicationController extends Controller
         $file_validation_rule = Application::$file_rules;
         $validator = Validator::make($request->all(), $file_validation_rule);
         if ($validator->fails()) {
-            dd($validator->errors());
             return redirect()->back()->with('error', "Whoops! looks like you have missed something. Please verify and submit again.")->withInput()->withErrors($validator);
         }
         // dd(request()->all());
@@ -255,7 +265,6 @@ class ApplicationController extends Controller
             Log::critical($application_rules);
             $validator = Validator::make($application_data, $application_rules);
             if ($validator->fails()) {
-                dd($validator->errors());
                 Log::error($validator->errors());
                 return redirect()->back()->with('error', "Whoops! looks like you have missed something. Please verify and submit again.")->withInput()->withErrors($validator);
             }
@@ -293,7 +302,6 @@ class ApplicationController extends Controller
             }
             // dd($application_data, $applied_stream_data, $applied_subjects_data);
         } catch (Exception $e) {
-            dd($e);
             DB::rollback();
             Log::error($e);
             Session::flash('error', 'Something Went Wrong');
@@ -957,7 +965,6 @@ AppliedSubject::create($applied_subjects_data);
                 ],
             ];
         }catch(\Exception $e){
-            dd($e);
             Log::error($e);
             DB::rollback();
             return redirect()
@@ -1155,7 +1162,6 @@ AppliedSubject::create($applied_subjects_data);
             $online_payment->update($update_data);
 
         } catch (Exception $e) {
-            dd($e);
             DB::rollback();
             Log::emergency($e);
             Session::flash('error', 'Payment unsuccessfull. Try again later');
