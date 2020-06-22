@@ -37,7 +37,7 @@ Application
                     @elseif($application->payment_status==1)
                     <a href="{{ route('student.application.download-application',$application->uuid) }}" class="btn btn-primary">
 
-                        @if($application->status == 0)
+                        @if($application->status != 1)
                         Download
                         @else
                         Offer of admission

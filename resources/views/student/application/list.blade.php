@@ -29,7 +29,15 @@
                             @if($application->payment_status==0)
                             <button type="button" class="btn btn-default" disabled>Payment Pending</button>
                             @elseif($application->payment_status==1)
-                            <button type="button" class="btn btn-default" disabled>Payment Done</button>
+                                @if($application->status == 1)
+                                    <button type="button" class="btn btn-default" disabled>Verified & Approved</button>
+                                @elseif($application->status == 2)
+                                    <button type="button" class="btn btn-default" disabled>On Hold</button>
+                                @elseif($application->status == 5)
+                                    <button type="button" class="btn btn-default" disabled>Rejected</button>
+                                @else
+                                    <button type="button" class="btn btn-default" disabled>Payment Done</button>
+                                @endif
                             @endif
                             @endif
                             @else
@@ -74,7 +82,7 @@
                                     @elseif($application->payment_status==1)
                                     <a href="{{ route('student.application.download-application',$application->uuid) }}"
                                         class="btn btn-success">
-                                        @if($application->status == 0)
+                                        @if($application->status != 1)
                                             Download
                                         @else
                                         Offer of admission

@@ -16,7 +16,7 @@
                   <span> & Payment Success</span>
                 @endif
                 @if($application->status==1)
-                  & Verified
+                  & Verfied & Approved.
                 @elseif($application->status == 2)
                   <span class="tag tag-red"> & On Hold because of {{$application->on_hold_reason}}</span>
                 @elseif($application->status == 5)

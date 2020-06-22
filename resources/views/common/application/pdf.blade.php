@@ -109,7 +109,7 @@
                 <h4 class="bold">Allocate Subjects Details</h4>
                 @include('common.application.subject-allocated-list')
                 @endif
-                @if($application->status === 0)
+                @if($application->status != 1)
                 <h4 class="bold">IMPORTANT INSTRUCTIONS</h4>
                 <ol>
                     <li>STATUS AND OFFER FOR PROVISIONAL ADMISSION WILL BE UPDATED AND MAY BE ACCESSED BY THE STUDENT/PARENTS ON THE ADMISSIONS

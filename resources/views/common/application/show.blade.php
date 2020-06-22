@@ -11,10 +11,10 @@
               <p class="mb-4 bold">
                 Beltola Road, Survey, Assam, Kamrup, Pin-781028
                 <br />
-                @if($application->status === 0)
-                    APPLICATION FORM
-                @else
+                @if($application->status ===1)
                     PROVISIONAL ADMISSION
+                @else
+                    APPLICATION FORM
                 @endif
               </p>
             </div>

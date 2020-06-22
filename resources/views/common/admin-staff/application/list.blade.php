@@ -66,7 +66,7 @@
                         @if($application->status==0)
                           <button type="button" class="btn btn-default" disabled>Pending</button>
                         @elseif($application->status==1)
-                          <button type="button" class="btn btn-primary" disabled>Verified</button>
+                          <button type="button" class="btn btn-primary" disabled>Verified &Approved</button>
                         @elseif($application->status==2)
                           <button type="button" class="btn btn-danger" disabled>On Hold</button>
                         @elseif($application->status==3)
